@@ -1,13 +1,146 @@
 import Nav from '@/components/Nav';
-import { Container } from '@mui/material';
+import { Box, Container, styled, Typography } from '@mui/material';
+import { useEffect, useRef, useState } from 'react';
+import { CardData } from '@/types';
+import Cookies from 'js-cookie';
+import Head from 'next/head';
+import Repeat from '@/components/programs/Repeat';
 
-export default function Dashboard() {
+const api_url = 'http://localhost:8080/words';
+
+async function fetchData() {
+	const credentials = Cookies.get('credentials') || '';
+	const { secret, database_id } = JSON.parse(credentials);
+
+	const data = await fetch(api_url + `?secret=${ secret }&database_id=${ database_id }`, {
+		method: 'GET'
+	});
+	const apiRes = await data.json();
+	return apiRes.data;
+}
+
+export const Title = styled(Typography)({
+	fontWeight: '700',
+	fontFamily: 'Montserrat',
+	textAlign: 'center',
+	color: 'rgba(0,0,0,0.81)'
+});
+
+const MenuItem = styled(Box)({
+	padding: '15px 100px',
+	cursor: 'pointer',
+	zIndex: 10,
+	transition: '0.1s',
+	':hover': {
+		backgroundColor: 'rgb(9,102,210, 0.4)',
+		color: 'white'
+	},
+	':first-child': {
+		borderRadius: '30px 30px 0 0'
+	},
+	':last-child': {
+		borderRadius: '0 0 30px 30px'
+	}
+});
+
+export const ProgramsContainer = styled(Box)({
+	width: "100%",
+	padding: "200px 0",
+	display: "flex",
+	justifyContent: "center",
+	flexDirection: "column",
+	textAlign: "center"
+});
+
+export const Dashboard = () => {
+	const firstRender = useRef(true);
+	const programs = ['Repeat', 'Guess the word', 'Guess the meaning'];
+
+	const [program, setProgram] = useState('');
+	const [words, setWords] = useState<CardData[]>([]);
+	const activeWord = words[words.length - 1];
+	let fetchNewWords = words.length <= 5;
+	let temp: CardData[] = [];
+	console.log('WORDS: ', words);
+
+	useEffect(() => {
+		if(firstRender.current) {
+			firstRender.current = false;
+			fetchData().then(data => {
+				setWords(data);
+			});
+			return;
+		}
+
+		if(fetchNewWords) {
+			fetchData().then(data => temp = data);
+			fetchNewWords = false;
+		}
+	}, [fetchNewWords]);
+
+	const removeCard = (id: string, action: 'right' | 'left') => {
+		setWords((prev) => prev.filter((card) => card.id !== id));
+
+		if(temp.length) {
+			setWords((prev) => [...prev, ...temp]);
+		}
+
+		if(action === 'right') {
+			console.log('swapped right');
+		} else {
+			console.log('swapped left');
+		}
+	};
+
+	const selectProgram = (program: string) => {
+		switch(program) {
+		case ('Repeat') :
+			return <Repeat words={ words } activeWord={ activeWord } removeCard={ removeCard }/>;
+		default:
+			return null;
+		}
+	};
+
 	return (
 		<>
-		<Container maxWidth="lg">
-			<Nav/>
-			DASHBOARD
-		</Container>
+			<Head>
+				{ words.map(w => {
+					return (
+						<link key={ w.id }
+						      rel="preload"
+						      href={ `https://source.unsplash.com/500x300/?${ w.meaning }` }
+						      as="image"
+						/>
+					);
+				}) }
+			</Head>
+			<Container maxWidth="lg" sx={{ overflow: 'hidden' }}>
+				<Nav/>
+				{ program.length === 0 && (
+					<ProgramsContainer>
+						<Title zIndex={ 10 } fontSize="24px">
+							Please select a programm
+						</Title>
+						<Box bgcolor="rgb(9,102,210, 0.15)" boxShadow="0 0 100px 10px rgb(9,102,210, 0.4)"
+						     borderRadius="30px" alignSelf="center" width="50%" display="flex" flexDirection="column"
+						     justifyContent="center" textAlign="center" marginTop="50px">
+							{
+								programs.map(program => {
+									return (
+										<MenuItem onClick={ () => setProgram(program) }>
+											<Typography fontFamily="Montserrat" fontWeight="500"
+											            fontSize={ 20 }>{ program }</Typography>
+										</MenuItem>
+									);
+								})
+							}
+						</Box>
+					</ProgramsContainer>
+				) }
+				{ selectProgram(program) }
+			</Container>
 		</>
 	);
-}
+};
+
+export default Dashboard;
