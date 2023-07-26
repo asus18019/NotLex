@@ -55,6 +55,7 @@ export const ProgramsContainer = styled(Box)({
 export const Dashboard = () => {
 	const firstRender = useRef(true);
 	const programs = ['Repeat', 'Guess the word', 'Guess the meaning'];
+	const [showMenu, setShowMenu] = useState(false);
 
 	const [program, setProgram] = useState('');
 	const [words, setWords] = useState<CardData[]>([]);
@@ -62,6 +63,10 @@ export const Dashboard = () => {
 	let fetchNewWords = words.length <= 5;
 	let temp: CardData[] = [];
 	console.log('WORDS: ', words);
+
+	useEffect(() => {
+		setShowMenu(window.screen.width > 900)
+	}, [])
 
 	useEffect(() => {
 		if(firstRender.current) {
@@ -115,7 +120,7 @@ export const Dashboard = () => {
 				}) }
 			</Head>
 			<Container maxWidth="lg" sx={{ overflow: 'hidden' }}>
-				<Nav/>
+				<Nav showMenu={ showMenu } setShowMenu={ () => setShowMenu(!showMenu) }/>
 				{ program.length === 0 && (
 					<ProgramsContainer>
 						<Title zIndex={ 10 } fontSize="24px">

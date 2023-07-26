@@ -2,6 +2,8 @@ import Link from 'next/link';
 import { Toolbar, styled, Divider, Typography, Box } from '@mui/material';
 import Head from 'next/head';
 import Logo from '@/svg/Logo';
+import MenuIcon from '@mui/icons-material/Menu';
+import CloseIcon from '@mui/icons-material/Close';
 
 const sections = [
 	{
@@ -35,30 +37,48 @@ const NavbarLink = styled(Link)({
 	':hover': {
 		color: '#000000'
 	},
+	'@media (max-width:900px)': {
+		textAlign: 'center',
+		fontSize: '22px',
+		fontWeight: 600
+	},
 	cursor: 'pointer'
 });
 
-export default function Nav() {
+export default function Nav({ showMenu, setShowMenu }: { showMenu: boolean, setShowMenu: () => void }) {
 	return (
 		<>
 			<Head>
 				<link rel="preconnect" href="https://fonts.googleapis.com"/>
 				<link rel="preconnect" href="https://fonts.gstatic.com"/>
-				<link href="https://fonts.googleapis.com/css2?family=Inter:wght@500&family=Montserrat:wght@500;600;700&family=Titillium+Web:wght@600&display=swap" rel="stylesheet"/>		</Head>
+				<link
+					href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600&family=Montserrat:wght@500;600;700&family=Titillium+Web:wght@600&display=swap"
+					rel="stylesheet"/>
+			</Head>
 			<Toolbar
 				component="nav"
 				variant="dense"
-				sx={ { justifyContent: 'space-between', overflowX: 'auto', py: 1 } }
+				sx={ {
+					width: { md: 'auto' },
+					height: { md: 'auto' },
+					justifyContent: 'space-between',
+					py: 1,
+					textAlign: 'center'
+				} }
 			>
-				<Box display="flex" justifyContent="center" alignItems="center">
+				<Box display={{ xs: showMenu ? 'none' : 'flex', md: 'flex' }} justifyContent="center" alignItems="center">
 					<Logo/>
 					<Typography sx={ { cursor: 'pointer' } } marginLeft={ 1 } fontFamily="Titillium Web"
 					            fontSize="26px">NotLex</Typography>
 				</Box>
-				<Box>
-					{ sections.map((section) => (
-						<NavbarLink key={section.title} href={ section.url }>{ section.title }</NavbarLink>
-					)) }
+				<Box display="flex" flexDirection={ { xs: 'column', md: 'row' } } width={{ xs: '100%', md: 'auto' }}>
+					{ showMenu && <CloseIcon cursor="pointer" onClick={ setShowMenu } fontSize='large' sx={{ display: { md: 'none' } }} /> }
+					{
+						!showMenu ? <MenuIcon sx={{ display: { xs: 'flex', md: 'none' }, alignSelf: 'flex-end' }} cursor="pointer" onClick={ setShowMenu }/> : (
+							sections.map((section) => (
+								<NavbarLink key={ section.title } href={ section.url }>{ section.title }</NavbarLink>
+							)))
+					}
 				</Box>
 			</Toolbar>
 			<Divider/>

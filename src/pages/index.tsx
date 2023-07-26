@@ -1,7 +1,7 @@
 import Nav from '@/components/Nav';
 import { Box, Button, Container, styled, Typography, FormControl, Divider } from '@mui/material';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Cookies from 'js-cookie'
 
 const Em = styled('em')({
@@ -52,6 +52,11 @@ const FormInput = styled('input')({
 export default function Home() {
 	const [secret, setSecret] = useState('');
 	const [dbId, setDbId] = useState('');
+	const [showMenu, setShowMenu] = useState(false);
+
+	useEffect(() => {
+		setShowMenu(window.screen.width > 900)
+	}, [])
 
 	const handleLogin = async (e: any) => {
 		e.preventDefault();
@@ -78,7 +83,7 @@ export default function Home() {
 
 	return (
 		<Container maxWidth="lg">
-			<Nav/>
+			<Nav showMenu={ showMenu } setShowMenu={ () => setShowMenu(!showMenu) }/>
 			<Box display="flex" justifyContent="center" alignItems="center" flexDirection="column"
 			     height="calc(100vh - 81px)">
 				<BlurredCircle zIndex={ 1 }/>
