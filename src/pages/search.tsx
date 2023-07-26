@@ -41,7 +41,7 @@ export const Search = () => {
 			return;
 		}
 
-		const res = await fetch('http://127.0.0.1:8080/find-word?word=' + value);
+		const res = await fetch('https://notlex-api.vercel.app/find-word?word=' + value);
 		const searchResult = await res.json();
 		if(res.status === 200) {
 			setSearchResults(searchResult.data);
