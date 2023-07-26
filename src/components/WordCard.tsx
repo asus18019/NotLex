@@ -19,10 +19,10 @@ const WordCard = ({ data, active, removeCard }: CardProps) => {
 		e: MouseEvent | TouchEvent | PointerEvent,
 		info: PanInfo
 	) => {
-		if(info.offset.x > 300) {
+		if(info.offset.x > 100) {
 			setExitX(200);
 			removeCard(data.id, 'right');
-		} else if(info.offset.x < -300) {
+		} else if(info.offset.x < -100) {
 			setExitX(-200);
 			removeCard(data.id, 'left');
 		}
