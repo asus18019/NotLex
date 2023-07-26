@@ -131,7 +131,7 @@ export const Dashboard = () => {
 							{
 								programs.map(program => {
 									return (
-										<MenuItem onClick={ () => setProgram(program) } padding={{ xs: "15px 0", md:'15px 100px' }}>
+										<MenuItem onClick={ () => setProgram(program) } padding={{ xs: "15px 0", md:'15px 100px' }} key={ program }>
 											<Typography fontFamily="Montserrat" fontWeight="500"
 											            fontSize={{ xs: 17, md: 20 }}>{ program }</Typography>
 										</MenuItem>
