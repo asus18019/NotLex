@@ -43,12 +43,12 @@ const WordCard = ({ data, active, removeCard }: CardProps) => {
 					exit={ { x: exitX } }
 				>
 					<Card sx={ {
+						margin: '0 auto',
 						p: 0,
-						border: '1px solid black',
-						boxShadow: 'none',
+						boxShadow: 'rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px',
 						borderRadius: '14px',
-						width: '450px',
-						height: '450px'
+						width: { xs: '90%', md: '450px' },
+						height: { xs: '90%', md: '450px' }
 					} }>
 						<CardMedia
 							draggable={ false }
@@ -59,7 +59,7 @@ const WordCard = ({ data, active, removeCard }: CardProps) => {
 						/>
 						<CardContent>
 							<Typography fontSize={ 20 } textAlign="center" fontFamily="Montserrat"
-							            fontWeight={ 700 } padding="10px 0">
+							            fontWeight={ 700 } padding={{ xs: 0, md: "10px 0" }}>
 								{ data.word }
 							</Typography>
 							<Box padding="10px 0" color="rgba(0,0,0,0.81)">

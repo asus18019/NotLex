@@ -6,7 +6,7 @@ import Cookies from 'js-cookie';
 import Head from 'next/head';
 import Repeat from '@/components/programs/Repeat';
 
-const api_url = 'http://localhost:8080/words';
+const api_url = 'https://notlex-api.vercel.app/words';
 
 async function fetchData() {
 	const credentials = Cookies.get('credentials') || '';
@@ -27,7 +27,6 @@ export const Title = styled(Typography)({
 });
 
 const MenuItem = styled(Box)({
-	padding: '15px 100px',
 	cursor: 'pointer',
 	zIndex: 10,
 	transition: '0.1s',
@@ -119,22 +118,22 @@ export const Dashboard = () => {
 					);
 				}) }
 			</Head>
-			<Container maxWidth="lg" sx={{ overflow: 'hidden' }}>
+			<Container maxWidth="lg" sx={{ overflow: 'hidden', px: { xs: 0, md: 'auto' } }} >
 				<Nav showMenu={ showMenu } setShowMenu={ () => setShowMenu(!showMenu) }/>
 				{ program.length === 0 && (
 					<ProgramsContainer>
-						<Title zIndex={ 10 } fontSize="24px">
+						<Title zIndex={ 10 } fontSize={{ xs: '20px', md: '24px' }}>
 							Please select a programm
 						</Title>
-						<Box bgcolor="rgb(9,102,210, 0.15)" boxShadow="0 0 100px 10px rgb(9,102,210, 0.4)"
-						     borderRadius="30px" alignSelf="center" width="50%" display="flex" flexDirection="column"
+						<Box bgcolor="rgb(9,102,210, 0.15)" boxShadow={{ xs: 'none', md: '0 0 100px 10px rgb(9,102,210, 0.4)' }}
+						     borderRadius="30px" alignSelf="center" width={{ xs: '95%', md: '50%' }} display="flex" flexDirection="column"
 						     justifyContent="center" textAlign="center" marginTop="50px">
 							{
 								programs.map(program => {
 									return (
-										<MenuItem onClick={ () => setProgram(program) }>
+										<MenuItem onClick={ () => setProgram(program) } padding={{ xs: "15px 0", md:'15px 100px' }}>
 											<Typography fontFamily="Montserrat" fontWeight="500"
-											            fontSize={ 20 }>{ program }</Typography>
+											            fontSize={{ xs: 17, md: 20 }}>{ program }</Typography>
 										</MenuItem>
 									);
 								})

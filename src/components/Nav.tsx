@@ -39,8 +39,9 @@ const NavbarLink = styled(Link)({
 	},
 	'@media (max-width:900px)': {
 		textAlign: 'center',
-		fontSize: '22px',
-		fontWeight: 600
+		fontSize: '20px',
+		fontWeight: 600,
+		margin: '8px 18px',
 	},
 	cursor: 'pointer'
 });

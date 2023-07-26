@@ -5,14 +5,12 @@ import { useEffect, useState } from 'react';
 import Cookies from 'js-cookie'
 
 const Em = styled('em')({
-	color: 'rgb(9,102,210)',
-	fontSize: 52
+	color: 'rgb(9,102,210)'
 });
 
 const Title = styled(Typography)({
 	fontWeight: '700',
 	fontFamily: 'Montserrat',
-	width: 900,
 	textAlign: 'center',
 	color: 'rgba(0,0,0,0.81)'
 });
@@ -20,7 +18,6 @@ const Title = styled(Typography)({
 const SubText = styled(Typography)({
 	fontWeight: '500',
 	fontFamily: 'Montserrat',
-	fontSize: '17px',
 	textAlign: 'center'
 });
 
@@ -62,7 +59,7 @@ export default function Home() {
 		e.preventDefault();
 
 		try {
-			const res = await fetch('http://localhost:8080/check-secrets', {
+			const res = await fetch('https://notlex-api.vercel.app/check-secrets', {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify({ secret: secret, database_id: dbId })
@@ -82,15 +79,15 @@ export default function Home() {
 	}
 
 	return (
-		<Container maxWidth="lg">
+		<Container maxWidth="lg" sx={{ px: { xs: 0, md: 'auto' } }}>
 			<Nav showMenu={ showMenu } setShowMenu={ () => setShowMenu(!showMenu) }/>
 			<Box display="flex" justifyContent="center" alignItems="center" flexDirection="column"
 			     height="calc(100vh - 81px)">
 				<BlurredCircle zIndex={ 1 }/>
-				<Title zIndex={ 10 } fontSize="36px">
-					Welcome to <Em>NotLex</Em> - Your English Word Learning Hub!
+				<Title zIndex={ 10 } fontSize={{ xs: '22px', md: '36px' }} width={{ xs: 'auto', md: 900 }}>
+					Welcome to <Em sx={{ fontSize: { xs: 32, md: 52 } }}>NotLex</Em> - Your English Word Learning Hub!
 				</Title>
-				<SubText color="rgba(0,0,0,0.55)" width={ 900 } zIndex={ 10 } marginTop={ 3 }>Are you tired of
+				<SubText color="rgba(0,0,0,0.55)" width={{ xs: 'auto', md: 900 }} fontSize={{ xs: '1rem', md: '17px' }} zIndex={ 10 } marginTop={ 3 }>Are you tired of
 					traditional language learning
 					methods ? Say
 					goodbye to mundane vocabulary drills and welcome to NotLex, where the world of English words comes
@@ -106,9 +103,13 @@ export default function Home() {
 			</Box>
 			<Divider/>
 			<Box display="flex" justifyContent="center" alignItems="center" flexDirection="column">
-				<Box display="flex" justifyContent="space-between" width="100%" margin="70px 0">
-					<Box width="50%" display="flex" flexDirection="column" alignItems="center">
-						<SubText color="black" width="100%">Connect your account</SubText>
+				<Box display="flex" justifyContent="space-between" width="100%" margin="70px 0" flexDirection={{ xs: "column-reverse", md: "row" }}>
+					<Box width={{ xs: "100%", md: "50%" }} display="flex" flexDirection="column" alignItems="center" marginTop={{ xs: '45px', md: 0 }}>
+						<Typography
+							fontFamily="Montserrat"
+							fontWeight="700"
+							fontSize="18px"
+						>Connect your account</Typography>
 						<form onSubmit={ handleLogin }>
 							<FormControl sx={ { my: '25px' } } fullWidth>
 								<FormInput placeholder="SECRET KEY" type="text" required value={ secret } onChange={ e => setSecret(e.target.value) }/>
@@ -119,7 +120,7 @@ export default function Home() {
 							</Button>
 						</form>
 					</Box>
-					<Box width="50%" display="flex" flexDirection="column" alignItems="center">
+					<Box width={{ xs: "100%", md: "50%" }} display="flex" flexDirection="column" alignItems="center">
 						<Typography
 							fontFamily="Montserrat"
 							fontWeight="700"
