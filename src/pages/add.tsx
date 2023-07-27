@@ -3,6 +3,7 @@ import { FormEvent, useEffect, useState } from 'react';
 import { Box, Button, Container, FormControl, styled, Typography } from '@mui/material';
 import Cookies from 'js-cookie';
 import { useSearchParams } from 'next/navigation';
+import CircularProgress from '@mui/material/CircularProgress';
 
 const FormInput = styled('input')({
 	fontWeight: '500',
@@ -29,12 +30,14 @@ const FormText = styled('textarea')({
 	resize: 'none'
 });
 
-const ADD_WORD_API_URL = "https://notlex-api.vercel.app/word";
+const ADD_WORD_API_URL = 'https://notlex-api.vercel.app/word';
 
 export const Add = () => {
 	const searchParams = useSearchParams();
 
 	const [showMenu, setShowMenu] = useState(false);
+	const [isFetching, setIsFetching] = useState(false);
+
 	const [word, setWord] = useState('');
 	const [category, setCategory] = useState('');
 	const [meaning, setMeaning] = useState('');
@@ -56,10 +59,11 @@ export const Add = () => {
 
 		const credentials = Cookies.get('credentials') || '';
 		const { secret, database_id } = JSON.parse(credentials);
+		setIsFetching(true);
 
 		const response = await fetch(ADD_WORD_API_URL, {
 			method: 'POST',
-			headers: { "Content-Type": "application/json" },
+			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({
 				credentials: {
 					secret,
@@ -74,25 +78,30 @@ export const Add = () => {
 			})
 		});
 
+		setIsFetching(false);
+
 		if(response.ok) {
 			setWord('');
 			setCategory('');
 			setMeaning('');
 			setExample('');
 		}
-	}
+	};
 
 	return (
 		<Container maxWidth="lg" sx={ { px: { xs: 0, md: 'auto' } } }>
-			<Nav showMenu={ showMenu } setShowMenu={ () => setShowMenu(!showMenu) } />
-			<Box width='100%' height="calc(100vh - 81px)" display='flex' justifyContent='center' alignItems='center' flexDirection='column'>
+			<Nav showMenu={ showMenu } setShowMenu={ () => setShowMenu(!showMenu) }/>
+			<Box width="100%" height="calc(100vh - 81px)" display="flex" justifyContent="center" alignItems="center"
+			     flexDirection="column">
 				<Typography fontFamily="Montserrat" fontSize={ 18 } marginTop={ 3 }>
 					Add new word
 				</Typography>
 				<form onSubmit={ handleAddWord }>
 					<FormControl sx={ { my: '25px' } } fullWidth>
-						<FormInput placeholder="Word" type="text" value={ word } onChange={ e => setWord(e.target.value) } required/>
-						<FormInput placeholder="Category" type="text" value={ category } onChange={ e => setCategory(e.target.value) } required/>
+						<FormInput placeholder="Word" type="text" value={ word }
+						           onChange={ e => setWord(e.target.value) } required/>
+						<FormInput placeholder="Category" type="text" value={ category }
+						           onChange={ e => setCategory(e.target.value) } required/>
 						<FormText
 							placeholder="Meaning"
 							rows={ 3 }
@@ -108,8 +117,12 @@ export const Add = () => {
 							onChange={ e => setExample(e.target.value) }
 						/>
 					</FormControl>
-					<Button variant="contained" type="submit" fullWidth>
-						<Typography fontFamily="Montserrat">Save</Typography>
+					<Button variant="contained" type="submit" disabled={ isFetching } fullWidth>
+						{ isFetching ? (
+							<CircularProgress size={ 24 }/>
+						) : (
+							<Typography fontFamily="Montserrat">Save</Typography>
+						) }
 					</Button>
 				</form>
 			</Box>

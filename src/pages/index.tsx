@@ -3,6 +3,7 @@ import { Box, Button, Container, styled, Typography, FormControl, Divider } from
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import Cookies from 'js-cookie'
+import CircularProgress from '@mui/material/CircularProgress';
 
 const Em = styled('em')({
 	color: 'rgb(9,102,210)'
@@ -49,7 +50,9 @@ const FormInput = styled('input')({
 export default function Home() {
 	const [secret, setSecret] = useState('');
 	const [dbId, setDbId] = useState('');
+
 	const [showMenu, setShowMenu] = useState(false);
+	const [isFetching, setIsFetching] = useState(false);
 
 	useEffect(() => {
 		setShowMenu(window.screen.width > 900)
@@ -58,6 +61,7 @@ export default function Home() {
 	const handleLogin = async (e: any) => {
 		e.preventDefault();
 
+		setIsFetching(true);
 		try {
 			const res = await fetch('https://notlex-api.vercel.app/check-secrets', {
 				method: "POST",
@@ -75,6 +79,8 @@ export default function Home() {
 			}
 		} catch(e) {
 			console.log(e);
+		} finally {
+			setIsFetching(false);
 		}
 	}
 
@@ -115,8 +121,12 @@ export default function Home() {
 								<FormInput placeholder="SECRET KEY" type="text" required value={ secret } onChange={ e => setSecret(e.target.value) }/>
 								<FormInput placeholder="DATABASE ID" type="text" required value={ dbId } onChange={ e => setDbId(e.target.value) }/>
 							</FormControl>
-							<Button variant="contained" type="submit" fullWidth>
-								<Typography fontFamily="Montserrat">Submit</Typography>
+							<Button variant="contained" type="submit" fullWidth disabled={ isFetching }>
+								{ isFetching ? (
+									<CircularProgress size={ 24 }/>
+								) : (
+									<Typography fontFamily="Montserrat">Submit</Typography>
+								) }
 							</Button>
 						</form>
 					</Box>

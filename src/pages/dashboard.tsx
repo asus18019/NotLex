@@ -55,13 +55,13 @@ export const Dashboard = () => {
 	const firstRender = useRef(true);
 	const programs = ['Repeat', 'Guess the word', 'Guess the meaning'];
 	const [showMenu, setShowMenu] = useState(false);
+	const [isFetching, setIsFetching] = useState(true);
 
 	const [program, setProgram] = useState('');
 	const [words, setWords] = useState<CardData[]>([]);
 	const activeWord = words[words.length - 1];
 	let fetchNewWords = words.length <= 5;
 	let temp: CardData[] = [];
-	console.log('WORDS: ', words);
 
 	useEffect(() => {
 		setShowMenu(window.screen.width > 900)
@@ -70,14 +70,17 @@ export const Dashboard = () => {
 	useEffect(() => {
 		if(firstRender.current) {
 			firstRender.current = false;
-			fetchData().then(data => {
-				setWords(data);
-			});
+
+			fetchData()
+				.then(data => setWords(data))
+				.finally(() => setIsFetching(false));
 			return;
 		}
 
 		if(fetchNewWords) {
-			fetchData().then(data => temp = data);
+			fetchData()
+				.then(data => temp = data)
+				.finally(() => setIsFetching(false));
 			fetchNewWords = false;
 		}
 	}, [fetchNewWords]);
@@ -99,7 +102,7 @@ export const Dashboard = () => {
 	const selectProgram = (program: string) => {
 		switch(program) {
 		case ('Repeat') :
-			return <Repeat words={ words } activeWord={ activeWord } removeCard={ removeCard }/>;
+			return <Repeat words={ words } activeWord={ activeWord } removeCard={ removeCard } isFetching={ isFetching }/>;
 		default:
 			return null;
 		}

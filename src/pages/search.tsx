@@ -5,6 +5,8 @@ import debounce from 'lodash/debounce';
 import { DictionaryWordResult } from '@/types';
 import AddIcon from '@mui/icons-material/Add';
 import { useRouter } from 'next/router';
+import CircularProgress from '@mui/material/CircularProgress';
+import { LoadingText } from '@/components/programs/Repeat';
 
 const FormInput = styled('input')({
 	fontWeight: '500',
@@ -26,6 +28,8 @@ export const Search = () => {
 	const router = useRouter();
 
 	const [showMenu, setShowMenu] = useState(false);
+	const [isFetching, setIsFetching] = useState(false);
+
 	const [searchValue, setSearchValue] = useState('');
 	const [searchResults, setSearchResults] = useState<DictionaryWordResult[]>([]);
 
@@ -49,6 +53,7 @@ export const Search = () => {
 			return;
 		}
 
+		setIsFetching(true);
 		const res = await fetch('https://notlex-api.vercel.app/find-word?word=' + value);
 		const searchResult = await res.json();
 		if(res.status === 200) {
@@ -57,6 +62,7 @@ export const Search = () => {
 			setSearchResults([]);
 			console.log(searchResult);
 		}
+		setIsFetching(false);
 	}, 1000), []);
 
 	return (
@@ -66,7 +72,12 @@ export const Search = () => {
 				find...</Typography>
 			<FormInput placeholder="Your search word" type="text" required value={ searchValue }
 			           onChange={ e => handleChangeInput(e.target.value) }/>
-			{ searchResults && searchResults.map(res => {
+			{ isFetching ? (
+				<Box display="flex" alignItems="center" flexDirection="column" justifyContent="center">
+					<CircularProgress size={ 50 }/>
+					<LoadingText fontSize={ { xs: 17, md: 17 } }>Looking for your words...</LoadingText>
+				</Box>
+			) : searchResults && searchResults.map(res => {
 				return res.meanings.map(re => {
 					return re.definitions.map(word => {
 						return (
