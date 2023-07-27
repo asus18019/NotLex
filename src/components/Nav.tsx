@@ -19,6 +19,10 @@ const sections = [
 		url: '/search'
 	},
 	{
+		title: 'Add word',
+		url: '/add'
+	},
+	{
 		title: 'About',
 		url: '/about'
 	},

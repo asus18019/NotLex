@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from 'react';
 import debounce from 'lodash/debounce';
 import { DictionaryWordResult } from '@/types';
 import AddIcon from '@mui/icons-material/Add';
+import { useRouter } from 'next/router';
 
 const FormInput = styled('input')({
 	fontWeight: '500',
@@ -17,11 +18,13 @@ const FormInput = styled('input')({
 	color: 'black',
 	border: '1px solid gray',
 	'@media (max-width:900px)': {
-		width: "calc(100% - 32px)",
-	},
+		width: 'calc(100% - 32px)'
+	}
 });
 
 export const Search = () => {
+	const router = useRouter();
+
 	const [showMenu, setShowMenu] = useState(false);
 	const [searchValue, setSearchValue] = useState('');
 	const [searchResults, setSearchResults] = useState<DictionaryWordResult[]>([]);
@@ -33,6 +36,11 @@ export const Search = () => {
 	const handleChangeInput = (value: string) => {
 		setSearchValue(value);
 		debounceFn(value);
+	};
+
+	const handleClickAddWord = (word: { definition: string, example: string }) => {
+		const { definition, example } = word;
+		router.push(`/add?word=${ searchValue }&definition=${ definition }${ example ? `&example=${ example }` : '' }`);
 	};
 
 	const debounceFn = useCallback(debounce(async (value: string) => {
@@ -64,8 +72,12 @@ export const Search = () => {
 						return (
 							<>
 								<Divider/>
-								<Box py={ 2 } display='flex' alignItems='center'>
-									<AddIcon transform='scale(1.8)' sx={{ m: '0 20px 0 0', cursor: 'pointer' }}/>
+								<Box py={ 2 } display="flex" alignItems="center">
+									<AddIcon
+										transform="scale(1.8)"
+										sx={ { m: '0 20px 0 0', cursor: 'pointer' } }
+										onClick={ () => handleClickAddWord(word) }
+									/>
 									<Box>
 										<Typography
 											fontFamily="Montserrat"
@@ -76,11 +88,11 @@ export const Search = () => {
 											{ word.definition }
 										</Typography>
 										<Typography
-											fontWeight={ 300 }
 											fontFamily="Montserrat"
 											margin="5px 0"
 											fontSize="15px"
-											color='#000000a6'
+											fontWeight={ 300 }
+											color="#000000a6"
 										>
 											{ word.example }
 										</Typography>

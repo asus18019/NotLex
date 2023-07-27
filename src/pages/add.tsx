@@ -2,6 +2,7 @@ import Nav from '@/components/Nav';
 import { FormEvent, useEffect, useState } from 'react';
 import { Box, Button, Container, FormControl, styled, Typography } from '@mui/material';
 import Cookies from 'js-cookie';
+import { useSearchParams } from 'next/navigation';
 
 const FormInput = styled('input')({
 	fontWeight: '500',
@@ -31,6 +32,8 @@ const FormText = styled('textarea')({
 const ADD_WORD_API_URL = "https://notlex-api.vercel.app/word";
 
 export const Add = () => {
+	const searchParams = useSearchParams();
+
 	const [showMenu, setShowMenu] = useState(false);
 	const [word, setWord] = useState('');
 	const [category, setCategory] = useState('');
@@ -40,6 +43,13 @@ export const Add = () => {
 	useEffect(() => {
 		setShowMenu(window.screen.width > 900);
 	}, []);
+
+	useEffect(() => {
+		if(!searchParams) return;
+		setWord(searchParams.get('word') || '');
+		setMeaning(searchParams.get('definition') || '');
+		setExample(searchParams.get('example') || '');
+	}, [searchParams]);
 
 	const handleAddWord = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
@@ -65,7 +75,6 @@ export const Add = () => {
 		});
 
 		if(response.ok) {
-			console.log("added");
 			setWord('');
 			setCategory('');
 			setMeaning('');
