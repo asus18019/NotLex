@@ -23,6 +23,10 @@ const sections = [
 		url: '/add'
 	},
 	{
+		title: 'Setting',
+		url: '/settings'
+	},
+	{
 		title: 'About',
 		url: '/about'
 	},
