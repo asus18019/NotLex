@@ -4,6 +4,7 @@ import { Box, Button, Container, FormControl, styled, Typography } from '@mui/ma
 import Cookies from 'js-cookie';
 import { useSearchParams } from 'next/navigation';
 import CircularProgress from '@mui/material/CircularProgress';
+import Head from 'next/head';
 
 const FormInput = styled('input')({
 	fontWeight: '500',
@@ -89,42 +90,47 @@ export const Add = () => {
 	};
 
 	return (
-		<Container maxWidth="lg" sx={ { px: { xs: 0, md: 'auto' } } }>
-			<Nav showMenu={ showMenu } setShowMenu={ () => setShowMenu(!showMenu) }/>
-			<Box width="100%" height="calc(100vh - 81px)" display="flex" justifyContent="center" alignItems="center"
-			     flexDirection="column">
-				<Typography fontFamily="Montserrat" fontSize={ 18 }>
-					Add new word
-				</Typography>
-				<FormControl sx={ { my: '25px', width: '310px' } } component="form" onSubmit={ handleAddWord }>
-					<FormInput placeholder="Word" type="text" value={ word }
-					           onChange={ e => setWord(e.target.value) } required/>
-					<FormInput placeholder="Category" type="text" value={ category }
-					           onChange={ e => setCategory(e.target.value) } required/>
-					<FormText
-						placeholder="Meaning"
-						rows={ 3 }
-						required
-						value={ meaning }
-						onChange={ e => setMeaning(e.target.value) }
-					/>
-					<FormText
-						placeholder="Example sentence"
-						rows={ 5 }
-						required
-						value={ example }
-						onChange={ e => setExample(e.target.value) }
-					/>
-					<Button sx={ { mt: '25px' } } variant="contained" type="submit" disabled={ isFetching } fullWidth>
-						{ isFetching ? (
-							<CircularProgress size={ 24 }/>
-						) : (
-							<Typography fontFamily="Montserrat">Save</Typography>
-						) }
-					</Button>
-				</FormControl>
-			</Box>
-		</Container>
+		<>
+			<Head>
+				<title>NotLex | Save</title>
+			</Head>
+			<Container maxWidth="lg" sx={ { px: { xs: 0, md: 'auto' } } }>
+				<Nav showMenu={ showMenu } setShowMenu={ () => setShowMenu(!showMenu) }/>
+				<Box width="100%" height="calc(100vh - 81px)" display="flex" justifyContent="center" alignItems="center"
+				     flexDirection="column">
+					<Typography fontFamily="Montserrat" fontSize={ 18 }>
+						Add new word
+					</Typography>
+					<FormControl sx={ { my: '25px', width: '310px' } } component="form" onSubmit={ handleAddWord }>
+						<FormInput placeholder="Word" type="text" value={ word }
+						           onChange={ e => setWord(e.target.value) } required/>
+						<FormInput placeholder="Category" type="text" value={ category }
+						           onChange={ e => setCategory(e.target.value) } required/>
+						<FormText
+							placeholder="Meaning"
+							rows={ 3 }
+							required
+							value={ meaning }
+							onChange={ e => setMeaning(e.target.value) }
+						/>
+						<FormText
+							placeholder="Example sentence"
+							rows={ 5 }
+							required
+							value={ example }
+							onChange={ e => setExample(e.target.value) }
+						/>
+						<Button sx={ { mt: '25px' } } variant="contained" type="submit" disabled={ isFetching } fullWidth>
+							{ isFetching ? (
+								<CircularProgress size={ 24 }/>
+							) : (
+								<Typography fontFamily="Montserrat">Save</Typography>
+							) }
+						</Button>
+					</FormControl>
+				</Box>
+			</Container>
+		</>
 	);
 };
 

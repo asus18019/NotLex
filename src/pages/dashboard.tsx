@@ -111,6 +111,7 @@ export const Dashboard = () => {
 	return (
 		<>
 			<Head>
+				<title>NotLex | Dashboard</title>
 				{ words.map(w => {
 					return (
 						<link key={ w.id }

@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import Cookies from 'js-cookie'
 import CircularProgress from '@mui/material/CircularProgress';
+import Head from 'next/head';
 
 const Em = styled('em')({
 	color: 'rgb(9,102,210)'
@@ -85,73 +86,78 @@ export default function Home() {
 	}
 
 	return (
-		<Container maxWidth="lg" sx={{ px: { xs: 0, md: 'auto' } }}>
-			<Nav showMenu={ showMenu } setShowMenu={ () => setShowMenu(!showMenu) }/>
-			<Box display="flex" justifyContent="center" alignItems="center" flexDirection="column"
-			     height="calc(100vh - 81px)">
-				<BlurredCircle zIndex={ 1 }/>
-				<Title zIndex={ 10 } fontSize={{ xs: '22px', md: '36px' }} width={{ xs: 'auto', md: 900 }}>
-					Welcome to <Em sx={{ fontSize: { xs: 32, md: 52 } }}>NotLex</Em> - Your English Word Learning Hub!
-				</Title>
-				<SubText color="rgba(0,0,0,0.55)" width={{ xs: 'auto', md: 900 }} fontSize={{ xs: '1rem', md: '17px' }} zIndex={ 10 } marginTop={ 3 }>Are you tired of
-					traditional language learning
-					methods ? Say
-					goodbye to mundane vocabulary drills and welcome to NotLex, where the world of English words comes
-					to life!</SubText>
-				<Box marginTop={ 3 } zIndex={ 10 }>
-					<Button sx={ { mx: 2 } } variant="contained">
-						<Typography fontFamily="Montserrat">Connect</Typography>
-					</Button>
-					<Button sx={ { mx: 2 } } variant="outlined">
-						<Typography fontFamily="Montserrat">Learn more</Typography>
-					</Button>
-				</Box>
-			</Box>
-			<Divider/>
-			<Box display="flex" justifyContent="center" alignItems="center" flexDirection="column">
-				<Box display="flex" justifyContent="space-between" width="100%" margin="70px 0" flexDirection={{ xs: "column-reverse", md: "row" }}>
-					<Box width={{ xs: "100%", md: "50%" }} display="flex" flexDirection="column" alignItems="center" marginTop={{ xs: '45px', md: 0 }}>
-						<Typography
-							fontFamily="Montserrat"
-							fontWeight="700"
-							fontSize="18px"
-						>Connect your account</Typography>
-						<FormControl sx={ { mt: '25px', width: '310px' } } fullWidth component="form" onSubmit={ handleLogin }>
-							<FormInput placeholder="SECRET KEY" type="text" required value={ secret } onChange={ e => setSecret(e.target.value) }/>
-							<FormInput placeholder="DATABASE ID" type="text" required value={ dbId } onChange={ e => setDbId(e.target.value) }/>
-							<Button sx={{ mt: '25px' }} variant="contained" type="submit" fullWidth disabled={ isFetching }>
-								{ isFetching ? (
-									<CircularProgress size={ 24 }/>
-								) : (
-									<Typography fontFamily="Montserrat">Submit</Typography>
-								) }
-							</Button>
-						</FormControl>
-					</Box>
-					<Box width={{ xs: "100%", md: "50%" }} display="flex" flexDirection="column" alignItems="center">
-						<Typography
-							fontFamily="Montserrat"
-							fontWeight="700"
-							fontSize="18px"
-						>
-							Log in using your Notion account
-						</Typography>
-						<SubText color="rgba(0,0,0,0.55)" marginTop="15px" width="100%">
-							Ready to continue your word-learning journey with NotLex? Simply log in using your
-							Notion account. Create an integration, copy an paste your access token and database ID.
-						</SubText>
-						<SubText color="rgba(0,0,0,0.55)" marginTop="15px" width="100%">
-							Need Help? Check out our <Link href="/">detailed guide</Link> on how to start using NotLex
-						</SubText>
+		<>
+			<Head>
+				<title>NotLex | Home</title>
+			</Head>
+			<Container maxWidth="lg" sx={{ px: { xs: 0, md: 'auto' } }}>
+				<Nav showMenu={ showMenu } setShowMenu={ () => setShowMenu(!showMenu) }/>
+				<Box display="flex" justifyContent="center" alignItems="center" flexDirection="column"
+				     height="calc(100vh - 81px)">
+					<BlurredCircle zIndex={ 1 }/>
+					<Title zIndex={ 10 } fontSize={{ xs: '22px', md: '36px' }} width={{ xs: 'auto', md: 900 }}>
+						Welcome to <Em sx={{ fontSize: { xs: 32, md: 52 } }}>NotLex</Em> - Your English Word Learning Hub!
+					</Title>
+					<SubText color="rgba(0,0,0,0.55)" width={{ xs: 'auto', md: 900 }} fontSize={{ xs: '1rem', md: '17px' }} zIndex={ 10 } marginTop={ 3 }>Are you tired of
+						traditional language learning
+						methods ? Say
+						goodbye to mundane vocabulary drills and welcome to NotLex, where the world of English words comes
+						to life!</SubText>
+					<Box marginTop={ 3 } zIndex={ 10 }>
+						<Button sx={ { mx: 2 } } variant="contained">
+							<Typography fontFamily="Montserrat">Connect</Typography>
+						</Button>
+						<Button sx={ { mx: 2 } } variant="outlined">
+							<Typography fontFamily="Montserrat">Learn more</Typography>
+						</Button>
 					</Box>
 				</Box>
-			</Box>
-			<Divider/>
-			<Box display='flex' justifyContent='center' alignItems='center' margin='70px 0'>
-				<Title zIndex={ 10 } fontSize="24px">
-					What is <Em sx={{ fontSize: 30 }}>NotLex</Em> ?
-				</Title>
-			</Box>
-		</Container>
+				<Divider/>
+				<Box display="flex" justifyContent="center" alignItems="center" flexDirection="column">
+					<Box display="flex" justifyContent="space-between" width="100%" margin="70px 0" flexDirection={{ xs: "column-reverse", md: "row" }}>
+						<Box width={{ xs: "100%", md: "50%" }} display="flex" flexDirection="column" alignItems="center" marginTop={{ xs: '45px', md: 0 }}>
+							<Typography
+								fontFamily="Montserrat"
+								fontWeight="700"
+								fontSize="18px"
+							>Connect your account</Typography>
+							<FormControl sx={ { mt: '25px', width: '310px' } } fullWidth component="form" onSubmit={ handleLogin }>
+								<FormInput placeholder="SECRET KEY" type="text" required value={ secret } onChange={ e => setSecret(e.target.value) }/>
+								<FormInput placeholder="DATABASE ID" type="text" required value={ dbId } onChange={ e => setDbId(e.target.value) }/>
+								<Button sx={{ mt: '25px' }} variant="contained" type="submit" fullWidth disabled={ isFetching }>
+									{ isFetching ? (
+										<CircularProgress size={ 24 }/>
+									) : (
+										<Typography fontFamily="Montserrat">Submit</Typography>
+									) }
+								</Button>
+							</FormControl>
+						</Box>
+						<Box width={{ xs: "100%", md: "50%" }} display="flex" flexDirection="column" alignItems="center">
+							<Typography
+								fontFamily="Montserrat"
+								fontWeight="700"
+								fontSize="18px"
+							>
+								Log in using your Notion account
+							</Typography>
+							<SubText color="rgba(0,0,0,0.55)" marginTop="15px" width="100%">
+								Ready to continue your word-learning journey with NotLex? Simply log in using your
+								Notion account. Create an integration, copy an paste your access token and database ID.
+							</SubText>
+							<SubText color="rgba(0,0,0,0.55)" marginTop="15px" width="100%">
+								Need Help? Check out our <Link href="/">detailed guide</Link> on how to start using NotLex
+							</SubText>
+						</Box>
+					</Box>
+				</Box>
+				<Divider/>
+				<Box display='flex' justifyContent='center' alignItems='center' margin='70px 0'>
+					<Title zIndex={ 10 } fontSize="24px">
+						What is <Em sx={{ fontSize: 30 }}>NotLex</Em> ?
+					</Title>
+				</Box>
+			</Container>
+		</>
 	);
 }
