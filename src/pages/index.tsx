@@ -116,19 +116,17 @@ export default function Home() {
 							fontWeight="700"
 							fontSize="18px"
 						>Connect your account</Typography>
-						<form onSubmit={ handleLogin }>
-							<FormControl sx={ { my: '25px' } } fullWidth>
-								<FormInput placeholder="SECRET KEY" type="text" required value={ secret } onChange={ e => setSecret(e.target.value) }/>
-								<FormInput placeholder="DATABASE ID" type="text" required value={ dbId } onChange={ e => setDbId(e.target.value) }/>
-							</FormControl>
-							<Button variant="contained" type="submit" fullWidth disabled={ isFetching }>
+						<FormControl sx={ { mt: '25px', width: '310px' } } fullWidth component="form" onSubmit={ handleLogin }>
+							<FormInput placeholder="SECRET KEY" type="text" required value={ secret } onChange={ e => setSecret(e.target.value) }/>
+							<FormInput placeholder="DATABASE ID" type="text" required value={ dbId } onChange={ e => setDbId(e.target.value) }/>
+							<Button sx={{ mt: '25px' }} variant="contained" type="submit" fullWidth disabled={ isFetching }>
 								{ isFetching ? (
 									<CircularProgress size={ 24 }/>
 								) : (
 									<Typography fontFamily="Montserrat">Submit</Typography>
 								) }
 							</Button>
-						</form>
+						</FormControl>
 					</Box>
 					<Box width={{ xs: "100%", md: "50%" }} display="flex" flexDirection="column" alignItems="center">
 						<Typography
