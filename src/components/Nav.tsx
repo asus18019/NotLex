@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import { Toolbar, styled, Divider, Typography, Box } from '@mui/material';
-import Head from 'next/head';
 import Logo from '@/svg/Logo';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
@@ -23,7 +22,7 @@ const sections = [
 		url: '/add'
 	},
 	{
-		title: 'Setting',
+		title: 'Settings',
 		url: '/settings'
 	},
 	{
@@ -57,13 +56,6 @@ const NavbarLink = styled(Link)({
 export default function Nav({ showMenu, setShowMenu }: { showMenu: boolean, setShowMenu: () => void }) {
 	return (
 		<>
-			<Head>
-				<link rel="preconnect" href="https://fonts.googleapis.com"/>
-				<link rel="preconnect" href="https://fonts.gstatic.com"/>
-				<link
-					href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Montserrat:wght@500;600;700&family=Titillium+Web:wght@600&display=swap"
-					rel="stylesheet"/>
-			</Head>
 			<Toolbar
 				component="nav"
 				variant="dense"
