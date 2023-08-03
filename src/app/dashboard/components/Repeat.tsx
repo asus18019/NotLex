@@ -1,4 +1,5 @@
-import WordCard from '@/app/components/WordCard';
+"use client"
+import WordCard from '@/app/dashboard/components/WordCard';
 import CircularProgress from '@mui/material/CircularProgress';
 import { Box, styled, Typography } from '@mui/material';
 import { CardData } from '@/types';

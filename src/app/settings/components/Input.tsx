@@ -8,7 +8,7 @@ interface SettingsInputProps {
 	handleMouseDownPassword: (e: React.MouseEvent<HTMLButtonElement>) => void
 }
 
-export const SettingsInput = ({
+export const Input = ({
 	value,
 	showPassword,
 	handleClickShowPassword,

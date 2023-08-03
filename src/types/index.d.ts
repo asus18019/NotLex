@@ -21,6 +21,13 @@ export type SwipeButtonProps = {
 	id: number;
 };
 
+export type WordDefinition = {
+	definition: string,
+	synonyms: string[],
+	antonyms: string[],
+	example: string
+}
+
 export type DictionaryWordResult = {
 	word: string,
 	phonetic: string,
@@ -35,12 +42,7 @@ export type DictionaryWordResult = {
 	} [],
 	meanings: {
 		partOfSpeech: string,
-		definitions: {
-			definition: string,
-			synonyms: string[],
-			antonyms: string[],
-			example: string
-		} [],
+		definitions: WordDefinition[],
 		synonyms: string[],
 		antonyms: string[]
 	} [],

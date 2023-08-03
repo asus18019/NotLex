@@ -1,3 +1,4 @@
+"use client"
 import { CardProps } from '@/types';
 import {
 	motion,
