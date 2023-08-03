@@ -1,8 +1,6 @@
-'use client';
-import Nav from '@/app/components/Nav';
-import { Box, Button, Container, styled, Typography, Divider, CardMedia } from '@mui/material';
+"use client"
+import { Box, Button, styled, Typography, Divider, CardMedia } from '@mui/material';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
 import IndexForm from '@/app/components/IndexForm';
 
 const Em = styled('em')({
@@ -59,15 +57,9 @@ const ContentCardMedia = styled(CardMedia)(({ theme }) => ({
 }));
 
 export default function Home() {
-	const [showMenu, setShowMenu] = useState(false);
-
-	useEffect(() => {
-		setShowMenu(window.screen.width > 900);
-	}, []);
 
 	return (
-		<Container maxWidth="lg" disableGutters>
-			<Nav showMenu={ showMenu } setShowMenu={ () => setShowMenu(!showMenu) }/>
+		<>
 			<Box display="flex" justifyContent="center" alignItems="center" flexDirection="column"
 			     height="calc(100vh - 81px)">
 				<BlurredCircle zIndex={ 1 }/>
@@ -175,6 +167,6 @@ export default function Home() {
 					</SubText>
 				</Box></ContentContainer>
 			<Divider/>
-		</Container>
+		</>
 	);
 }
