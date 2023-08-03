@@ -1,10 +1,11 @@
-import Nav from '@/components/Nav';
+"use client"
+import Nav from '@/app/components/Nav';
 import { Box, Container, styled, Typography } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 import { CardData } from '@/types';
 import Cookies from 'js-cookie';
 import Head from 'next/head';
-import Repeat from '@/components/programs/Repeat';
+import Repeat from '@/app/components/programs/Repeat';
 
 const api_url = 'https://notlex-api.vercel.app/words';
 
@@ -51,7 +52,7 @@ export const ProgramsContainer = styled(Box)({
 	textAlign: "center"
 });
 
-export const Dashboard = () => {
+export default function Dashboard() {
 	const firstRender = useRef(true);
 	const programs = ['Repeat', 'Guess the word', 'Guess the meaning'];
 	const [showMenu, setShowMenu] = useState(false);
@@ -150,5 +151,3 @@ export const Dashboard = () => {
 		</>
 	);
 };
-
-export default Dashboard;

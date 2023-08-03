@@ -1,12 +1,13 @@
+"use client"
 import { Box, Container, Divider, styled, Typography } from '@mui/material';
-import Nav from '@/components/Nav';
+import Nav from '@/app/components/Nav';
 import { useCallback, useEffect, useState } from 'react';
 import debounce from 'lodash/debounce';
 import { DictionaryWordResult } from '@/types';
 import AddIcon from '@mui/icons-material/Add';
 import { useRouter } from 'next/router';
 import CircularProgress from '@mui/material/CircularProgress';
-import { LoadingText } from '@/components/programs/Repeat';
+import { LoadingText } from '@/app/components/programs/Repeat';
 import Head from 'next/head';
 
 const FormInput = styled('input')({
@@ -25,7 +26,7 @@ const FormInput = styled('input')({
 	}
 });
 
-export const Search = () => {
+export default function Search() {
 	const router = useRouter();
 
 	const [showMenu, setShowMenu] = useState(false);
@@ -124,5 +125,3 @@ export const Search = () => {
 		</>
 	);
 };
-
-export default Search;

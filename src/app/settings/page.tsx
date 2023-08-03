@@ -1,3 +1,4 @@
+"use client"
 import {
 	Box,
 	Container,
@@ -5,13 +6,13 @@ import {
 	Typography
 } from '@mui/material';
 import Head from 'next/head';
-import Nav from '@/components/Nav';
+import Nav from '@/app/components/Nav';
 import { useEffect, useState } from 'react';
-import { SettingsInput } from '@/components/UI/SettingsInput';
+import { SettingsInput } from '@/app/components/UI/SettingsInput';
 import Link from 'next/link';
 import Cookies from 'js-cookie';
 
-export const Settings = () => {
+export default function Settings () {
 	const [showMenu, setShowMenu] = useState(false);
 
 	const [secretKey, setSecretKey] = useState('');
@@ -87,5 +88,3 @@ export const Settings = () => {
 		</>
 	);
 };
-
-export default Settings;

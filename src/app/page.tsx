@@ -1,4 +1,5 @@
-import Nav from '@/components/Nav';
+"use client"
+import Nav from '@/app/components/Nav';
 import { Box, Button, Container, styled, Typography, FormControl, Divider, CardMedia } from '@mui/material';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';

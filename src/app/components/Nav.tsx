@@ -3,6 +3,7 @@ import { Toolbar, styled, Divider, Typography, Box } from '@mui/material';
 import Logo from '@/svg/Logo';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
+import { useRouter } from 'next/router';
 
 const sections = [
 	{
@@ -54,6 +55,7 @@ const NavbarLink = styled(Link)({
 });
 
 export default function Nav({ showMenu, setShowMenu }: { showMenu: boolean, setShowMenu: () => void }) {
+	// const router = useRouter();
 	return (
 		<>
 			<Toolbar

@@ -1,4 +1,5 @@
-import Nav from '@/components/Nav';
+"use client"
+import Nav from '@/app/components/Nav';
 import { FormEvent, useEffect, useState } from 'react';
 import { Box, Button, Container, FormControl, styled, Typography } from '@mui/material';
 import Cookies from 'js-cookie';
@@ -33,7 +34,7 @@ const FormText = styled('textarea')({
 
 const ADD_WORD_API_URL = 'https://notlex-api.vercel.app/word';
 
-export const Add = () => {
+export default function Add() {
 	const searchParams = useSearchParams();
 
 	const [showMenu, setShowMenu] = useState(false);
@@ -133,5 +134,3 @@ export const Add = () => {
 		</>
 	);
 };
-
-export default Add;
