@@ -28,11 +28,7 @@ export const Repeat = ({ words, activeWord, removeCard, isFetching }: RepeatProp
 				words.map((word) => (
 					<WordCard key={ word.id } { ...{ data: word, active: activeWord === word, removeCard } }/>
 				))) : (
-				<h2 className="absolute z-10 text-center text-2xl font-bold text-textGrey ">
-					Excessive swiping can be injurious to health!
-					<br/>
-					Come back tomorrow for more
-				</h2>
+				<Typography fontFamily='Montseratt'>Your dictionary is empty</Typography>
 			) }
 		</Box>
 	);
