@@ -77,8 +77,7 @@ export default function ProgramsWrapper() {
 	const [words, setWords] = useState<CardData[]>([]);
 
 	const activeWord = words[words.length - 1];
-	let fetchNewWords = words.length <= 5;
-	let temp: CardData[] = [];
+	const fetchNewWords = !words.length;
 
 	useEffect(() => {
 		if(firstRender.current) {
@@ -91,19 +90,15 @@ export default function ProgramsWrapper() {
 		}
 
 		if(fetchNewWords) {
+			setIsFetching(true);
 			fetchData()
-				.then(data => temp = data)
+				.then(data => setWords([...data, ...words]))
 				.finally(() => setIsFetching(false));
-			fetchNewWords = false;
 		}
 	}, [fetchNewWords]);
 
 	const removeCard = (id: string, action: 'right' | 'left') => {
 		setWords((prev) => prev.filter((card) => card.id !== id));
-
-		if(temp.length) {
-			setWords((prev) => [...prev, ...temp]);
-		}
 
 		if(action === 'right') {
 			console.log('swapped right');
