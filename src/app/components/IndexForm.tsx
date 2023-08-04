@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import { Button, FormControl, styled, Typography } from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
 import Cookies from 'js-cookie';

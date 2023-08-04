@@ -2,6 +2,7 @@
 import { Box, Button, styled, Typography, Divider, CardMedia } from '@mui/material';
 import Link from 'next/link';
 import IndexForm from '@/app/components/IndexForm';
+import { Metadata } from 'next';
 
 const Em = styled('em')({
 	color: 'rgb(9,102,210)'
@@ -56,8 +57,12 @@ const ContentCardMedia = styled(CardMedia)(({ theme }) => ({
 	component: 'img'
 }));
 
-export default function Home() {
+// export const metadata: Metadata = {
+// 	title: 'Home | NotLex',
+// 	description: 'NotLex - homepage',
+// }
 
+export default function Home() {
 	return (
 		<>
 			<Box display="flex" justifyContent="center" alignItems="center" flexDirection="column"

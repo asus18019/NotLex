@@ -2,12 +2,18 @@
 import { Container } from '@mui/material';
 import '../styles/globals.css';
 import Nav from '@/app/components/Nav';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, ReactNode } from 'react';
+import { Inter } from 'next/font/google';
+
+const inter = Inter({
+	subsets: ['latin'],
+	display: 'swap',
+})
 
 export default function RootLayout({
 	children
 }: {
-	children: React.ReactNode
+	children: ReactNode
 }) {
 	const [showMenu, setShowMenu] = useState(false);
 
@@ -16,7 +22,7 @@ export default function RootLayout({
 	}, []);
 
 	return (
-		<html lang="en">
+		<html lang="en" className={inter.className}>
 		<body>
 		<Container maxWidth="lg" disableGutters>
 			<Nav showMenu={ showMenu } setShowMenu={ () => setShowMenu(!showMenu) }/>

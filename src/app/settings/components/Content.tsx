@@ -1,3 +1,4 @@
+"use client"
 import { Box, Paper, styled, Typography } from '@mui/material';
 import { Input } from '@/app/settings/components/Input';
 import Link from 'next/link';

@@ -1,6 +1,11 @@
-'use client';
 import { Box } from '@mui/material';
 import Content from '@/app/settings/components/Content';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+	title: 'Settings | NotLex',
+	description: 'Configure your data',
+}
 
 export default function Settings() {
 	return (

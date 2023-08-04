@@ -1,5 +1,11 @@
 import { Box, Typography } from '@mui/material';
 import Form from '@/app/add/components/Form';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+	title: 'Add | NotLex',
+	description: 'Add a new word to your Notion database using NotLex',
+}
 
 export default function Add() {
 	return (
