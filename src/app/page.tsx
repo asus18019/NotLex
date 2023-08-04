@@ -117,7 +117,7 @@ export default function Home() {
 				</Title>
 				<SubText mt="15px" width={ { xs: 'auto', md: 900 } }>
 					NotLex is an innovative online platform designed to revolutionize the way you learn English
-					words. Leveraging the power of Notion, the popular note-taking app, we've created a seamless
+					words. Leveraging the power of Notion, the popular note-taking app, we&apos;ve created a seamless
 					learning experience that puts you in control of your language journey.
 				</SubText>
 			</ContentContainer>
@@ -128,7 +128,7 @@ export default function Home() {
 				<Box width={ { xs: '100%', md: '50%' } } marginBottom={ { xs: '25px', md: 0 } }>
 					<Title fontSize="24px">Your Personal Word Database</Title>
 					<SubText mt="15px">
-						With NotLex, you'll have your very own word database at your fingertips. Store words,
+						With NotLex, you&apos;ll have your very own word database at your fingertips. Store words,
 						meanings,
 						examples, translations, and more in a structured and organized manner. Our intelligent API
 						integration with Notion ensures that you can effortlessly sync and access your vocabulary,
@@ -145,7 +145,7 @@ export default function Home() {
 					<SubText mt="15px">
 						Learning should be fun, not a chore. NotLex offers a variety of interactive and engaging
 						learning programs to suit your preferences. Choose from a range of activities such as
-						selecting the correct translation, matching words with their meanings, and more. We're
+						selecting the correct translation, matching words with their meanings, and more. We&apos;re
 						constantly innovating, so expect exciting new features on the horizon!
 					</SubText>
 				</Box></ContentContainer>
@@ -166,7 +166,7 @@ export default function Home() {
 				<Box width={ { xs: '100%', md: '50%' } } marginBottom={ { xs: '25px', md: 0 } }>
 					<Title fontSize="24px">Learn Anytime, Anywhere</Title>
 					<SubText mt="15px">
-						Whether you're on your desktop, laptop, or mobile device, NotLex adapts seamlessly to
+						Whether you&apos;re on your desktop, laptop, or mobile device, NotLex adapts seamlessly to
 						provide an optimal learning experience. Switch between light and dark themes to suit your
 						preferences and protect your eyes during those late-night study sessions.
 					</SubText>

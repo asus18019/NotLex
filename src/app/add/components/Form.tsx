@@ -13,7 +13,7 @@ const FormInput = styled('input')({
 	padding: '12px 16px',
 	borderRadius: '6px',
 	border: '1px solid gray',
-	':nth-child(2n)': {
+	':nth-of-type(2)': {
 		marginTop: '20px'
 	}
 });

@@ -1,4 +1,4 @@
-"use client"
+'use client';
 import { Box, styled, Typography } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 import Repeat from '@/app/dashboard/components/Repeat';
@@ -40,17 +40,17 @@ const Title = styled(Typography)({
 const ProgramsBox = styled(Box)(({ theme }) => ({
 	marginTop: '50px',
 	display: 'flex',
-	justifyContent: "center",
-	flexDirection: "column",
-	alignSelf: "center",
-	textAlign: "center",
+	justifyContent: 'center',
+	flexDirection: 'column',
+	alignSelf: 'center',
+	textAlign: 'center',
 	borderRadius: '30px',
 	width: '95%',
-	backgroundColor: "rgb(9,102,210, 0.15)",
+	backgroundColor: 'rgb(9,102,210, 0.15)',
 	boxShadow: 'none',
-	[theme.breakpoints.up("md")]: {
+	[theme.breakpoints.up('md')]: {
 		width: '50%',
-		boxShadow: '0 0 100px 10px rgb(9,102,210, 0.4)',
+		boxShadow: '0 0 100px 10px rgb(9,102,210, 0.4)'
 	}
 }));
 
@@ -115,31 +115,26 @@ export default function ProgramsWrapper() {
 	const selectProgram = (program: string) => {
 		switch(program) {
 		case ('Repeat') :
-			return <Repeat words={ words } activeWord={ activeWord } removeCard={ removeCard } isFetching={ isFetching }/>;
+			return <Repeat { ...{ words, activeWord, removeCard, isFetching } }/>;
 		default:
 			return null;
 		}
 	};
 
-	return (
-		<>
-			{ !selectedProgram ? (
-				<ProgramsContainer>
-					<Title zIndex={ 10 } fontSize={ { xs: '20px', md: '24px' } }>Please select a program</Title>
-					<ProgramsBox>
-						{ programs.map(program => {
-							return (
-								<MenuItem onClick={ () => setSelectedProgram(program) }
-								          padding={ { xs: '15px 0', md: '15px 100px' } } key={ program }>
-									<Typography fontFamily="Montserrat" fontWeight="500"
-									            fontSize={ { xs: 17, md: 20 } }>{ program }</Typography>
-								</MenuItem>
-							);
-						}) }
-					</ProgramsBox>
-				</ProgramsContainer>
-			) : selectProgram(selectedProgram)
-			}
-		</>
-	);
+	return !selectedProgram ? (
+		<ProgramsContainer>
+			<Title zIndex={ 10 } fontSize={ { xs: '20px', md: '24px' } }>Please select a program</Title>
+			<ProgramsBox>
+				{ programs.map(program => {
+					return (
+						<MenuItem onClick={ () => setSelectedProgram(program) }
+						          padding={ { xs: '15px 0', md: '15px 100px' } } key={ program }>
+							<Typography fontFamily="Montserrat" fontWeight="500"
+							            fontSize={ { xs: 17, md: 20 } }>{ program }</Typography>
+						</MenuItem>
+					);
+				}) }
+			</ProgramsBox>
+		</ProgramsContainer>
+	) : selectProgram(selectedProgram);
 }

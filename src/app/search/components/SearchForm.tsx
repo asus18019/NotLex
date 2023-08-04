@@ -1,9 +1,9 @@
 "use client"
 import { Divider, styled } from '@mui/material';
-import { useCallback, useState } from 'react';
+import { Fragment, useCallback, useState } from 'react';
 import { DictionaryWordResult } from '@/types';
 import debounce from 'lodash/debounce';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import Loader from '@/app/search/components/Loader';
 import WordResult from '@/app/search/components/WordResult';
 
@@ -24,7 +24,7 @@ const FormInput = styled('input')({
 });
 
 export default function SearchForm() {
-	// const router = useRouter();
+	const router = useRouter();
 	const [isFetching, setIsFetching] = useState(false);
 
 	const [searchValue, setSearchValue] = useState('');
@@ -37,7 +37,7 @@ export default function SearchForm() {
 
 	const handleClickAddWord = (word: { definition: string, example: string }) => {
 		const { definition, example } = word;
-		// router.push(`/add?word=${ searchValue }&definition=${ definition }${ example ? `&example=${ example }` : '' }`);
+		router.push(`/add?word=${ searchValue }&definition=${ definition }${ example ? `&example=${ example }` : '' }`);
 	};
 
 	const debounceFn = useCallback(debounce(async (value: string) => {
@@ -71,15 +71,15 @@ export default function SearchForm() {
 				<Loader/>
 			) : searchResults && searchResults.map(res => {
 				return res.meanings.map(re => {
-					return re.definitions.map(word => {
+					return re.definitions.map((word, index) => {
 						return (
-							<>
+							<Fragment key={ index }>
 								<Divider/>
 								<WordResult
 									word={ word }
 									handleClickAddWord={ handleClickAddWord }
 								/>
-							</>
+							</Fragment>
 						);
 					});
 				});
