@@ -52,3 +52,10 @@ export type DictionaryWordResult = {
 	},
 	sourceUrls: string[]
 }
+
+export type SearchParamsType = { [key: string]: string | string[] | undefined };
+
+export type ServerComponentPropsType = {
+	params: { slug: string }
+	searchParams: SearchParamsType
+}

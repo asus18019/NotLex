@@ -23,12 +23,14 @@ const FormInput = styled('input')({
 	}
 });
 
-export default function SearchForm() {
+export const DICTIONARY_API = 'https://notlex-api.vercel.app/find-word?word='
+
+export default function SearchForm({ data, searchParam }: { data: DictionaryWordResult[], searchParam: string }) {
 	const router = useRouter();
 	const [isFetching, setIsFetching] = useState(false);
 
-	const [searchValue, setSearchValue] = useState('');
-	const [searchResults, setSearchResults] = useState<DictionaryWordResult[]>([]);
+	const [searchValue, setSearchValue] = useState(searchParam);
+	const [searchResults, setSearchResults] = useState<DictionaryWordResult[]>(data);
 
 	const handleChangeInput = (value: string) => {
 		setSearchValue(value);
@@ -41,12 +43,14 @@ export default function SearchForm() {
 	};
 
 	const debounceFn = useCallback(debounce(async (value: string) => {
-		if(!value.trim()) {
+        router.push(`/search${ value.trim() && `?search=${ value }` }`);
+
+        if(!value.trim()) {
 			setSearchResults([]);
 			return;
 		}
 
-		setIsFetching(true);
+        setIsFetching(true);
 		const res = await fetch('https://notlex-api.vercel.app/find-word?word=' + value);
 		const searchResult = await res.json();
 		if(res.status === 200) {

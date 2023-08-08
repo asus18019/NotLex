@@ -1,9 +1,10 @@
 'use client';
 import { Button, FormControl, styled, Typography } from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
-import { FormEvent, useEffect, useState } from 'react';
+import { FormEvent, useState } from 'react';
 import Cookies from 'js-cookie';
-import { useSearchParams } from 'next/navigation';
+import { SearchParamsType } from '@/types';
+import { useRouter } from 'next/navigation';
 
 const FormInput = styled('input')({
 	fontWeight: '500',
@@ -32,22 +33,14 @@ const FormText = styled('textarea')({
 
 const ADD_WORD_API_URL = 'https://notlex-api.vercel.app/word';
 
-export default function Form() {
-	const searchParams = useSearchParams();
+export default function Form({ searchParams }: { searchParams: SearchParamsType }) {
+    const router = useRouter();
+    const [isFetching, setIsFetching] = useState(false);
 
-	const [isFetching, setIsFetching] = useState(false);
-
-	const [word, setWord] = useState('');
+	const [word, setWord] = useState(searchParams.word);
 	const [category, setCategory] = useState('');
-	const [meaning, setMeaning] = useState('');
-	const [example, setExample] = useState('');
-
-	useEffect(() => {
-		if(!searchParams) return;
-		setWord(searchParams.get('word') || '');
-		setMeaning(searchParams.get('definition') || '');
-		setExample(searchParams.get('example') || '');
-	}, [searchParams]);
+	const [meaning, setMeaning] = useState(searchParams.definition);
+	const [example, setExample] = useState(searchParams.example);
 
 	const handleAddWord = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
@@ -71,7 +64,8 @@ export default function Form() {
 			setMeaning('');
 			setExample('');
 
-		} catch(e) {
+            router.push('/add');
+        } catch(e) {
 			console.log(e);
 		} finally {
 			setIsFetching(false);
