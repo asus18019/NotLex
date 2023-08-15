@@ -92,7 +92,13 @@ export default function Nav({ showMenu, setShowMenu }: { showMenu: boolean, setS
 						!showMenu ? <MenuIcon sx={ { display: { xs: 'flex', md: 'none' }, alignSelf: 'flex-end' } }
 						                      cursor="pointer" onClick={ setShowMenu }/> : (
 							sections.map((section) => (
-								<NavbarLink key={ section.title } href={ section.url }>{ section.title }</NavbarLink>
+								<NavbarLink
+                                        key={ section.title }
+                                        href={ section.url }
+                                        onClick={ setShowMenu }
+                                >
+                                    { section.title }
+                                </NavbarLink>
 							)))
 					}
 				</Box>

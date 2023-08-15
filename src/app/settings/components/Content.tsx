@@ -2,7 +2,7 @@
 import { Box, Paper, styled, Typography } from '@mui/material';
 import { Input } from '@/app/settings/components/Input';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Cookies from 'js-cookie';
 
 const PaperWrapper = styled(Paper)(({ theme }) => ({
@@ -17,18 +17,11 @@ const PaperWrapper = styled(Paper)(({ theme }) => ({
 }));
 
 export default function Content() {
-	const [secretKey, setSecretKey] = useState('');
-	const [showSecretKey, setShowSecretKey] = useState(false);
-	const [databaseId, setDatabaseId] = useState('');
-	const [showDatabaseId, setShowDatabaseId] = useState(false);
+    const credentials = Cookies.get('credentials') || '';
+    const { secret, database_id: databaseId } = JSON.parse(credentials);
 
-	useEffect(() => {
-		const credentials = Cookies.get('credentials');
-		if(!credentials) return;
-		const { secret, database_id } = JSON.parse(credentials);
-		setSecretKey(secret);
-		setDatabaseId(database_id);
-	}, []);
+	const [showSecretKey, setShowSecretKey] = useState(false);
+	const [showDatabaseId, setShowDatabaseId] = useState(false);
 
 	return (
 		<PaperWrapper variant="elevation" elevation={ 4 }>
@@ -37,9 +30,9 @@ export default function Content() {
 			<Box display="flex" justifyContent="space-between" marginTop="30px">
 				<Typography fontFamily="Montserrat" fontWeight="400" fontSize={ 15 }
 				            alignSelf="center">SECRET_KEY</Typography>
-				{ secretKey ? (
+				{ secret ? (
 					<Input
-						value={ secretKey }
+						value={ secret }
 						showPassword={ showSecretKey }
 						handleClickShowPassword={ () => setShowSecretKey(show => !show) }
 						handleMouseDownPassword={ e => e.preventDefault() }
