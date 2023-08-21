@@ -1,7 +1,7 @@
 "use client";
 import { Button, FormControl, styled, Typography } from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
-import Cookies from 'js-cookie';
+import { setCookie } from 'cookies-next';
 import { useState } from 'react';
 
 const FormInput = styled('input')({
@@ -38,7 +38,7 @@ export default function IndexForm() {
 
 			if(res.ok) {
 				const credentials = { secret, database_id: dbId };
-				Cookies.set('credentials', JSON.stringify(credentials));
+				setCookie('credentials', JSON.stringify(credentials));
 				setSecret('');
 				setDbId('');
 			} else {

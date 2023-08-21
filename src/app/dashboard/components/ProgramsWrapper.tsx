@@ -3,7 +3,7 @@ import { Box, styled, Typography } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 import Repeat from '@/app/dashboard/components/Repeat';
 import { CardData } from '@/types';
-import Cookies from 'js-cookie';
+import { getCookie } from 'cookies-next';
 
 export const ProgramsContainer = styled(Box)({
 	width: '100%',
@@ -57,14 +57,17 @@ const ProgramsBox = styled(Box)(({ theme }) => ({
 const api_url = 'https://notlex-api.vercel.app/words';
 
 async function fetchData() {
-	const credentials = Cookies.get('credentials') || '';
-	const { secret, database_id } = JSON.parse(credentials);
+    const credentials = getCookie('credentials');
+	const { secret, database_id } = JSON.parse(credentials?.toString() || '{}');
 
 	const data = await fetch(api_url + `?secret=${ secret }&database_id=${ database_id }`, {
 		method: 'GET'
 	});
-	const apiRes = await data.json();
-	return apiRes.data;
+
+    if(data.ok) {
+        return await data.json();
+    }
+    throw new Error('Something went wrong');
 }
 
 const programs = ['Repeat', 'Guess the word', 'Guess the meaning'];
@@ -84,7 +87,8 @@ export default function ProgramsWrapper() {
 			firstRender.current = false;
 
 			fetchData()
-				.then(data => setWords(data))
+				.then(response => setWords(response.data))
+                .catch(error => console.log(error))
 				.finally(() => setIsFetching(false));
 			return;
 		}
@@ -92,7 +96,8 @@ export default function ProgramsWrapper() {
 		if(fetchNewWords) {
 			setIsFetching(true);
 			fetchData()
-				.then(data => setWords([...data, ...words]))
+				.then(response => setWords([...response.data, ...words]))
+                .catch(error => console.log(error))
 				.finally(() => setIsFetching(false));
 		}
 	}, [fetchNewWords]);

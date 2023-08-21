@@ -2,7 +2,7 @@
 import { Button, FormControl, styled, Typography } from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
 import { FormEvent, useState } from 'react';
-import Cookies from 'js-cookie';
+import { getCookie } from 'cookies-next';
 import { SearchParamsType } from '@/types';
 import { useRouter } from 'next/navigation';
 
@@ -37,16 +37,16 @@ export default function Form({ searchParams }: { searchParams: SearchParamsType 
     const router = useRouter();
     const [isFetching, setIsFetching] = useState(false);
 
-	const [word, setWord] = useState(searchParams.word);
+	const [word, setWord] = useState(searchParams.word || '');
 	const [category, setCategory] = useState('');
-	const [meaning, setMeaning] = useState(searchParams.definition);
-	const [example, setExample] = useState(searchParams.example);
+	const [meaning, setMeaning] = useState(searchParams.definition || '');
+	const [example, setExample] = useState(searchParams.example || '');
 
 	const handleAddWord = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 
-		const credentials = Cookies.get('credentials') || '';
-		const { secret, database_id } = JSON.parse(credentials);
+        const credentials = getCookie('credentials');
+        const { secret, database_id } = JSON.parse(credentials?.toString() || '{}');
 		setIsFetching(true);
 
 		try {

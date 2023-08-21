@@ -3,7 +3,7 @@ import { Box, Paper, styled, Typography } from '@mui/material';
 import { Input } from '@/app/settings/components/Input';
 import Link from 'next/link';
 import { useState } from 'react';
-import Cookies from 'js-cookie';
+import { getCookie } from 'cookies-next';
 
 const PaperWrapper = styled(Paper)(({ theme }) => ({
 	display: 'flex',
@@ -17,8 +17,8 @@ const PaperWrapper = styled(Paper)(({ theme }) => ({
 }));
 
 export default function Content() {
-    const credentials = Cookies.get('credentials') || '';
-    const { secret, database_id: databaseId } = JSON.parse(credentials);
+    const credentials = getCookie('credentials');
+    const { secret = '', database_id: databaseId = '' } = JSON.parse(credentials?.toString() || '{}');
 
 	const [showSecretKey, setShowSecretKey] = useState(false);
 	const [showDatabaseId, setShowDatabaseId] = useState(false);
