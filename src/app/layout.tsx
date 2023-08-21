@@ -2,6 +2,8 @@
 import { Container } from '@mui/material';
 import '../styles/globals.css';
 import Nav from '@/app/components/Nav';
+import SimpleBar from 'simplebar-react';
+import 'simplebar-react/dist/simplebar.min.css';
 import { useEffect, useState, ReactNode } from 'react';
 
 export default function RootLayout({
@@ -22,10 +24,12 @@ export default function RootLayout({
     return (
             <html lang="en">
             <body>
-            <Container maxWidth="lg">
-                <Nav showMenu={ showMenu } setShowMenu={ () => isMobile && setShowMenu(!showMenu) }/>
-                { children }
-            </Container>
+            <SimpleBar style={{ maxHeight: '100vh' }}>
+                <Container maxWidth="lg">
+                    <Nav showMenu={ showMenu } setShowMenu={ () => isMobile && setShowMenu(!showMenu) }/>
+                    { children }
+                </Container>
+            </SimpleBar>
             </body>
             </html>
     );
