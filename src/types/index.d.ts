@@ -59,3 +59,8 @@ export type ServerComponentPropsType = {
 	params: { slug: string }
 	searchParams: SearchParamsType
 }
+
+export type CredentialsType = {
+	secret: string | undefined,
+	database_id: string | undefined
+}

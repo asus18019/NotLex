@@ -2,8 +2,8 @@
 import { Box, styled, Typography } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 import Repeat from '@/app/dashboard/components/Repeat';
-import { CardData } from '@/types';
-import { getCookie } from 'cookies-next';
+import { CardData, CredentialsType } from '@/types';
+import { useCredentials } from '@/hooks/useCredentials';
 
 export const ProgramsContainer = styled(Box)({
 	width: '100%',
@@ -56,11 +56,8 @@ const ProgramsBox = styled(Box)(({ theme }) => ({
 
 const api_url = 'https://notlex-api.vercel.app/words';
 
-async function fetchData() {
-    const credentials = getCookie('credentials');
-	const { secret, database_id } = JSON.parse(credentials?.toString() || '{}');
-
-	const data = await fetch(api_url + `?secret=${ secret }&database_id=${ database_id }`, {
+async function fetchData({ secret, database_id }: CredentialsType) {
+    const data = await fetch(api_url + `?secret=${ secret }&database_id=${ database_id }`, {
 		method: 'GET'
 	});
 
@@ -74,7 +71,9 @@ const programs = ['Repeat', 'Guess the word', 'Guess the meaning'];
 
 export default function ProgramsWrapper() {
 	const firstRender = useRef(true);
-	const [selectedProgram, setSelectedProgram] = useState('');
+    const [secret, database_id] = useCredentials();
+
+    const [selectedProgram, setSelectedProgram] = useState('');
 
 	const [isFetching, setIsFetching] = useState(true);
 	const [words, setWords] = useState<CardData[]>([]);
@@ -86,7 +85,7 @@ export default function ProgramsWrapper() {
 		if(firstRender.current) {
 			firstRender.current = false;
 
-			fetchData()
+			fetchData({ secret, database_id })
 				.then(response => setWords(response.data))
                 .catch(error => console.log(error))
 				.finally(() => setIsFetching(false));
@@ -95,7 +94,7 @@ export default function ProgramsWrapper() {
 
 		if(fetchNewWords) {
 			setIsFetching(true);
-			fetchData()
+			fetchData({ secret, database_id })
 				.then(response => setWords([...response.data, ...words]))
                 .catch(error => console.log(error))
 				.finally(() => setIsFetching(false));
