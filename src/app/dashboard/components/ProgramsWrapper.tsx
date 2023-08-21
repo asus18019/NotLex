@@ -22,7 +22,7 @@ const MenuItem = styled(Box)({
 		backgroundColor: 'rgb(9,102,210, 0.4)',
 		color: 'white'
 	},
-	':first-child': {
+	':first-of-type': {
 		borderRadius: '30px 30px 0 0'
 	},
 	':last-child': {

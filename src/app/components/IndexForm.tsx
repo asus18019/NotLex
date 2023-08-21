@@ -14,7 +14,7 @@ const FormInput = styled('input')({
 	// width: '320px',
 	color: 'rgba(0,0,0,0.55)',
 	border: '1px solid gray',
-	':nth-child(2n)': {
+	':nth-of-type(2n)': {
 		marginTop: '10px'
 	}
 });
