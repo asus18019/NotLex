@@ -3,7 +3,7 @@ import { Box, styled, Typography } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 import Repeat from '@/app/dashboard/components/Repeat';
 import { CardData } from '@/types';
-import { getCookie } from 'cookies-next';
+import { useCredentials } from '@/hooks/useCredentials';
 
 export const ProgramsContainer = styled(Box)({
 	width: '100%',
@@ -57,10 +57,9 @@ const ProgramsBox = styled(Box)(({ theme }) => ({
 const api_url = 'https://notlex-api.vercel.app/words';
 
 async function fetchData() {
-    const credentials = getCookie('credentials');
-	const { secret, database_id } = JSON.parse(credentials?.toString() || '{}');
+    const [secret, database_id] = useCredentials();
 
-	const data = await fetch(api_url + `?secret=${ secret }&database_id=${ database_id }`, {
+    const data = await fetch(api_url + `?secret=${ secret }&database_id=${ database_id }`, {
 		method: 'GET'
 	});
 

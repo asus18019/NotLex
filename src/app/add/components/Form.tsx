@@ -2,9 +2,9 @@
 import { Button, FormControl, styled, Typography } from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
 import { FormEvent, useState } from 'react';
-import { getCookie } from 'cookies-next';
 import { SearchParamsType } from '@/types';
 import { useRouter } from 'next/navigation';
+import { useCredentials } from '@/hooks/useCredentials';
 
 const FormInput = styled('input')({
 	fontWeight: '500',
@@ -35,6 +35,8 @@ const ADD_WORD_API_URL = 'https://notlex-api.vercel.app/word';
 
 export default function Form({ searchParams }: { searchParams: SearchParamsType }) {
     const router = useRouter();
+    const [secret, database_id] = useCredentials();
+
     const [isFetching, setIsFetching] = useState(false);
 
 	const [word, setWord] = useState(searchParams.word || '');
@@ -44,9 +46,6 @@ export default function Form({ searchParams }: { searchParams: SearchParamsType 
 
 	const handleAddWord = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-
-        const credentials = getCookie('credentials');
-        const { secret, database_id } = JSON.parse(credentials?.toString() || '{}');
 		setIsFetching(true);
 
 		try {
