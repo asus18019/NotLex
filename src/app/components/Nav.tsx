@@ -1,38 +1,49 @@
 import Link from 'next/link';
-import { Toolbar, styled, Divider, Typography, Box } from '@mui/material';
+import { Toolbar, styled, Divider, Typography, Box, CircularProgress } from '@mui/material';
 import Logo from '@/svg/Logo';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
 import { useRouter } from 'next/navigation';
+import { useContext, useEffect } from 'react';
+import { AuthContext } from '@/context/AuthContextProvider';
+import { CredentialsType } from '@/types';
+import { useCredentials } from '@/hooks/useCredentials';
 
-const sections = [
+const links = [
 	{
 		title: 'Home',
-		url: '/'
+		url: '/',
+		private: false
 	},
 	{
 		title: 'Dashboard',
-		url: '/dashboard'
+		url: '/dashboard',
+		private: true
 	},
 	{
 		title: 'Find word',
-		url: '/search'
+		url: '/search',
+		private: false
 	},
 	{
 		title: 'Add word',
-		url: '/add'
+		url: '/add',
+		private: true
 	},
 	{
 		title: 'Settings',
-		url: '/settings'
+		url: '/settings',
+		private: true
 	},
 	{
 		title: 'About',
-		url: '/about'
+		url: '/about',
+		private: false
 	},
 	{
 		title: 'Donate',
-		url: '/donate'
+		url: '/donate',
+		private: false
 	}
 ];
 
@@ -54,10 +65,41 @@ const NavbarLink = styled(Link)(({ theme }) => ({
 	}
 }));
 
+const checkSecrets = async ({ secret, database_id }: CredentialsType): Promise<boolean> => {
+	const res = await fetch('https://notlex-api.vercel.app/check-secrets', {
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json' },
+		body: JSON.stringify({ secret: secret, database_id })
+	});
+
+	return res.ok;
+};
+
 export default function Nav({ showMenu, setShowMenu }: { showMenu: boolean, setShowMenu: () => void }) {
 	const router = useRouter();
+	const [secret, database_id] = useCredentials();
+	const { loading, loggedIn, setAuthState } = useContext(AuthContext);
+
+	useEffect(() => {
+		checkSecrets({ secret, database_id })
+			.then(isValid => {
+				setAuthState({ loading: false, loggedIn: isValid });
+			})
+			.catch(() => {
+				console.log('Something went wrong');
+			});
+	}, []);
 
 	const goToMain = () => router.push('/');
+
+	const showCloseMenuIcon = showMenu && (
+		<CloseIcon
+			cursor="pointer"
+			onClick={ setShowMenu }
+			fontSize="large"
+			sx={ { display: { md: 'none' } } }
+		/>
+	)
 
 	return (
 		<>
@@ -85,21 +127,29 @@ export default function Nav({ showMenu, setShowMenu }: { showMenu: boolean, setS
 						NotLex
 					</Typography>
 				</Box>
-				<Box display="flex" flexDirection={ { xs: 'column', md: 'row' } } width={ { xs: '100%', md: 'auto' } }>
-					{ showMenu && <CloseIcon cursor="pointer" onClick={ setShowMenu } fontSize="large"
-					                         sx={ { display: { md: 'none' } } }/> }
-					{
-						!showMenu ? <MenuIcon sx={ { display: { xs: 'flex', md: 'none' }, alignSelf: 'flex-end' } }
-						                      cursor="pointer" onClick={ setShowMenu }/> : (
-							sections.map((section) => (
-								<NavbarLink
-                                        key={ section.title }
-                                        href={ section.url }
-                                        onClick={ setShowMenu }
-                                >
-                                    { section.title }
-                                </NavbarLink>
-							)))
+				<Box display="flex" flexDirection={ { xs: 'column', md: 'row' } }
+				     width={ { xs: '100%', md: 'auto' } }>
+					{ showCloseMenuIcon }
+					{ !showMenu ? (
+						<MenuIcon sx={ { alignSelf: 'flex-end' } } cursor="pointer" onClick={ setShowMenu }/>
+					) : (
+						loading ? (
+							<CircularProgress size={ 30 } sx={ { m: '10px auto' } }/>
+						) : (
+							links.map((section) => {
+								if(!loggedIn && section.private) return;
+								return (
+									<NavbarLink
+										key={ section.title }
+										href={ section.url }
+										onClick={ setShowMenu }
+									>
+										{ section.title }
+									</NavbarLink>
+								);
+							})
+						)
+					)
 					}
 				</Box>
 			</Toolbar>

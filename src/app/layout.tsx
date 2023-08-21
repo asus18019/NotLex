@@ -5,6 +5,7 @@ import Nav from '@/app/components/Nav';
 import SimpleBar from 'simplebar-react';
 import 'simplebar-react/dist/simplebar.min.css';
 import { useEffect, useState, ReactNode } from 'react';
+import AuthContextProvider from '@/context/AuthContextProvider';
 
 export default function RootLayout({
     children
@@ -24,11 +25,13 @@ export default function RootLayout({
     return (
             <html lang="en">
             <body>
-            <SimpleBar style={{ maxHeight: '100vh' }}>
-                <Container maxWidth="lg">
-                    <Nav showMenu={ showMenu } setShowMenu={ () => isMobile && setShowMenu(!showMenu) }/>
-                    { children }
-                </Container>
+            <SimpleBar style={ { maxHeight: '100vh' } }>
+                <AuthContextProvider>
+                    <Container maxWidth="lg">
+                        <Nav showMenu={ showMenu } setShowMenu={ () => isMobile && setShowMenu(!showMenu) }/>
+                        { children }
+                    </Container>
+                </AuthContextProvider>
             </SimpleBar>
             </body>
             </html>

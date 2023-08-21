@@ -2,7 +2,8 @@
 import { Button, FormControl, styled, Typography } from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
 import { setCookie } from 'cookies-next';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
+import { AuthContext } from '@/context/AuthContextProvider';
 
 const FormInput = styled('input')({
 	fontWeight: '500',
@@ -20,6 +21,7 @@ const FormInput = styled('input')({
 });
 
 export default function IndexForm() {
+	const { setAuthState } = useContext(AuthContext);
 	const [isFetching, setIsFetching] = useState(false);
 
 	const [secret, setSecret] = useState('');
@@ -41,6 +43,7 @@ export default function IndexForm() {
 				setCookie('credentials', JSON.stringify(credentials));
 				setSecret('');
 				setDbId('');
+				setAuthState({ loading: false, loggedIn: true })
 			} else {
 				console.log('something went wrong');
 			}
