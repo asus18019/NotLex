@@ -92,14 +92,34 @@ export default function Nav({ showMenu, setShowMenu }: { showMenu: boolean, setS
 
 	const goToMain = () => router.push('/');
 
-	const showCloseMenuIcon = showMenu && (
+	const mobileNavbarHeight = (showMenu && !loading) ? (loggedIn ? '287px' : '179px') : '0px';
+
+	const closeMenuIcon = (
 		<CloseIcon
 			cursor="pointer"
 			onClick={ setShowMenu }
-			fontSize="large"
-			sx={ { display: { md: 'none' } } }
+			sx={ {
+				display: { md: 'none' },
+				position: 'absolute',
+				right: '14px',
+				top: '14px',
+				fontSize: 30
+			} }
 		/>
-	)
+	);
+
+	const openMenuIcon = (
+		<MenuIcon
+			cursor="pointer"
+			onClick={ setShowMenu }
+			sx={ {
+				display: { md: 'none' },
+				position: 'absolute',
+				right: '16px',
+				top: '16px'
+			} }
+		/>
+	);
 
 	return (
 		<>
@@ -108,14 +128,26 @@ export default function Nav({ showMenu, setShowMenu }: { showMenu: boolean, setS
 				variant="dense"
 				sx={ {
 					width: { md: 'auto' },
-					height: { md: 'auto' },
+					height: { xs: mobileNavbarHeight, md: 'auto' },
 					justifyContent: 'space-between',
 					py: 1,
-					textAlign: 'center'
+					textAlign: 'center',
+					overflow: 'hidden',
+					transition: '0.3s',
+					position: 'relative'
 				} }
 			>
-				<Box display={ { xs: showMenu ? 'none' : 'flex', md: 'flex' } } justifyContent="center"
-				     alignItems="center">
+				<Box
+					display="flex"
+					justifyContent="center"
+					alignItems="center"
+					position={ { xs: showMenu ? 'absolute' : 'static', md: 'static' } }
+					sx={ {
+						transform: { xs: showMenu ? 'translateY(-250px)' : 'none', md: 'none' },
+						transition: '0.3s'
+					} }
+					top={ 0 }
+				>
 					<Logo onClick={ goToMain }/>
 					<Typography
 						sx={ { cursor: 'pointer' } }
@@ -129,10 +161,8 @@ export default function Nav({ showMenu, setShowMenu }: { showMenu: boolean, setS
 				</Box>
 				<Box display="flex" flexDirection={ { xs: 'column', md: 'row' } }
 				     width={ { xs: '100%', md: 'auto' } }>
-					{ showCloseMenuIcon }
-					{ !showMenu ? (
-						<MenuIcon sx={ { alignSelf: 'flex-end' } } cursor="pointer" onClick={ setShowMenu }/>
-					) : (
+					{ showMenu ? closeMenuIcon : openMenuIcon }
+					{ showMenu && (
 						loading ? (
 							<CircularProgress size={ 30 } sx={ { m: '10px auto' } }/>
 						) : (
