@@ -6,46 +6,9 @@ import CloseIcon from '@mui/icons-material/Close';
 import { useRouter } from 'next/navigation';
 import { useContext, useEffect } from 'react';
 import { AuthContext } from '@/context/AuthContextProvider';
-import { CredentialsType } from '@/types';
 import { useCredentials } from '@/hooks/useCredentials';
-
-const links = [
-	{
-		title: 'Home',
-		url: '/',
-		private: false
-	},
-	{
-		title: 'Dashboard',
-		url: '/dashboard',
-		private: true
-	},
-	{
-		title: 'Find word',
-		url: '/search',
-		private: false
-	},
-	{
-		title: 'Add word',
-		url: '/add',
-		private: true
-	},
-	{
-		title: 'Settings',
-		url: '/settings',
-		private: true
-	},
-	{
-		title: 'About',
-		url: '/about',
-		private: false
-	},
-	{
-		title: 'Donate',
-		url: '/donate',
-		private: false
-	}
-];
+import { checkSecrets } from '@/utils/checkCredentials';
+import { navLinks } from '@/config/links';
 
 const NavbarLink = styled(Link)(({ theme }) => ({
 	margin: '10px 18px',
@@ -64,16 +27,6 @@ const NavbarLink = styled(Link)(({ theme }) => ({
 		margin: '8px 18px'
 	}
 }));
-
-const checkSecrets = async ({ secret, database_id }: CredentialsType): Promise<boolean> => {
-	const res = await fetch('https://notlex-api.vercel.app/check-secrets', {
-		method: 'POST',
-		headers: { 'Content-Type': 'application/json' },
-		body: JSON.stringify({ secret: secret, database_id })
-	});
-
-	return res.ok;
-};
 
 export default function Nav({ showMenu, setShowMenu }: { showMenu: boolean, setShowMenu: () => void }) {
 	const router = useRouter();
@@ -166,7 +119,7 @@ export default function Nav({ showMenu, setShowMenu }: { showMenu: boolean, setS
 						loading ? (
 							<CircularProgress size={ 30 } sx={ { m: '10px auto' } }/>
 						) : (
-							links.map((section) => {
+							navLinks.map((section) => {
 								if(!loggedIn && section.private) return;
 								return (
 									<NavbarLink
