@@ -91,7 +91,6 @@ export default function Home() {
 				     flexDirection={ { xs: 'column-reverse', md: 'row' } }>
 					<Box width={ { xs: '100%', md: '50%' } } display="flex" flexDirection="column"
 					     alignItems="center" mt={ { xs: '45px', md: 0 } }>
-						<SubTitle>Connect your account</SubTitle>
 						<IndexForm/>
 					</Box>
 					<Box width={ { xs: '100%', md: '50%' } } display="flex" flexDirection="column"
