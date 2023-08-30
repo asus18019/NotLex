@@ -64,3 +64,9 @@ export type CredentialsType = {
 	secret: string | undefined,
 	database_id: string | undefined
 }
+export type ModalDataType = {
+	message: string,
+	type: ModalType
+}
+
+export type ModalType = 'error' | 'warning' | 'info' | 'success'

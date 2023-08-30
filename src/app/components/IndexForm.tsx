@@ -5,6 +5,9 @@ import { setCookie } from 'cookies-next';
 import { useContext, useState } from 'react';
 import { AuthContext } from '@/context/AuthContextProvider';
 import { checkSecrets } from '@/utils/checkCredentials';
+import AlertModal from '@/app/components/AlertModal';
+import { AlertTimeout } from '@/config/AlertTimeout';
+import { ModalDataType, ModalType } from '@/types';
 
 const FormInput = styled('input')({
 	fontWeight: '500',
@@ -26,6 +29,7 @@ export default function IndexForm() {
 	const { setAuthState } = useContext(AuthContext);
 	const [isLoginForm, setIsLoginForm] = useState(true);
 	const [isFetching, setIsFetching] = useState(false);
+	const [modalData, setModalData] = useState<ModalDataType>({ message: '', type: 'success' });
 
 	const [secret, setSecret] = useState('');
 	const [dbId, setDbId] = useState('');
@@ -38,18 +42,19 @@ export default function IndexForm() {
 		setIsFetching(true);
 		try {
 			const res = await checkSecrets({ secret, database_id: dbId });
-
 			if(res) {
 				const credentials = { secret, database_id: dbId };
 				setCookie('credentials', JSON.stringify(credentials));
 				setSecret('');
 				setDbId('');
 				setAuthState({ loading: false, loggedIn: true });
+				handleShowModal("You have logged in", "success");
 			} else {
-				console.log('something went wrong');
+				throw new Error('Something went wrong. Try again...');
 			}
-		} catch(e) {
-			console.log(e);
+		} catch(e: any) {
+			const error = e as Error;
+			handleShowModal(error.message, "error");
 		} finally {
 			setIsFetching(false);
 		}
@@ -74,18 +79,30 @@ export default function IndexForm() {
 				setPageId('');
 				setDbName('');
 				setAuthState({ loading: false, loggedIn: true });
+				handleShowModal("You've created your database and logged in", "success");
 			} else {
-				console.log('something went wrong');
+				throw new Error('Something went wrong. Try again...');
 			}
-		} catch(e) {
-			console.log(e);
+		} catch(e: any) {
+			const error = e as Error;
+			handleShowModal(error.message, "error");
 		} finally {
 			setIsFetching(false);
 		}
 	};
 
+	const handleShowModal = (message: string, type: ModalType) => {
+		setModalData({ message, type });
+		setTimeout(() => {
+			setModalData({ message: '', type });
+		}, AlertTimeout)
+	}
+
 	return (
 		<>
+			{ modalData.message && (
+				<AlertModal handleClickModal={ () => setModalData({ message: '', type: 'success' }) } modalData={ modalData }/>
+			) }
 			<Typography
 				fontFamily="Montserrat"
 				fontWeight={ 700 }

@@ -1,0 +1,1 @@
+export const AlertTimeout = 5000;
