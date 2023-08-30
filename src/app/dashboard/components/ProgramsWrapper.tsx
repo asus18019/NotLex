@@ -4,6 +4,8 @@ import { useEffect, useRef, useState } from 'react';
 import Repeat from '@/app/dashboard/components/Repeat';
 import { CardData, CredentialsType } from '@/types';
 import { useCredentials } from '@/hooks/useCredentials';
+import GuessMeaning from '@/app/dashboard/components/GuessMeaning';
+import { programs } from '@/config/programs';
 
 export const ProgramsContainer = styled(Box)({
 	width: '100%',
@@ -57,23 +59,21 @@ const ProgramsBox = styled(Box)(({ theme }) => ({
 const api_url = 'https://notlex-api.vercel.app/words';
 
 async function fetchData({ secret, database_id }: CredentialsType) {
-    const data = await fetch(api_url + `?secret=${ secret }&database_id=${ database_id }`, {
+	const data = await fetch(api_url + `?secret=${ secret }&database_id=${ database_id }`, {
 		method: 'GET'
 	});
 
-    if(data.ok) {
-        return await data.json();
-    }
-    throw new Error('Something went wrong');
+	if(data.ok) {
+		return await data.json();
+	}
+	throw new Error('Something went wrong');
 }
-
-const programs = ['Repeat', 'Guess the word', 'Guess the meaning'];
 
 export default function ProgramsWrapper() {
 	const firstRender = useRef(true);
-    const [secret, database_id] = useCredentials();
+	const [secret, database_id] = useCredentials();
 
-    const [selectedProgram, setSelectedProgram] = useState('');
+	const [selectedProgram, setSelectedProgram] = useState('');
 
 	const [isFetching, setIsFetching] = useState(true);
 	const [words, setWords] = useState<CardData[]>([]);
@@ -87,7 +87,7 @@ export default function ProgramsWrapper() {
 
 			fetchData({ secret, database_id })
 				.then(response => setWords(response.data))
-                .catch(error => console.log(error))
+				.catch(error => console.log(error))
 				.finally(() => setIsFetching(false));
 			return;
 		}
@@ -96,15 +96,17 @@ export default function ProgramsWrapper() {
 			setIsFetching(true);
 			fetchData({ secret, database_id })
 				.then(response => setWords([...response.data, ...words]))
-                .catch(error => console.log(error))
+				.catch(error => console.log(error))
 				.finally(() => setIsFetching(false));
 		}
 	}, [fetchNewWords]);
 
-	const removeCard = (id: string, action: 'right' | 'left') => {
+	const removeCard = (id: string, action?: 'right' | 'left') => {
 		setWords((prev) => prev.filter((card) => card.id !== id));
 
-		if(action === 'right') {
+		if(!action) {
+			return;
+		} else if(action === 'right') {
 			console.log('swapped right');
 		} else {
 			console.log('swapped left');
@@ -115,6 +117,8 @@ export default function ProgramsWrapper() {
 		switch(program) {
 		case ('Repeat') :
 			return <Repeat { ...{ words, activeWord, removeCard, isFetching } }/>;
+		case ('GuessMeaning') :
+			return <GuessMeaning { ...{ words, activeWord, removeCard, isFetching } }/>
 		default:
 			return null;
 		}
@@ -126,10 +130,10 @@ export default function ProgramsWrapper() {
 			<ProgramsBox>
 				{ programs.map(program => {
 					return (
-						<MenuItem onClick={ () => setSelectedProgram(program) }
-						          padding={ { xs: '15px 0', md: '15px 100px' } } key={ program }>
+						<MenuItem onClick={ () => setSelectedProgram(program.name) }
+						          padding={ { xs: '15px 0', md: '15px 100px' } } key={ program.label }>
 							<Typography fontFamily="Montserrat" fontWeight="500"
-							            fontSize={ { xs: 17, md: 20 } }>{ program }</Typography>
+							            fontSize={ { xs: 17, md: 20 } }>{ program.label }</Typography>
 						</MenuItem>
 					);
 				}) }
