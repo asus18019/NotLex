@@ -17,7 +17,10 @@ const AlertWindow = styled(Alert)(({ theme }) => ({
 		left: 'auto',
 		right: 30,
 		bottom: 30
-	}
+	},
+	'& .MuiAlert-message': {
+		width: '100%'
+	},
 }));
 
 
@@ -28,7 +31,6 @@ interface AlertModalProps {
 
 const AlertModal = ({ modalData, handleClickModal }: AlertModalProps) => {
 	const [lineWidth, setLineWidth] = useState('100%');
-	console.log(lineWidth);
 
 	useEffect(() => {
 		setLineWidth('0%');
