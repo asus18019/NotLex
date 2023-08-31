@@ -118,7 +118,7 @@ export default function ProgramSelector() {
 	const selectProgram = (program: string) => {
 		switch(program) {
 		case ('Repeat') :
-			return <Repeat { ...{ words, activeWord, removeCard, isFetching } }/>;
+			return <Repeat { ...{ words, activeWord, removeCard, isFetching, closeProgram } }/>;
 		case ('GuessMeaning') :
 			return <GuessMeaning { ...{ words, activeWord, removeCard, isFetching, closeProgram } }/>
 		default:
