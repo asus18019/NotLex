@@ -113,12 +113,14 @@ export default function ProgramSelector() {
 		}
 	};
 
+	const closeProgram = () => setSelectedProgram('');
+
 	const selectProgram = (program: string) => {
 		switch(program) {
 		case ('Repeat') :
 			return <Repeat { ...{ words, activeWord, removeCard, isFetching } }/>;
 		case ('GuessMeaning') :
-			return <GuessMeaning { ...{ words, activeWord, removeCard, isFetching } }/>
+			return <GuessMeaning { ...{ words, activeWord, removeCard, isFetching, closeProgram } }/>
 		default:
 			return null;
 		}

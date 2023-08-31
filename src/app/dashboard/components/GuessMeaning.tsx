@@ -6,6 +6,7 @@ import { capitalizeFirstLetter } from '@/utils/capitalizeFirstLetter';
 import { useMemo, useState } from 'react';
 import ProgramWrapper from '@/app/dashboard/components/ProgramWrapper';
 import { getOptionColor } from '@/utils/getOptionColor';
+import ProgramNav from '@/app/dashboard/components/ProgramNav';
 
 const QuizOption = styled(Box)({
 	padding: '8px 10px',
@@ -41,10 +42,11 @@ interface GuessMeaningProps {
 	words: CardData[],
 	activeWord: CardData,
 	removeCard: (id: string) => void,
-	isFetching: boolean
+	isFetching: boolean,
+	closeProgram: () => void
 }
 
-const GuessMeaning = ({ words, activeWord, removeCard, isFetching }: GuessMeaningProps) => {
+const GuessMeaning = ({ words, activeWord, removeCard, isFetching, closeProgram }: GuessMeaningProps) => {
 	const { shuffleWords } = useShuffleWords();
 	const [answer, setAnswer] = useState<CardData | undefined>();
 	const randomWords = useMemo(() => shuffleWords(words, activeWord), [activeWord]);
@@ -58,26 +60,34 @@ const GuessMeaning = ({ words, activeWord, removeCard, isFetching }: GuessMeanin
 		}, 3000);
 	};
 
+	const skipWord = () => {
+		removeCard(activeWord.id);
+		setAnswer(undefined);
+	};
+
 	return (
 		<ProgramWrapper isFetching={ isFetching } words={ words }>
-			{ words.map((word) => {
-				return word === activeWord && (
-					<Box>
-						<MainWord>{ capitalizeFirstLetter(word.word) }</MainWord>
-						<Box border="1px solid lightgray" borderRadius="10px" width={ { xs: '100%', md: '550px' } }>
-							{ randomWords.map(word => (
-								<QuizOption
-									key={ word.id }
-									onClick={ () => handleClickAnswer(word) }
-									bgcolor={ getOptionColor(answer, activeWord, word) }
-								>
-									<AnswerText>{ word.meaning }</AnswerText>
-								</QuizOption>
-							)) }
+			<Box display="flex" flexDirection="column" justifyContent="center">
+				{ words.map((word) => {
+					return word === activeWord && (
+						<Box>
+							<MainWord>{ capitalizeFirstLetter(word.word) }</MainWord>
+							<Box border="1px solid lightgray" borderRadius="10px" width={ { xs: '100%', md: '550px' } }>
+								{ randomWords.map(word => (
+									<QuizOption
+										key={ word.id }
+										onClick={ () => handleClickAnswer(word) }
+										bgcolor={ getOptionColor(answer, activeWord, word) }
+									>
+										<AnswerText>{ word.meaning }</AnswerText>
+									</QuizOption>
+								)) }
+							</Box>
 						</Box>
-					</Box>
-				);
-			}) }
+					);
+				}) }
+				<ProgramNav closeProgram={ closeProgram } skipWord={ skipWord }/>
+			</Box>
 		</ProgramWrapper>
 
 	);
