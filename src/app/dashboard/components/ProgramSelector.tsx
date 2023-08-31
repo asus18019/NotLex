@@ -69,7 +69,7 @@ async function fetchData({ secret, database_id }: CredentialsType) {
 	throw new Error('Something went wrong');
 }
 
-export default function ProgramsWrapper() {
+export default function ProgramSelector() {
 	const firstRender = useRef(true);
 	const [secret, database_id] = useCredentials();
 

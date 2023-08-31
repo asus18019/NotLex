@@ -1,4 +1,4 @@
-import ProgramsWrapper from '@/app/dashboard/components/ProgramsWrapper';
+import ProgramSelector from '@/app/dashboard/components/ProgramSelector';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -8,6 +8,6 @@ export const metadata: Metadata = {
 
 export default function Dashboard() {
 	return (
-		<ProgramsWrapper/>
+		<ProgramSelector/>
 	);
 };
