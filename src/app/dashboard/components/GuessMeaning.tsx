@@ -3,7 +3,7 @@ import { Box, styled, Typography } from '@mui/material';
 import { CardData } from '@/types';
 import { useShuffleWords } from '@/hooks/useShuffleWords';
 import { capitalizeFirstLetter } from '@/utils/capitalizeFirstLetter';
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import ProgramWrapper from '@/app/dashboard/components/ProgramWrapper';
 import { getOptionColor } from '@/utils/getOptionColor';
 import ProgramNav from '@/app/dashboard/components/ProgramNav';
@@ -47,14 +47,16 @@ interface GuessMeaningProps {
 }
 
 const GuessMeaning = ({ words, activeWord, removeCard, isFetching, closeProgram }: GuessMeaningProps) => {
+	const nextTimeoutRef = useRef<NodeJS.Timeout | undefined>();
 	const { shuffleWords } = useShuffleWords();
 	const [answer, setAnswer] = useState<CardData | undefined>();
 	const randomWords = useMemo(() => shuffleWords(words, activeWord), [activeWord]);
 
 	const handleClickAnswer = (word: CardData) => {
+		if(answer) return;
 		setAnswer(word);
 		console.log(`correct: ${ word.meaning === activeWord.meaning }`);
-		setTimeout(() => {
+		nextTimeoutRef.current = setTimeout(() => {
 			setAnswer(undefined);
 			removeCard(activeWord.id);
 		}, 3000);
@@ -63,6 +65,7 @@ const GuessMeaning = ({ words, activeWord, removeCard, isFetching, closeProgram 
 	const skipWord = () => {
 		removeCard(activeWord.id);
 		setAnswer(undefined);
+		clearTimeout(nextTimeoutRef.current);
 	};
 
 	return (
