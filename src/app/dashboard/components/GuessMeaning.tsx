@@ -7,6 +7,8 @@ import { useMemo, useRef, useState } from 'react';
 import ProgramWrapper from '@/app/dashboard/components/ProgramWrapper';
 import { getOptionColor } from '@/utils/getOptionColor';
 import ProgramNav from '@/app/dashboard/components/ProgramNav';
+import { useProgress } from '@/hooks/useProgress';
+import { useCredentials } from '@/hooks/useCredentials';
 
 const QuizOption = styled(Box)({
 	padding: '8px 10px',
@@ -49,13 +51,17 @@ interface GuessMeaningProps {
 const GuessMeaning = ({ words, activeWord, removeCard, isFetching, closeProgram }: GuessMeaningProps) => {
 	const nextTimeoutRef = useRef<NodeJS.Timeout | undefined>();
 	const { shuffleWords } = useShuffleWords();
+	const [secret = ''] = useCredentials();
+	const { updateProgress } = useProgress();
 	const [answer, setAnswer] = useState<CardData | undefined>();
 	const randomWords = useMemo(() => shuffleWords(words, activeWord), [activeWord]);
 
 	const handleClickAnswer = (word: CardData) => {
 		if(answer) return;
 		setAnswer(word);
-		console.log(`correct: ${ word.meaning === activeWord.meaning }`);
+		const isCorrect = word.meaning === activeWord.meaning;
+
+		updateProgress(secret, activeWord.id, isCorrect ? 2 : -2);
 		nextTimeoutRef.current = setTimeout(() => {
 			setAnswer(undefined);
 			removeCard(activeWord.id);

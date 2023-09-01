@@ -5,7 +5,7 @@ export type CardData = {
 	word: string;
 	meaning: string;
 	sentence: string;
-	guesses: number;
+	progress: number;
 	category: string[]
 };
 
