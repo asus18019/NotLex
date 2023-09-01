@@ -5,6 +5,7 @@ import Nav from '@/app/components/Nav';
 import SimpleBar from 'simplebar-react';
 import 'simplebar-react/dist/simplebar.min.css';
 import { useEffect, useState, ReactNode } from 'react';
+import { Analytics } from '@vercel/analytics/react';
 import AuthContextProvider from '@/context/AuthContextProvider';
 
 export default function RootLayout({
@@ -33,6 +34,7 @@ export default function RootLayout({
                     </Container>
                 </AuthContextProvider>
             </SimpleBar>
+            <Analytics />
             </body>
             </html>
     );
