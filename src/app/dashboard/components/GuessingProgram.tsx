@@ -31,7 +31,9 @@ const MainWord = styled(Typography)({
 	textAlign: 'center',
 	fontFamily: 'Montserrat',
 	fontWeight: 700,
-	padding: '10px 0'
+	padding: '10px 0',
+	maxWidth: '530px',
+	margin: '0 auto'
 });
 
 const AnswerText = styled(Typography)({
@@ -40,7 +42,8 @@ const AnswerText = styled(Typography)({
 	fontWeight: 500
 });
 
-interface GuessMeaningProps {
+interface GuessingProgramProps {
+	type: 'GuessMeaning' | 'GuessWord',
 	words: CardData[],
 	activeWord: CardData,
 	removeCard: (id: string) => void,
@@ -48,7 +51,7 @@ interface GuessMeaningProps {
 	closeProgram: () => void
 }
 
-const GuessMeaning = ({ words, activeWord, removeCard, isFetching, closeProgram }: GuessMeaningProps) => {
+const GuessingProgram = ({ type, words, activeWord, removeCard, isFetching, closeProgram }: GuessingProgramProps) => {
 	const nextTimeoutRef = useRef<NodeJS.Timeout | undefined>();
 	const { shuffleWords } = useShuffleWords();
 	const [secret = ''] = useCredentials();
@@ -74,13 +77,17 @@ const GuessMeaning = ({ words, activeWord, removeCard, isFetching, closeProgram 
 		clearTimeout(nextTimeoutRef.current);
 	};
 
+	const renderContent = (guessMeaningContent: string, guessWordContent: string) => {
+		return type === 'GuessMeaning' ? guessMeaningContent : guessWordContent;
+	};
+
 	return (
 		<ProgramWrapper isFetching={ isFetching } words={ words }>
 			<Box display="flex" flexDirection="column" justifyContent="center">
 				{ words.map((word) => {
 					return word === activeWord && (
 						<Box>
-							<MainWord>{ capitalizeFirstLetter(word.word) }</MainWord>
+							<MainWord>{ capitalizeFirstLetter(renderContent(word.word, word.meaning)) }</MainWord>
 							<Box border="1px solid lightgray" borderRadius="10px" width={ { xs: '100%', md: '550px' } }>
 								{ randomWords.map(word => (
 									<QuizOption
@@ -88,7 +95,7 @@ const GuessMeaning = ({ words, activeWord, removeCard, isFetching, closeProgram 
 										onClick={ () => handleClickAnswer(word) }
 										bgcolor={ getOptionColor(answer, activeWord, word) }
 									>
-										<AnswerText>{ word.meaning }</AnswerText>
+										<AnswerText>{ capitalizeFirstLetter(renderContent(word.meaning, word.word)) }</AnswerText>
 									</QuizOption>
 								)) }
 							</Box>
@@ -102,4 +109,4 @@ const GuessMeaning = ({ words, activeWord, removeCard, isFetching, closeProgram 
 	);
 };
 
-export default GuessMeaning;
+export default GuessingProgram;

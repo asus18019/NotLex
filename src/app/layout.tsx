@@ -9,33 +9,33 @@ import { Analytics } from '@vercel/analytics/react';
 import AuthContextProvider from '@/context/AuthContextProvider';
 
 export default function RootLayout({
-    children
+	children
 }: {
-    children: ReactNode
+	children: ReactNode
 }) {
-    const [isMobile, setIsMobile] = useState(true);
-    const [showMenu, setShowMenu] = useState(false);
+	const [isMobile, setIsMobile] = useState(true);
+	const [showMenu, setShowMenu] = useState(false);
 
-    useEffect(() => {
-        const isWiderThan900Px = window.screen.width > 900;
+	useEffect(() => {
+		const isWiderThan900Px = window.screen.width > 900;
 
-        setShowMenu(isWiderThan900Px);
-        setIsMobile(!isWiderThan900Px);
-    }, []);
+		setShowMenu(isWiderThan900Px);
+		setIsMobile(!isWiderThan900Px);
+	}, []);
 
-    return (
-            <html lang="en">
-            <body>
-            <SimpleBar style={ { maxHeight: '100vh' } }>
-                <AuthContextProvider>
-                    <Container maxWidth="lg">
-                        <Nav showMenu={ showMenu } setShowMenu={ () => isMobile && setShowMenu(!showMenu) }/>
-                        { children }
-                    </Container>
-                </AuthContextProvider>
-            </SimpleBar>
-            <Analytics />
-            </body>
-            </html>
-    );
+	return (
+		<html lang="en">
+		<body>
+		<SimpleBar style={ { maxHeight: '100vh' } }>
+			<AuthContextProvider>
+				<Container maxWidth="lg">
+					<Nav showMenu={ showMenu } setShowMenu={ () => isMobile && setShowMenu(!showMenu) }/>
+					{ children }
+				</Container>
+			</AuthContextProvider>
+		</SimpleBar>
+		<Analytics/>
+		</body>
+		</html>
+	);
 }

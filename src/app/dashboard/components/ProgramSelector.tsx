@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import Repeat from '@/app/dashboard/components/Repeat';
 import { CardData, CredentialsType } from '@/types';
 import { useCredentials } from '@/hooks/useCredentials';
-import GuessMeaning from '@/app/dashboard/components/GuessMeaning';
+import GuessingProgram from '@/app/dashboard/components/GuessingProgram';
 import { programs } from '@/config/programs';
 
 export const ProgramsContainer = styled(Box)({
@@ -120,7 +120,9 @@ export default function ProgramSelector() {
 		case ('Repeat') :
 			return <Repeat { ...{ words, activeWord, removeCard, isFetching, closeProgram } }/>;
 		case ('GuessMeaning') :
-			return <GuessMeaning { ...{ words, activeWord, removeCard, isFetching, closeProgram } }/>
+			return <GuessingProgram { ...{ words, activeWord, removeCard, isFetching, closeProgram, type: program } }/>
+		case ('GuessWord') :
+			return <GuessingProgram { ...{ words, activeWord, removeCard, isFetching, closeProgram, type: program } }/>
 		default:
 			return null;
 		}
