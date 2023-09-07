@@ -6,6 +6,7 @@ import { CardData, CredentialsType } from '@/types';
 import { useCredentials } from '@/hooks/useCredentials';
 import GuessingProgram from '@/app/dashboard/components/GuessingProgram';
 import { programs } from '@/config/programs';
+import Pairing from '@/app/dashboard/components/Pairing';
 
 export const ProgramsContainer = styled(Box)({
 	width: '100%',
@@ -123,6 +124,8 @@ export default function ProgramSelector() {
 			return <GuessingProgram { ...{ words, activeWord, removeCard, isFetching, closeProgram, type: program } }/>
 		case ('GuessWord') :
 			return <GuessingProgram { ...{ words, activeWord, removeCard, isFetching, closeProgram, type: program } }/>
+		case ('Pairing') :
+			return <Pairing { ...{ words, removeCard, isFetching, closeProgram } }/>
 		default:
 			return null;
 		}

@@ -26,7 +26,7 @@ const QuizOption = styled(Box)({
 	}
 });
 
-const MainWord = styled(Typography)({
+export const MainWord = styled(Typography)({
 	fontSize: '20px',
 	textAlign: 'center',
 	fontFamily: 'Montserrat',
