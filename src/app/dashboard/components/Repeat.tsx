@@ -27,7 +27,7 @@ export const Repeat = ({ words, activeWord, removeCard, isFetching, closeProgram
 				{ words.map((word) => (
 					<WordCard key={ word.id } { ...{ data: word, active: activeWord === word, removeCard } }/>
 				)) }
-				<ProgramNav closeProgram={ closeProgram } skipWord={ skipWord }/>
+				<ProgramNav closeProgram={ closeProgram } skipWord={ skipWord } isAnswered={ true }/>
 			</Box>
 		</ProgramWrapper>
 	);

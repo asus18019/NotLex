@@ -39,7 +39,7 @@ export default function Nav({ showMenu, setShowMenu }: { showMenu: boolean, setS
 				setAuthState({ loading: false, loggedIn: isValid });
 			})
 			.catch(() => {
-				console.log('Something went wrong');
+				setAuthState({ loading: false, loggedIn: false });
 			});
 	}, []);
 

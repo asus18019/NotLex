@@ -4,10 +4,11 @@ import SkipNextIcon from '@mui/icons-material/SkipNext';
 
 interface ProgramNavProps {
 	closeProgram: () => void,
-	skipWord: () => void
+	skipWord: () => void,
+	isAnswered: boolean
 }
 
-const ProgramNav = ({ closeProgram, skipWord }: ProgramNavProps) => {
+const ProgramNav = ({ closeProgram, skipWord, isAnswered }: ProgramNavProps) => {
 	return (
 		<Box display="flex" flexWrap="nowrap" mt="10px">
 			<Button
@@ -26,7 +27,7 @@ const ProgramNav = ({ closeProgram, skipWord }: ProgramNavProps) => {
 				sx={{ color: '#4f4f4f', fontFamily: "Montserrat" }}
 				onClick={ skipWord }
 			>
-				Skip
+				{ isAnswered ? "Next" : "Skip" }
 			</Button>
 		</Box>
 	);

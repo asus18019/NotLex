@@ -1,7 +1,8 @@
 'use client';
 import { CardProps } from '@/types';
-import { Box, CardContent, CardMedia, Typography, Card, styled } from '@mui/material';
+import { Box, CardContent, Typography, Card, styled } from '@mui/material';
 import Swappable from '@/app/dashboard/components/Swappable';
+import Image from 'next/image';
 
 const StyledCard = styled(Card)(({ theme }) => ({
 	margin: '0 auto',
@@ -19,12 +20,16 @@ const WordCard = ({ data, active, removeCard }: CardProps) => {
 	return active && (
 		<Swappable { ...{ removeCard, data } }>
 			<StyledCard>
-				<CardMedia
-					draggable={ false }
-					component="img"
-					width="500px"
-					image={ `https://source.unsplash.com/500x300/?${ data.meaning }` }
-				/>
+				<Box width={{ xs: '100%', md: 500 }} height={{ xs: 193, md: 300 }} position="relative">
+					<Image
+						draggable={ false }
+						fill={ true }
+						priority={ true }
+						alt={ data.word }
+						style={{ objectFit: "contain" }}
+						src={ `https://source.unsplash.com/500x300/?${ data.meaning }` }
+					/>
+				</Box>
 				<CardContent>
 					<Typography fontSize={ 20 } textAlign="center" fontFamily="Montserrat"
 					            fontWeight={ 700 } padding={ { xs: 0, md: '10px 0' } }>

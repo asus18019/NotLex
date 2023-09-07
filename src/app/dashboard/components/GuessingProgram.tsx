@@ -102,7 +102,7 @@ const GuessingProgram = ({ type, words, activeWord, removeCard, isFetching, clos
 						</Box>
 					);
 				}) }
-				<ProgramNav closeProgram={ closeProgram } skipWord={ skipWord }/>
+				<ProgramNav closeProgram={ closeProgram } skipWord={ skipWord } isAnswered={ Boolean(answer) }/>
 			</Box>
 		</ProgramWrapper>
 
