@@ -15,22 +15,22 @@ const OptionBox = styled(Box)({
 	alignItems: 'center',
 	cursor: 'pointer',
 	border: '1px solid lightgray',
-	borderTop: "none",
-	fontFamily: "Montserrat",
-	fontSize: "15px",
+	borderTop: 'none',
+	fontFamily: 'Montserrat',
+	fontSize: '15px',
 	':hover': {
 		backgroundColor: '#eeeeee'
 	},
 	':first-of-type': {
 		borderRadius: '10px 0 0 0',
-		borderTop: "1px solid lightgray",
+		borderTop: '1px solid lightgray'
 	},
 	':nth-of-type(2)': {
 		borderRadius: '0 10px 0 0',
-		borderTop: "1px solid lightgray",
+		borderTop: '1px solid lightgray'
 	},
 	':nth-of-type(odd)': {
-		borderRight: "none"
+		borderRight: 'none'
 	},
 	':last-of-type': {
 		borderRadius: '0 0 10px 0'
@@ -40,6 +40,16 @@ const OptionBox = styled(Box)({
 	}
 });
 
+const ContentContainer = styled(Box)(({ theme }) => ({
+	display: 'flex',
+	flexDirection: 'column',
+	justifyContent: 'center',
+	width: '100%',
+	[theme.breakpoints.up('md')]: {
+		width: '550px'
+	}
+}));
+
 interface PairingProps {
 	words: CardData[],
 	removeCard: (id: string) => void,
@@ -48,7 +58,7 @@ interface PairingProps {
 }
 
 interface SelectedOption extends CardData {
-	type: "word" | "meaning"
+	type: 'word' | 'meaning';
 }
 
 const Pairing = ({ words, removeCard, isFetching, closeProgram }: PairingProps) => {
@@ -59,69 +69,74 @@ const Pairing = ({ words, removeCard, isFetching, closeProgram }: PairingProps) 
 	const activeWords: CardData[] = useMemo(() => shuffleArray(words.slice(0, 10)), [words]);
 	const shuffledAnswers = useMemo(() => shuffleArray(words.slice(0, 10)), [words]);
 
-	const handleClickOption = (selectedOption: SelectedOption, type: "word" | "meaning") => {
-		if(!selected) {
-			return setSelected(selectedOption);
-		} else {
+	const handleClickOption = (selectedOption: SelectedOption, type: 'word' | 'meaning') => {
+		if(!selected && !answers.some(answer => answer.id === selectedOption.id)) {
+			setSelected(selectedOption);
+		}
+
+		if(selected) {
 			if(answers.some(answer => answer.id === selectedOption.id)) {
-				return
-			}
-			if(selected.type === type && selected.id === selectedOption.id) {
-				return setSelected(undefined);
+				return;
+			} else if(selected.type === type && selected.id === selectedOption.id) {
+				setSelected(undefined);
 			} else if(selected.type === type) {
-				return setSelected(selectedOption);
+				setSelected(selectedOption);
 			} else {
 				const isCorrect = selectedOption.id === selected.id;
 				updateProgress(secret, selected.id, isCorrect ? 2 : -2);
-				setAnswers(prev => [...prev, { id: selected.id, isCorrect }])
+				setAnswers(prev => [...prev, { id: selected.id, isCorrect }]);
 				setSelected(undefined);
 			}
 		}
-	}
 
-	const getOptionColor = (word: CardData, type: "word" | "meaning"): string => {
-		const answer = answers.find(answer => answer.id === word.id)
+	};
+
+	const getOptionColor = (word: CardData, type: 'word' | 'meaning'): string => {
+		const answer = answers.find(answer => answer.id === word.id);
 		if(answer) {
 			if(answer.isCorrect) {
-				return "#bfffcd !important";
+				return '#bfffcd !important';
 			} else {
-				return "#faafaf !important";
+				return '#faafaf !important';
 			}
 		}
-		if(!selected) return "transparent";
+		if(!selected) return 'transparent';
 
 		if(selected.id === word.id && selected.type === type) {
-			return "lightgray !important"
+			return 'lightgray !important';
 		} else {
-			return "transparent";
+			return 'transparent';
 		}
-	}
+	};
 
 	const skipWord = () => {
 		activeWords.forEach((word) => removeCard(word.id));
 		setAnswers([]);
-	}
+	};
 
 	const isAnswered = answers.length === (answers.length < 10 ? words.length : 10);
 
 	return (
 		<ProgramWrapper isFetching={ isFetching } words={ words }>
-			<Box display="flex" flexDirection="column" justifyContent="center" width={ { xs: '100%', md: '550px' } }>
+			<ContentContainer>
 				<MainWord>Match each option with its correct answer</MainWord>
 				<Box display="flex" justifyContent="center" flexWrap="wrap">
 					{ activeWords.map((word, index) => (
 						<>
 							<OptionBox
 								width="calc(35% - 22px)"
-								bgcolor={ getOptionColor(word, "word") }
-								onClick={ () => handleClickOption({ ...word, type: "word" }, "word") }
+								bgcolor={ getOptionColor(word, 'word') }
+								onClick={ () => handleClickOption({ ...word, type: 'word' }, 'word') }
 							>
 								{ capitalizeFirstLetter(word.word) }
 							</OptionBox>
 							<OptionBox
 								width="calc(65% - 22px)"
-								bgcolor={ getOptionColor(shuffledAnswers[index], "meaning") }
-								onClick={ () => handleClickOption({ ...shuffledAnswers[index], type: "meaning" }, "meaning") }
+								bgcolor={ getOptionColor(shuffledAnswers[index], 'meaning') }
+								onClick={ () => handleClickOption({
+									...shuffledAnswers[index],
+									type: 'meaning'
+								}, 'meaning') }
 							>
 								{ capitalizeFirstLetter(shuffledAnswers[index].meaning) }
 							</OptionBox>
@@ -129,7 +144,7 @@ const Pairing = ({ words, removeCard, isFetching, closeProgram }: PairingProps) 
 					)) }
 				</Box>
 				<ProgramNav closeProgram={ closeProgram } skipWord={ skipWord } isAnswered={ isAnswered }/>
-			</Box>
+			</ContentContainer>
 		</ProgramWrapper>
 	);
 };
