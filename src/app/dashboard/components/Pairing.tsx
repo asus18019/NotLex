@@ -9,7 +9,7 @@ import { useMemo, useState } from 'react';
 import { useCredentials } from '@/hooks/useCredentials';
 import { useProgress } from '@/hooks/useProgress';
 
-const OptionBox = styled(Box)({
+const OptionBox = styled(Box)(({ theme }) => ({
 	display: 'flex',
 	padding: '10px',
 	alignItems: 'center',
@@ -18,8 +18,10 @@ const OptionBox = styled(Box)({
 	borderTop: 'none',
 	fontFamily: 'Montserrat',
 	fontSize: '15px',
-	':hover': {
-		backgroundColor: '#eeeeee'
+	[theme.breakpoints.up('md')]: {
+		':hover': {
+			backgroundColor: '#eeeeee'
+		},
 	},
 	':first-of-type': {
 		borderRadius: '10px 0 0 0',
@@ -38,7 +40,7 @@ const OptionBox = styled(Box)({
 	':nth-last-of-type(2)': {
 		borderRadius: '0 0 0 10px'
 	}
-});
+}));
 
 const ContentContainer = styled(Box)(({ theme }) => ({
 	display: 'flex',
@@ -114,6 +116,11 @@ const Pairing = ({ words, removeCard, isFetching, closeProgram }: PairingProps) 
 		setAnswers([]);
 	};
 
+	const closePairingProgram = () => {
+		answers.forEach(answer => removeCard(answer.id));
+		closeProgram();
+	}
+
 	const isAnswered = answers.length === (answers.length < 10 ? words.length : 10);
 
 	return (
@@ -143,7 +150,7 @@ const Pairing = ({ words, removeCard, isFetching, closeProgram }: PairingProps) 
 						</>
 					)) }
 				</Box>
-				<ProgramNav closeProgram={ closeProgram } skipWord={ skipWord } isAnswered={ isAnswered }/>
+				<ProgramNav closeProgram={ closePairingProgram } skipWord={ skipWord } isAnswered={ isAnswered }/>
 			</ContentContainer>
 		</ProgramWrapper>
 	);

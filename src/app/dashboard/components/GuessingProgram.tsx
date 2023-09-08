@@ -10,9 +10,14 @@ import ProgramNav from '@/app/dashboard/components/ProgramNav';
 import { useProgress } from '@/hooks/useProgress';
 import { useCredentials } from '@/hooks/useCredentials';
 
-const QuizOption = styled(Box)({
+const QuizOption = styled(Box)(({ theme }) => ({
 	padding: '8px 10px',
 	cursor: 'pointer',
+	[theme.breakpoints.up('md')]: {
+		':hover': {
+			backgroundColor: '#eeeeee'
+		},
+	},
 	':first-of-type': {
 		borderRadius: '10px 10px 0 0',
 		paddingTop: '16px'
@@ -20,11 +25,8 @@ const QuizOption = styled(Box)({
 	':last-child': {
 		borderRadius: '0 0 10px 10px',
 		paddingBottom: '16px'
-	},
-	':hover': {
-		backgroundColor: '#eeeeee'
 	}
-});
+}));
 
 export const MainWord = styled(Typography)({
 	fontSize: '20px',
