@@ -12,7 +12,7 @@ interface ProgramWrapperProps {
 
 const ProgramWrapper = ({ isFetching, words, children }: ProgramWrapperProps) => {
 	return (
-		<Box display="flex" justifyContent="center" height="calc(100vh - 81px)" alignItems="center">
+		<Box display="flex" justifyContent="center" minHeight="calc(100vh - 81px)" alignItems="center">
 			{ isFetching ? (
 				<Box display="flex" alignItems="center" flexDirection="column" justifyContent="center">
 					<CircularProgress size={ 50 }/>

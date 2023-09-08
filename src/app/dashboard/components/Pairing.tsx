@@ -47,6 +47,7 @@ const ContentContainer = styled(Box)(({ theme }) => ({
 	flexDirection: 'column',
 	justifyContent: 'center',
 	width: '100%',
+	margin: '20px 0',
 	[theme.breakpoints.up('md')]: {
 		width: '550px'
 	}
