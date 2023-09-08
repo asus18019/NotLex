@@ -21,7 +21,7 @@ const OptionBox = styled(Box)(({ theme }) => ({
 	[theme.breakpoints.up('md')]: {
 		':hover': {
 			backgroundColor: '#eeeeee'
-		},
+		}
 	},
 	':first-of-type': {
 		borderRadius: '10px 0 0 0',
@@ -32,7 +32,11 @@ const OptionBox = styled(Box)(({ theme }) => ({
 		borderTop: '1px solid lightgray'
 	},
 	':nth-of-type(odd)': {
-		borderRight: 'none'
+		borderRight: 'none',
+		width: 'calc(35% - 22px)'
+	},
+	':nth-of-type(even)': {
+		width: 'calc(65% - 22px)'
 	},
 	':last-of-type': {
 		borderRadius: '0 0 10px 0'
@@ -69,16 +73,20 @@ const Pairing = ({ words, removeCard, isFetching, closeProgram }: PairingProps) 
 	const { updateProgress } = useProgress();
 	const [selected, setSelected] = useState<SelectedOption | undefined>(undefined);
 	const [answers, setAnswers] = useState<{ id: string, isCorrect: boolean }[]>([]);
-	const activeWords: CardData[] = useMemo(() => shuffleArray(words.slice(0, 10)), [words]);
-	const shuffledAnswers = useMemo(() => shuffleArray(words.slice(0, 10)), [words]);
+
+	const activeWords = useMemo(() => [...words].reverse().slice(0, 10), [words]);
+	const shuffledWords = useMemo(() => shuffleArray([...activeWords]), [activeWords]);
+	const shuffledAnswers = useMemo(() => shuffleArray([...activeWords]), [activeWords]);
 
 	const handleClickOption = (selectedOption: SelectedOption, type: 'word' | 'meaning') => {
-		if(!selected && !answers.some(answer => answer.id === selectedOption.id)) {
+		const isClickedOptionAnswered = answers.some(answer => answer.id === selectedOption.id);
+
+		if(!selected && !isClickedOptionAnswered) {
 			setSelected(selectedOption);
 		}
 
 		if(selected) {
-			if(answers.some(answer => answer.id === selectedOption.id)) {
+			if(isClickedOptionAnswered) {
 				return;
 			} else if(selected.type === type && selected.id === selectedOption.id) {
 				setSelected(undefined);
@@ -113,14 +121,14 @@ const Pairing = ({ words, removeCard, isFetching, closeProgram }: PairingProps) 
 	};
 
 	const skipWord = () => {
-		activeWords.forEach((word) => removeCard(word.id));
+		shuffledWords.forEach((word) => removeCard(word.id));
 		setAnswers([]);
 	};
 
 	const closePairingProgram = () => {
 		answers.forEach(answer => removeCard(answer.id));
 		closeProgram();
-	}
+	};
 
 	const isAnswered = answers.length === (answers.length < 10 ? words.length : 10);
 
@@ -129,17 +137,15 @@ const Pairing = ({ words, removeCard, isFetching, closeProgram }: PairingProps) 
 			<ContentContainer>
 				<MainWord>Match each option with its correct answer</MainWord>
 				<Box display="flex" justifyContent="center" flexWrap="wrap">
-					{ activeWords.map((word, index) => (
+					{ shuffledWords.map((word, index) => (
 						<>
 							<OptionBox
-								width="calc(35% - 22px)"
 								bgcolor={ getOptionColor(word, 'word') }
 								onClick={ () => handleClickOption({ ...word, type: 'word' }, 'word') }
 							>
 								{ capitalizeFirstLetter(word.word) }
 							</OptionBox>
 							<OptionBox
-								width="calc(65% - 22px)"
 								bgcolor={ getOptionColor(shuffledAnswers[index], 'meaning') }
 								onClick={ () => handleClickOption({
 									...shuffledAnswers[index],
