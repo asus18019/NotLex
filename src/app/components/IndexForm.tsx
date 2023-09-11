@@ -8,6 +8,7 @@ import { checkSecrets } from '@/utils/checkCredentials';
 import AlertModal from '@/app/components/AlertModal';
 import { AlertTimeout } from '@/config/AlertTimeout';
 import { ModalDataType, ModalType } from '@/types';
+import { fetchCategories } from '@/utils/fetchCategories';
 
 const FormInput = styled('input')({
 	fontWeight: '500',
@@ -44,6 +45,8 @@ export default function IndexForm() {
 			const res = await checkSecrets({ secret, database_id: dbId });
 			if(res) {
 				const credentials = { secret, database_id: dbId };
+				const { properties: categories } = await fetchCategories(credentials);
+				setCookie('categories', JSON.stringify(categories));
 				setCookie('credentials', JSON.stringify(credentials));
 				setSecret('');
 				setDbId('');

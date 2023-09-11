@@ -1,8 +1,9 @@
 'use client';
-import { Button, FormControl, styled, Typography } from '@mui/material';
+import { Autocomplete, Button, FormControl, styled, Typography } from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
+import { getCookie } from 'cookies-next';
 import { FormEvent, useState } from 'react';
-import { SearchParamsType } from '@/types';
+import { CategoryType, SearchParamsType } from '@/types';
 import { useRouter } from 'next/navigation';
 import { useCredentials } from '@/hooks/useCredentials';
 
@@ -34,15 +35,17 @@ const FormText = styled('textarea')({
 const ADD_WORD_API_URL = 'https://notlex-api.vercel.app/word';
 
 export default function Form({ searchParams }: { searchParams: SearchParamsType }) {
-    const router = useRouter();
-    const [secret, database_id] = useCredentials();
+	const router = useRouter();
+	const [secret, database_id] = useCredentials();
 
-    const [isFetching, setIsFetching] = useState(false);
+	const [isFetching, setIsFetching] = useState(false);
 
 	const [word, setWord] = useState(searchParams.word || '');
 	const [category, setCategory] = useState('');
 	const [meaning, setMeaning] = useState(searchParams.definition || '');
 	const [example, setExample] = useState(searchParams.example || '');
+
+	const categories: CategoryType[] = JSON.parse(getCookie('categories')?.toString() || '[]');
 
 	const handleAddWord = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
@@ -63,8 +66,8 @@ export default function Form({ searchParams }: { searchParams: SearchParamsType 
 			setMeaning('');
 			setExample('');
 
-            router.push('/add');
-        } catch(e) {
+			router.push('/add');
+		} catch(e) {
 			console.log(e);
 		} finally {
 			setIsFetching(false);
@@ -80,12 +83,29 @@ export default function Form({ searchParams }: { searchParams: SearchParamsType 
 				onChange={ e => setWord(e.target.value) }
 				required
 			/>
-			<FormInput
-				placeholder="Category"
-				type="text"
+			<Autocomplete
+				sx={ { mt: '20px' } }
+				options={ categories.map(elem => elem.name) }
+				disableClearable={ true }
+				freeSolo={ true }
 				value={ category }
-				onChange={ e => setCategory(e.target.value) }
-				required
+				onChange={ (_event: any, value: string | null) => {
+					setCategory(value || '');
+				} }
+				inputValue={ category }
+				onInputChange={ (_event: any, value: string | null) => {
+					setCategory(value || '');
+				} }
+				renderInput={ (params) => (
+					<div ref={ params.InputProps.ref }>
+						<FormInput
+							sx={{ width: "calc(100% - 32px)" }}
+							type="text"
+							{ ...params.inputProps }
+							placeholder="Category"
+							required/>
+					</div>
+				) }
 			/>
 			<FormText
 				placeholder="Meaning"

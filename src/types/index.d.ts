@@ -70,3 +70,9 @@ export type ModalDataType = {
 }
 
 export type ModalType = 'error' | 'warning' | 'info' | 'success'
+
+export type CategoryType = {
+	id: string,
+	name: string,
+	color: string
+}
