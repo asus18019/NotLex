@@ -9,10 +9,7 @@ import { AuthContext } from '@/context/AuthContextProvider';
 import { useCredentials } from '@/hooks/useCredentials';
 import { checkSecrets } from '@/utils/checkCredentials';
 import { navLinks } from '@/config/links';
-import { CategoryType } from '@/types';
-import { getCookie, setCookie } from 'cookies-next';
-import md5 from 'md5';
-import { fetchCategories } from '@/utils/fetchCategories';
+import { useCategories } from '@/hooks/useCategories';
 
 const NavbarLink = styled(Link)(({ theme }) => ({
 	margin: '10px 18px',
@@ -35,8 +32,8 @@ const NavbarLink = styled(Link)(({ theme }) => ({
 export default function Nav({ showMenu, setShowMenu }: { showMenu: boolean, setShowMenu: () => void }) {
 	const router = useRouter();
 	const [secret, database_id] = useCredentials();
+	const { syncCategories } = useCategories();
 	const { loading, loggedIn, setAuthState } = useContext(AuthContext);
-	const categories: CategoryType[] = JSON.parse(getCookie('categories')?.toString() || '[]');
 
 	useEffect(() => {
 		checkSecrets({ secret, database_id })
@@ -44,11 +41,7 @@ export default function Nav({ showMenu, setShowMenu }: { showMenu: boolean, setS
 				setAuthState({ loading: false, loggedIn: res.ok });
 
 				const { categoriesHash } = await res.json();
-				const isLocalCategoriesHashEqualsNotion = md5(JSON.stringify(categories)) === categoriesHash;
-				if(!isLocalCategoriesHashEqualsNotion) {
-					const { properties: fetchedCategories } = await fetchCategories({ secret, database_id });
-					setCookie('categories', JSON.stringify(fetchedCategories));
-				}
+				await syncCategories(categoriesHash, { secret, database_id });
 			})
 			.catch(() => {
 				setAuthState({ loading: false, loggedIn: false });

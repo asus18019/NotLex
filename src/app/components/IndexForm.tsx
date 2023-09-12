@@ -1,15 +1,14 @@
 'use client';
 import { Button, FormControl, styled, Typography } from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
-import { getCookie, setCookie } from 'cookies-next';
+import { setCookie } from 'cookies-next';
 import { useContext, useState } from 'react';
-import md5 from 'md5';
 import { AuthContext } from '@/context/AuthContextProvider';
 import { checkSecrets } from '@/utils/checkCredentials';
 import AlertModal from '@/app/components/AlertModal';
 import { AlertTimeout } from '@/config/AlertTimeout';
-import { CategoryType, ModalDataType, ModalType } from '@/types';
-import { fetchCategories } from '@/utils/fetchCategories';
+import { ModalDataType, ModalType } from '@/types';
+import { useCategories } from '@/hooks/useCategories';
 
 const FormInput = styled('input')({
 	fontWeight: '500',
@@ -29,7 +28,7 @@ const FormInput = styled('input')({
 
 export default function IndexForm() {
 	const { setAuthState } = useContext(AuthContext);
-	const categories: CategoryType[] = JSON.parse(getCookie('categories')?.toString() || '[]');
+	const { syncCategories } = useCategories();
 	const [isLoginForm, setIsLoginForm] = useState(true);
 	const [isFetching, setIsFetching] = useState(false);
 	const [modalData, setModalData] = useState<ModalDataType>({ message: '', type: 'success' });
@@ -50,11 +49,7 @@ export default function IndexForm() {
 				setCookie('credentials', JSON.stringify(credentials));
 
 				const { categoriesHash } = await res.json();
-				const isLocalCategoriesHashEqualsNotion = md5(JSON.stringify(categories)) === categoriesHash;
-				if(!isLocalCategoriesHashEqualsNotion) {
-					const { properties: fetchedCategories } = await fetchCategories(credentials);
-					setCookie('categories', JSON.stringify(fetchedCategories));
-				}
+				await syncCategories(categoriesHash, credentials);
 
 				setSecret('');
 				setDbId('');
