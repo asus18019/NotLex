@@ -10,8 +10,8 @@ export async function middleware(req: NextRequest) {
 	}
 
 	try {
-		const isValid = checkSecrets({ secret, database_id });
-		if(!isValid) {
+		const res = await checkSecrets({ secret, database_id });
+		if(!res.ok) {
 			new Error('This route is unavailable');
 		}
 	} catch(error) {

@@ -1,13 +1,14 @@
 'use client';
 import { Button, FormControl, styled, Typography } from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
-import { setCookie } from 'cookies-next';
+import { getCookie, setCookie } from 'cookies-next';
 import { useContext, useState } from 'react';
+import md5 from 'md5';
 import { AuthContext } from '@/context/AuthContextProvider';
 import { checkSecrets } from '@/utils/checkCredentials';
 import AlertModal from '@/app/components/AlertModal';
 import { AlertTimeout } from '@/config/AlertTimeout';
-import { ModalDataType, ModalType } from '@/types';
+import { CategoryType, ModalDataType, ModalType } from '@/types';
 import { fetchCategories } from '@/utils/fetchCategories';
 
 const FormInput = styled('input')({
@@ -28,6 +29,7 @@ const FormInput = styled('input')({
 
 export default function IndexForm() {
 	const { setAuthState } = useContext(AuthContext);
+	const categories: CategoryType[] = JSON.parse(getCookie('categories')?.toString() || '[]');
 	const [isLoginForm, setIsLoginForm] = useState(true);
 	const [isFetching, setIsFetching] = useState(false);
 	const [modalData, setModalData] = useState<ModalDataType>({ message: '', type: 'success' });
@@ -43,21 +45,27 @@ export default function IndexForm() {
 		setIsFetching(true);
 		try {
 			const res = await checkSecrets({ secret, database_id: dbId });
-			if(res) {
+			if(res.ok) {
 				const credentials = { secret, database_id: dbId };
-				const { properties: categories } = await fetchCategories(credentials);
-				setCookie('categories', JSON.stringify(categories));
 				setCookie('credentials', JSON.stringify(credentials));
+
+				const { categoriesHash } = await res.json();
+				const isLocalCategoriesHashEqualsNotion = md5(JSON.stringify(categories)) === categoriesHash;
+				if(!isLocalCategoriesHashEqualsNotion) {
+					const { properties: fetchedCategories } = await fetchCategories(credentials);
+					setCookie('categories', JSON.stringify(fetchedCategories));
+				}
+
 				setSecret('');
 				setDbId('');
 				setAuthState({ loading: false, loggedIn: true });
-				handleShowModal("You have logged in", "success");
+				handleShowModal('You have logged in', 'success');
 			} else {
 				throw new Error('Something went wrong. Try again...');
 			}
 		} catch(e: any) {
 			const error = e as Error;
-			handleShowModal(error.message, "error");
+			handleShowModal(error.message, 'error');
 		} finally {
 			setIsFetching(false);
 		}
@@ -82,13 +90,13 @@ export default function IndexForm() {
 				setPageId('');
 				setDbName('');
 				setAuthState({ loading: false, loggedIn: true });
-				handleShowModal("You've created your database and logged in", "success");
+				handleShowModal('You\'ve created your database and logged in', 'success');
 			} else {
 				throw new Error('Something went wrong. Try again...');
 			}
 		} catch(e: any) {
 			const error = e as Error;
-			handleShowModal(error.message, "error");
+			handleShowModal(error.message, 'error');
 		} finally {
 			setIsFetching(false);
 		}
@@ -98,13 +106,14 @@ export default function IndexForm() {
 		setModalData({ message, type });
 		setTimeout(() => {
 			setModalData({ message: '', type });
-		}, AlertTimeout)
-	}
+		}, AlertTimeout);
+	};
 
 	return (
 		<>
 			{ modalData.message && (
-				<AlertModal handleClickModal={ () => setModalData({ message: '', type: 'success' }) } modalData={ modalData }/>
+				<AlertModal handleClickModal={ () => setModalData({ message: '', type: 'success' }) }
+				            modalData={ modalData }/>
 			) }
 			<Typography
 				fontFamily="Montserrat"

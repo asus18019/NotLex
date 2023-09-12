@@ -9,6 +9,10 @@ import { AuthContext } from '@/context/AuthContextProvider';
 import { useCredentials } from '@/hooks/useCredentials';
 import { checkSecrets } from '@/utils/checkCredentials';
 import { navLinks } from '@/config/links';
+import { CategoryType } from '@/types';
+import { getCookie, setCookie } from 'cookies-next';
+import md5 from 'md5';
+import { fetchCategories } from '@/utils/fetchCategories';
 
 const NavbarLink = styled(Link)(({ theme }) => ({
 	margin: '10px 18px',
@@ -32,11 +36,19 @@ export default function Nav({ showMenu, setShowMenu }: { showMenu: boolean, setS
 	const router = useRouter();
 	const [secret, database_id] = useCredentials();
 	const { loading, loggedIn, setAuthState } = useContext(AuthContext);
+	const categories: CategoryType[] = JSON.parse(getCookie('categories')?.toString() || '[]');
 
 	useEffect(() => {
 		checkSecrets({ secret, database_id })
-			.then(isValid => {
-				setAuthState({ loading: false, loggedIn: isValid });
+			.then(async res => {
+				setAuthState({ loading: false, loggedIn: res.ok });
+
+				const { categoriesHash } = await res.json();
+				const isLocalCategoriesHashEqualsNotion = md5(JSON.stringify(categories)) === categoriesHash;
+				if(!isLocalCategoriesHashEqualsNotion) {
+					const { properties: fetchedCategories } = await fetchCategories({ secret, database_id });
+					setCookie('categories', JSON.stringify(fetchedCategories));
+				}
 			})
 			.catch(() => {
 				setAuthState({ loading: false, loggedIn: false });
