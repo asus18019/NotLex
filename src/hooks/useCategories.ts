@@ -14,5 +14,5 @@ export const useCategories = () => {
 		}
 	};
 
-	return { syncCategories };
+	return { categories, syncCategories };
 };

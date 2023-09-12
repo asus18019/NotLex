@@ -1,11 +1,11 @@
 'use client';
 import { Autocomplete, Button, FormControl, styled, Typography } from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
-import { getCookie } from 'cookies-next';
 import { FormEvent, useState } from 'react';
-import { CategoryType, SearchParamsType } from '@/types';
+import { SearchParamsType } from '@/types';
 import { useRouter } from 'next/navigation';
 import { useCredentials } from '@/hooks/useCredentials';
+import { useCategories } from '@/hooks/useCategories';
 
 const FormInput = styled('input')({
 	fontWeight: '500',
@@ -32,11 +32,10 @@ const FormText = styled('textarea')({
 	resize: 'none'
 });
 
-const ADD_WORD_API_URL = 'https://notlex-api.vercel.app/word';
-
 export default function Form({ searchParams }: { searchParams: SearchParamsType }) {
 	const router = useRouter();
 	const [secret, database_id] = useCredentials();
+	const { categories } = useCategories();
 
 	const [isFetching, setIsFetching] = useState(false);
 
@@ -45,14 +44,12 @@ export default function Form({ searchParams }: { searchParams: SearchParamsType 
 	const [meaning, setMeaning] = useState(searchParams.definition || '');
 	const [example, setExample] = useState(searchParams.example || '');
 
-	const categories: CategoryType[] = JSON.parse(getCookie('categories')?.toString() || '[]');
-
 	const handleAddWord = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		setIsFetching(true);
 
 		try {
-			await fetch(ADD_WORD_API_URL, {
+			await fetch(`${ process.env.NEXT_PUBLIC_API_URL }/word`, {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({

@@ -71,7 +71,7 @@ export default function IndexForm() {
 
 		setIsFetching(true);
 		try {
-			const res = await fetch('https://notlex-api.vercel.app/create-database', {
+			const res = await fetch(`${ process.env.NEXT_PUBLIC_API_URL }/create-database`, {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({ secret, pageId, dbName })

@@ -57,10 +57,8 @@ const ProgramsBox = styled(Box)(({ theme }) => ({
 	}
 }));
 
-const api_url = 'https://notlex-api.vercel.app/words';
-
 async function fetchData({ secret, database_id }: CredentialsType) {
-	const data = await fetch(api_url + `?secret=${ secret }&database_id=${ database_id }`, {
+	const data = await fetch(`${ process.env.NEXT_PUBLIC_API_URL }/words?secret=${ secret }&database_id=${ database_id }`, {
 		method: 'GET'
 	});
 

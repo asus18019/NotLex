@@ -23,8 +23,6 @@ const FormInput = styled('input')({
 	}
 });
 
-export const DICTIONARY_API = 'https://notlex-api.vercel.app/find-word?word='
-
 export default function SearchForm({ data, searchParam }: { data: DictionaryWordResult[], searchParam: string }) {
 	const router = useRouter();
 	const [isFetching, setIsFetching] = useState(false);
@@ -51,7 +49,7 @@ export default function SearchForm({ data, searchParam }: { data: DictionaryWord
 		}
 
         setIsFetching(true);
-		const res = await fetch('https://notlex-api.vercel.app/find-word?word=' + value);
+		const res = await fetch(`${ process.env.NEXT_PUBLIC_API_URL }/find-word?word=` + value);
 		const searchResult = await res.json();
 		if(res.status === 200) {
 			setSearchResults(searchResult.data);

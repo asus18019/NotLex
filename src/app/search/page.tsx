@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 const fetchSearchWords = async (word: string): Promise<DictionaryWordResult[]> => {
     if(!word) return [];
 
-    const res = await fetch('https://notlex-api.vercel.app/find-word?word=' + word);
+    const res = await fetch(`${ process.env.NEXT_PUBLIC_API_URL }/find-word?word=` + word);
     const data = await res.json();
     return data.data;
 }
