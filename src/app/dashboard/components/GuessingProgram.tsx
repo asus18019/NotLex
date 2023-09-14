@@ -86,9 +86,9 @@ const GuessingProgram = ({ type, words, activeWord, removeCard, isFetching, clos
 	return (
 		<ProgramWrapper isFetching={ isFetching } words={ words }>
 			<Box display="flex" flexDirection="column" justifyContent="center">
-				{ words.map((word) => {
+				{ words.map((word, index) => {
 					return word === activeWord && (
-						<Box>
+						<Box key={ word.id + index }>
 							<MainWord>{ capitalizeFirstLetter(renderContent(word.word, word.meaning)) }</MainWord>
 							<Box border="1px solid lightgray" borderRadius="10px" width={ { xs: '100%', md: '550px' } }>
 								{ randomWords.map(word => (

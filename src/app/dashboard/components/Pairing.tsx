@@ -5,7 +5,7 @@ import ProgramWrapper from './ProgramWrapper';
 import { shuffleArray } from '@/utils/shuffleArray';
 import { capitalizeFirstLetter } from '@/utils/capitalizeFirstLetter';
 import { MainWord } from './GuessingProgram';
-import { useMemo, useState } from 'react';
+import { Fragment, useMemo, useState } from 'react';
 import { useCredentials } from '@/hooks/useCredentials';
 import { useProgress } from '@/hooks/useProgress';
 
@@ -138,7 +138,7 @@ const Pairing = ({ words, removeCard, isFetching, closeProgram }: PairingProps) 
 				<MainWord>Match each option with its correct answer</MainWord>
 				<Box display="flex" justifyContent="center" flexWrap="wrap">
 					{ shuffledWords.map((word, index) => (
-						<>
+						<Fragment key={ word.id }>
 							<OptionBox
 								bgcolor={ getOptionColor(word, 'word') }
 								onClick={ () => handleClickOption({ ...word, type: 'word' }, 'word') }
@@ -154,7 +154,7 @@ const Pairing = ({ words, removeCard, isFetching, closeProgram }: PairingProps) 
 							>
 								{ capitalizeFirstLetter(shuffledAnswers[index].meaning) }
 							</OptionBox>
-						</>
+						</Fragment>
 					)) }
 				</Box>
 				<ProgramNav closeProgram={ closePairingProgram } skipWord={ skipWord } isAnswered={ isAnswered }/>
