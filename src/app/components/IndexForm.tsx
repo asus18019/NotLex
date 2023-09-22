@@ -47,7 +47,7 @@ export default function IndexForm() {
 				setCookie('credentials', JSON.stringify(credentials));
 
 				const { categoriesHash } = await res.json();
-				await syncCategories(categoriesHash, credentials);
+				await syncCategories(categoriesHash);
 
 				setSecret('');
 				setDbId('');

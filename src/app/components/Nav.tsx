@@ -41,7 +41,7 @@ export default function Nav({ showMenu, setShowMenu }: { showMenu: boolean, setS
 				setAuthState({ loading: false, loggedIn: res.ok });
 
 				const { categoriesHash } = await res.json();
-				await syncCategories(categoriesHash, { secret, database_id });
+				await syncCategories(categoriesHash);
 			})
 			.catch(() => {
 				setAuthState({ loading: false, loggedIn: false });

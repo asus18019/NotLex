@@ -1,3 +1,4 @@
+'use client'
 import AlertModal from '@/app/components/AlertModal';
 import { useState } from 'react';
 import { ModalDataType, ModalType } from '@/types';

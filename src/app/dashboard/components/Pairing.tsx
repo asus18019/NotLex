@@ -6,7 +6,6 @@ import { shuffleArray } from '@/utils/shuffleArray';
 import { capitalizeFirstLetter } from '@/utils/capitalizeFirstLetter';
 import { MainWord } from './GuessingProgram';
 import { Fragment, useMemo, useState } from 'react';
-import { useCredentials } from '@/hooks/useCredentials';
 import { useProgress } from '@/hooks/useProgress';
 
 const OptionBox = styled(Box)(({ theme }) => ({
@@ -69,7 +68,6 @@ interface SelectedOption extends CardData {
 }
 
 const Pairing = ({ words, removeCard, isFetching, closeProgram }: PairingProps) => {
-	const [secret = ''] = useCredentials();
 	const { updateProgress } = useProgress();
 	const [selected, setSelected] = useState<SelectedOption | undefined>(undefined);
 	const [answers, setAnswers] = useState<{ id: string, isCorrect: boolean }[]>([]);
@@ -94,7 +92,7 @@ const Pairing = ({ words, removeCard, isFetching, closeProgram }: PairingProps) 
 				setSelected(selectedOption);
 			} else {
 				const isCorrect = selectedOption.id === selected.id;
-				updateProgress(secret, selected.id, isCorrect ? 2 : -2);
+				updateProgress(selected.id, isCorrect ? 2 : -2);
 				setAnswers(prev => [...prev, { id: selected.id, isCorrect }]);
 				setSelected(undefined);
 			}
