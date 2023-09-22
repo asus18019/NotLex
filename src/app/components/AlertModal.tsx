@@ -1,7 +1,6 @@
 import { Alert, Box, styled, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { ModalDataType } from '@/types';
-import { AlertTimeout } from '@/config/AlertTimeout';
 
 const AlertWindow = styled(Alert)(({ theme }) => ({
 	cursor: 'pointer',
@@ -25,11 +24,12 @@ const AlertWindow = styled(Alert)(({ theme }) => ({
 
 
 interface AlertModalProps {
-	modalData: ModalDataType;
-	handleClickModal: () => void;
+	modalData: ModalDataType,
+	handleClickModal: () => void,
+	timeout: number
 }
 
-const AlertModal = ({ modalData, handleClickModal }: AlertModalProps) => {
+const AlertModal = ({ modalData, handleClickModal, timeout }: AlertModalProps) => {
 	const [lineWidth, setLineWidth] = useState('100%');
 
 	useEffect(() => {
@@ -44,7 +44,7 @@ const AlertModal = ({ modalData, handleClickModal }: AlertModalProps) => {
 				bgcolor="blue"
 				sx={ {
 					width: lineWidth,
-					transitionDuration: `${ AlertTimeout / 1000 }s`
+					transitionDuration: `${ timeout / 1000 }s`
 				} }
 			/>
 			<Typography fontWeight={ 500 }>{ modalData.message }</Typography>

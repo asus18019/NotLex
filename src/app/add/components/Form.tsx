@@ -2,12 +2,11 @@
 import { Autocomplete, Button, FormControl, styled, Typography } from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
 import { FormEvent, useState } from 'react';
-import { ModalDataType, ModalType, SearchParamsType } from '@/types';
+import { SearchParamsType } from '@/types';
 import { useRouter } from 'next/navigation';
 import { useCredentials } from '@/hooks/useCredentials';
 import { useCategories } from '@/hooks/useCategories';
-import AlertModal from '@/app/components/AlertModal';
-import { AlertTimeout } from '@/config/AlertTimeout';
+import { useAlertModal } from '@/hooks/useAlertModal';
 
 const FormInput = styled('input')({
 	fontWeight: '500',
@@ -38,9 +37,9 @@ export default function Form({ searchParams }: { searchParams: SearchParamsType 
 	const router = useRouter();
 	const [secret, database_id] = useCredentials();
 	const { categories } = useCategories();
+	const { alertModal, handleShowModal } = useAlertModal();
 
 	const [isFetching, setIsFetching] = useState(false);
-	const [modalData, setModalData] = useState<ModalDataType>({ message: '', type: 'success' });
 
 	const [word, setWord] = useState(searchParams.word || '');
 	const [category, setCategory] = useState('');
@@ -79,19 +78,9 @@ export default function Form({ searchParams }: { searchParams: SearchParamsType 
 		}
 	};
 
-	const handleShowModal = (message: string, type: ModalType) => {
-		setModalData({ message, type });
-		setTimeout(() => {
-			setModalData({ message: '', type });
-		}, AlertTimeout);
-	};
-
 	return (
 		<FormControl sx={ { my: '25px', width: '310px' } } component="form" onSubmit={ handleAddWord }>
-			{ modalData.message && (
-				<AlertModal handleClickModal={ () => setModalData({ message: '', type: 'success' }) }
-				            modalData={ modalData }/>
-			) }
+			{ alertModal }
 			<FormInput
 				placeholder="Word"
 				type="text"

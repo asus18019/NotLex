@@ -5,10 +5,8 @@ import { setCookie } from 'cookies-next';
 import { useContext, useState } from 'react';
 import { AuthContext } from '@/context/AuthContextProvider';
 import { checkSecrets } from '@/utils/checkCredentials';
-import AlertModal from '@/app/components/AlertModal';
-import { AlertTimeout } from '@/config/AlertTimeout';
-import { ModalDataType, ModalType } from '@/types';
 import { useCategories } from '@/hooks/useCategories';
+import { useAlertModal } from '@/hooks/useAlertModal';
 
 const FormInput = styled('input')({
 	fontWeight: '500',
@@ -29,9 +27,9 @@ const FormInput = styled('input')({
 export default function IndexForm() {
 	const { setAuthState } = useContext(AuthContext);
 	const { syncCategories } = useCategories();
+	const { alertModal, handleShowModal } = useAlertModal();
 	const [isLoginForm, setIsLoginForm] = useState(true);
 	const [isFetching, setIsFetching] = useState(false);
-	const [modalData, setModalData] = useState<ModalDataType>({ message: '', type: 'success' });
 
 	const [secret, setSecret] = useState('');
 	const [dbId, setDbId] = useState('');
@@ -97,19 +95,9 @@ export default function IndexForm() {
 		}
 	};
 
-	const handleShowModal = (message: string, type: ModalType) => {
-		setModalData({ message, type });
-		setTimeout(() => {
-			setModalData({ message: '', type });
-		}, AlertTimeout);
-	};
-
 	return (
 		<>
-			{ modalData.message && (
-				<AlertModal handleClickModal={ () => setModalData({ message: '', type: 'success' }) }
-				            modalData={ modalData }/>
-			) }
+			{ alertModal }
 			<Typography
 				fontFamily="Montserrat"
 				fontWeight={ 700 }
