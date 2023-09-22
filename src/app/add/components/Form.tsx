@@ -2,10 +2,12 @@
 import { Autocomplete, Button, FormControl, styled, Typography } from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
 import { FormEvent, useState } from 'react';
-import { SearchParamsType } from '@/types';
+import { ModalDataType, ModalType, SearchParamsType } from '@/types';
 import { useRouter } from 'next/navigation';
 import { useCredentials } from '@/hooks/useCredentials';
 import { useCategories } from '@/hooks/useCategories';
+import AlertModal from '@/app/components/AlertModal';
+import { AlertTimeout } from '@/config/AlertTimeout';
 
 const FormInput = styled('input')({
 	fontWeight: '500',
@@ -38,6 +40,7 @@ export default function Form({ searchParams }: { searchParams: SearchParamsType 
 	const { categories } = useCategories();
 
 	const [isFetching, setIsFetching] = useState(false);
+	const [modalData, setModalData] = useState<ModalDataType>({ message: '', type: 'success' });
 
 	const [word, setWord] = useState(searchParams.word || '');
 	const [category, setCategory] = useState('');
@@ -49,7 +52,7 @@ export default function Form({ searchParams }: { searchParams: SearchParamsType 
 		setIsFetching(true);
 
 		try {
-			await fetch(`${ process.env.NEXT_PUBLIC_API_URL }/word`, {
+			const response = await fetch(`${ process.env.NEXT_PUBLIC_API_URL }/word`, {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({
@@ -58,6 +61,10 @@ export default function Form({ searchParams }: { searchParams: SearchParamsType 
 				})
 			});
 
+			if(!response.ok) throw new Error();
+
+			handleShowModal('You\'ve added a new word', 'success');
+
 			setWord('');
 			setCategory('');
 			setMeaning('');
@@ -65,14 +72,26 @@ export default function Form({ searchParams }: { searchParams: SearchParamsType 
 
 			router.push('/add');
 		} catch(e) {
+			handleShowModal('Something went wrong. Try again', 'error');
 			console.log(e);
 		} finally {
 			setIsFetching(false);
 		}
 	};
 
+	const handleShowModal = (message: string, type: ModalType) => {
+		setModalData({ message, type });
+		setTimeout(() => {
+			setModalData({ message: '', type });
+		}, AlertTimeout);
+	};
+
 	return (
 		<FormControl sx={ { my: '25px', width: '310px' } } component="form" onSubmit={ handleAddWord }>
+			{ modalData.message && (
+				<AlertModal handleClickModal={ () => setModalData({ message: '', type: 'success' }) }
+				            modalData={ modalData }/>
+			) }
 			<FormInput
 				placeholder="Word"
 				type="text"
@@ -96,7 +115,7 @@ export default function Form({ searchParams }: { searchParams: SearchParamsType 
 				renderInput={ (params) => (
 					<div ref={ params.InputProps.ref }>
 						<FormInput
-							sx={{ width: "calc(100% - 32px)" }}
+							sx={ { width: 'calc(100% - 32px)' } }
 							type="text"
 							{ ...params.inputProps }
 							placeholder="Category"
