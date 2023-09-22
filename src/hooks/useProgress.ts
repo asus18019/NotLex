@@ -1,5 +1,9 @@
+import { useCredentials } from '@/hooks/useCredentials';
+
 export const useProgress = () => {
-	const updateProgress = async (secret: string, page_id: string, difference: number) => {
+	const [secret] = useCredentials();
+
+	const updateProgress = async (page_id: string, difference: number) => {
 		await fetch(`${ process.env.NEXT_PUBLIC_API_URL }/change-progress`, {
 			method: 'PATCH',
 			headers: { 'Content-Type': 'application/json' },
