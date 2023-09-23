@@ -1,6 +1,27 @@
 import AddIcon from '@mui/icons-material/Add';
-import { Box, Typography } from '@mui/material';
+import { Box, styled, Typography } from '@mui/material';
 import { WordDefinition } from '@/types';
+import { AuthContext } from '@/context/AuthContextProvider';
+import { useContext } from 'react';
+
+const WordContainer = styled(Box)({
+	padding: '16px 0',
+	display: 'flex',
+	alignItems: 'center',
+	borderTop: '1px solid lightgray',
+	':first-of-type': {
+		borderTop: 'none'
+	}
+});
+
+const StyledAddIcon = styled(AddIcon)({
+	borderRadius: '50%',
+	transition: '0.2s',
+	cursor: 'pointer',
+	':hover': {
+		backgroundColor: '#eeeeee'
+	}
+});
 
 interface WordResultProps {
 	word: WordDefinition,
@@ -8,13 +29,18 @@ interface WordResultProps {
 }
 
 export default function WordResult({ word, handleClickAddWord }: WordResultProps) {
+	const { loggedIn } = useContext(AuthContext);
 	return (
-		<Box py={ 2 } display="flex" alignItems="center">
-			<AddIcon
-				transform="scale(1.8)"
-				sx={ { m: '0 20px 0 0', cursor: 'pointer' } }
-				onClick={ () => handleClickAddWord(word) }
-			/>
+		<WordContainer>
+			{
+				loggedIn && (
+					<StyledAddIcon
+						transform="scale(1.8)"
+						sx={ { m: '0 20px 0 0', cursor: 'pointer' } }
+						onClick={ () => handleClickAddWord(word) }
+					/>
+				)
+			}
 			<Box>
 				<Typography
 					fontFamily="Montserrat"
@@ -34,6 +60,6 @@ export default function WordResult({ word, handleClickAddWord }: WordResultProps
 					{ word.example }
 				</Typography>
 			</Box>
-		</Box>
+		</WordContainer>
 	);
 }

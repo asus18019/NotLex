@@ -1,6 +1,6 @@
-"use client"
-import { Divider, styled } from '@mui/material';
-import { Fragment, useCallback, useState } from 'react';
+'use client';
+import { styled } from '@mui/material';
+import { useCallback, useState } from 'react';
 import { DictionaryWordResult } from '@/types';
 import debounce from 'lodash/debounce';
 import { useRouter } from 'next/navigation';
@@ -41,14 +41,14 @@ export default function SearchForm({ data, searchParam }: { data: DictionaryWord
 	};
 
 	const debounceFn = useCallback(debounce(async (value: string) => {
-        router.push(`/search${ value.trim() && `?search=${ value }` }`);
+		router.push(`/search${ value.trim() && `?search=${ value }` }`);
 
-        if(!value.trim()) {
+		if(!value.trim()) {
 			setSearchResults([]);
 			return;
 		}
 
-        setIsFetching(true);
+		setIsFetching(true);
 		const res = await fetch(`${ process.env.NEXT_PUBLIC_API_URL }/find-word?word=` + value);
 		const searchResult = await res.json();
 		if(res.status === 200) {
@@ -75,13 +75,11 @@ export default function SearchForm({ data, searchParam }: { data: DictionaryWord
 				return res.meanings.map(re => {
 					return re.definitions.map((word, index) => {
 						return (
-							<Fragment key={ index }>
-								<Divider/>
-								<WordResult
-									word={ word }
-									handleClickAddWord={ handleClickAddWord }
-								/>
-							</Fragment>
+							<WordResult
+								key={ index }
+								word={ word }
+								handleClickAddWord={ handleClickAddWord }
+							/>
 						);
 					});
 				});
