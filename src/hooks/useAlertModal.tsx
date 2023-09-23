@@ -15,6 +15,7 @@ export const useAlertModal = () => {
 			closeModal();
 		}, timeout);
 	};
+
 	const closeModal = () => setModalData({ message: '', type: 'success' });
 
 	const alertModal = modalData.message && (
