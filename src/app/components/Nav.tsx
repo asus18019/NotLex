@@ -4,7 +4,7 @@ import Logo from '@/svg/Logo';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
 import { useRouter } from 'next/navigation';
-import { useContext, useLayoutEffect } from 'react';
+import { useContext, useLayoutEffect, useState } from 'react';
 import { AuthContext } from '@/context/AuthContextProvider';
 import { useCredentials } from '@/hooks/useCredentials';
 import { checkSecrets } from '@/utils/checkCredentials';
@@ -34,6 +34,7 @@ export default function Nav({ showMenu, setShowMenu }: { showMenu: boolean, setS
 	const [secret, database_id] = useCredentials();
 	const { syncCategories } = useCategories();
 	const { loading, loggedIn, setAuthState } = useContext(AuthContext);
+	const [hideMenu, setHideMenu] = useState(true);
 
 	useLayoutEffect(() => {
 		checkSecrets({ secret, database_id })
@@ -50,12 +51,15 @@ export default function Nav({ showMenu, setShowMenu }: { showMenu: boolean, setS
 
 	const goToMain = () => router.push('/');
 
-	const mobileNavbarHeight = (showMenu && !loading) ? (loggedIn ? '287px' : '179px') : '0px';
-
 	const closeMenuIcon = (
 		<CloseIcon
 			cursor="pointer"
-			onClick={ setShowMenu }
+			onClick={ () => {
+				setShowMenu();
+				setTimeout(() => {
+					setHideMenu(true);
+				}, 100);
+			} }
 			sx={ {
 				display: { md: 'none' },
 				position: 'absolute',
@@ -69,7 +73,12 @@ export default function Nav({ showMenu, setShowMenu }: { showMenu: boolean, setS
 	const openMenuIcon = (
 		<MenuIcon
 			cursor="pointer"
-			onClick={ setShowMenu }
+			onClick={ () => {
+				setHideMenu(false);
+				setTimeout(() => {
+					setShowMenu();
+				}, 200);
+			} }
 			sx={ {
 				display: { md: 'none' },
 				position: 'absolute',
@@ -85,26 +94,14 @@ export default function Nav({ showMenu, setShowMenu }: { showMenu: boolean, setS
 				component="nav"
 				variant="dense"
 				sx={ {
-					width: { md: 'auto' },
-					height: { xs: mobileNavbarHeight, md: 'auto' },
 					justifyContent: 'space-between',
 					py: 1,
-					textAlign: 'center',
-					overflow: 'hidden',
-					transition: '0.3s',
-					position: 'relative'
+					textAlign: 'center'
 				} }
 			>
 				<Box
-					display="flex"
+					display={ { xs: !hideMenu ? 'none' : 'flex', md: 'flex' } }
 					justifyContent="center"
-					alignItems="center"
-					position={ { xs: showMenu ? 'absolute' : 'static', md: 'static' } }
-					sx={ {
-						transform: { xs: showMenu ? 'translateY(-250px)' : 'none', md: 'none' },
-						transition: '0.3s'
-					} }
-					top={ 0 }
 				>
 					<Logo onClick={ goToMain }/>
 					<Typography
@@ -117,28 +114,38 @@ export default function Nav({ showMenu, setShowMenu }: { showMenu: boolean, setS
 						NotLex
 					</Typography>
 				</Box>
-				<Box display="flex" flexDirection={ { xs: 'column', md: 'row' } }
-				     width={ { xs: '100%', md: 'auto' } }>
+				<Box display="flex" flexDirection={ { xs: 'column', md: 'row' } } width={ { xs: '100%', md: 'auto' } }>
 					{ showMenu ? closeMenuIcon : openMenuIcon }
-					{ showMenu && (
-						loading ? (
-							<CircularProgress size={ 30 } sx={ { m: '10px auto' } }/>
-						) : (
+					{ showMenu && loading ? (
+						<CircularProgress size={ 30 } sx={ { m: '10px auto' } }/>
+					) : (
+						<Box
+							sx={ {
+								display: 'flex',
+								flexDirection: { xs: 'column', md: 'row' },
+								transition: 'height 0.2s',
+								height: { xs: !hideMenu ? '260px' : '0px', md: 'auto' },
+								opacity: showMenu ? 1 : 0
+							} }
+						>{
 							navLinks.map((section) => {
 								if(!loggedIn && section.private) return;
 								return (
 									<NavbarLink
 										key={ section.title }
 										href={ section.url }
-										onClick={ setShowMenu }
+										onClick={ () => {
+											setShowMenu();
+											setHideMenu(true);
+										} }
+										sx={ { display: { xs: hideMenu ? 'none' : 'block', md: 'block' } } }
 									>
 										{ section.title }
 									</NavbarLink>
 								);
 							})
-						)
-					)
-					}
+						}</Box>
+					) }
 				</Box>
 			</Toolbar>
 			<Divider/>
