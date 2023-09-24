@@ -33,20 +33,12 @@ const AlertModal = ({ modalData, handleClickModal, timeout }: AlertModalProps) =
 	const [lineWidth, setLineWidth] = useState('100%');
 
 	useEffect(() => {
-		setLineWidth('0%');
-
-	}, [modalData.message]);
+		requestAnimationFrame(() => setLineWidth('0%'));
+	}, []);
 
 	return (
 		<AlertWindow onClick={ handleClickModal } severity={ modalData.type }>
-			<Box
-				height="2px"
-				bgcolor="blue"
-				sx={ {
-					width: lineWidth,
-					transitionDuration: `${ timeout / 1000 }s`
-				} }
-			/>
+			<Box height="2px" bgcolor="blue" width={ lineWidth } sx={ { transitionDuration: `${ timeout / 1000 }s` } }/>
 			<Typography fontWeight={ 500 }>{ modalData.message }</Typography>
 		</AlertWindow>
 	);

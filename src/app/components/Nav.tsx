@@ -4,7 +4,7 @@ import Logo from '@/svg/Logo';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
 import { useRouter } from 'next/navigation';
-import { useContext, useEffect } from 'react';
+import { useContext, useLayoutEffect } from 'react';
 import { AuthContext } from '@/context/AuthContextProvider';
 import { useCredentials } from '@/hooks/useCredentials';
 import { checkSecrets } from '@/utils/checkCredentials';
@@ -35,7 +35,7 @@ export default function Nav({ showMenu, setShowMenu }: { showMenu: boolean, setS
 	const { syncCategories } = useCategories();
 	const { loading, loggedIn, setAuthState } = useContext(AuthContext);
 
-	useEffect(() => {
+	useLayoutEffect(() => {
 		checkSecrets({ secret, database_id })
 			.then(async res => {
 				setAuthState({ loading: false, loggedIn: res.ok });

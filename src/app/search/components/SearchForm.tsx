@@ -71,19 +71,13 @@ export default function SearchForm({ data, searchParam }: { data: DictionaryWord
 			/>
 			{ isFetching ? (
 				<Loader/>
-			) : searchResults && searchResults.map(res => {
-				return res.meanings.map(re => {
-					return re.definitions.map((word, index) => {
-						return (
-							<WordResult
-								key={ index }
-								word={ word }
-								handleClickAddWord={ handleClickAddWord }
-							/>
-						);
-					});
-				});
-			})
+			) : searchResults && searchResults.map((res) =>
+				res.meanings.map((re) =>
+					re.definitions.map((word, index) => (
+						<WordResult key={ index } word={ word } handleClickAddWord={ handleClickAddWord }/>
+					))
+				)
+			)
 			}
 		</>
 	);
