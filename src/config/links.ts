@@ -25,8 +25,8 @@ export const navLinks = [
 		private: true
 	},
 	{
-		title: 'About',
-		url: '/about',
+		title: 'FAQ',
+		url: '/faq',
 		private: false
 	},
 	{
