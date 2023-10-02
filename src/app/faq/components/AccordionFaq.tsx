@@ -2,19 +2,39 @@
 import { Accordion, AccordionDetails, AccordionSummary, Typography } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { ReactNode, useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 interface AccordionFaqProps {
-	question: string,
-	answer: string | ReactNode
+	question: {
+		id: number,
+		question: string,
+		answer: ReactNode
+	},
+	searchParam: string | string[] | undefined
 }
 
-const AccordionFaq = ({ question, answer }: AccordionFaqProps) => {
-	const [expanded, setExpanded] = useState(false);
+const AccordionFaq = ({ question, searchParam }: AccordionFaqProps) => {
+	const router = useRouter();
+	const [expanded, setExpanded] = useState(searchParam?.includes(question.id.toString()));
+	const parsedParams = typeof searchParam === 'string' ? searchParam.split(',') : [];
+
+	const handleClickAccordion = () => {
+		setExpanded(!expanded);
+
+		let queryUrl: string;
+		if(expanded) {
+			const filteredParams = parsedParams.filter(param => Number(param) !== question.id);
+			queryUrl = filteredParams.length ? `?questions=${ filteredParams }` : '';
+		} else {
+			queryUrl = `?questions=${ [...parsedParams, question.id] }`;
+		}
+		router.push('/faq' + queryUrl);
+	};
 
 	return (
 		<Accordion
 			expanded={ expanded }
-			onChange={ () => setExpanded(!expanded) }
+			onChange={ handleClickAccordion }
 			sx={ {
 				borderRadius: '8px !important',
 				'&::before': { content: 'none' },
@@ -25,10 +45,11 @@ const AccordionFaq = ({ question, answer }: AccordionFaqProps) => {
 			} }
 		>
 			<AccordionSummary expandIcon={ <ExpandMoreIcon/> }>
-				<Typography fontFamily="Montserrat" fontWeight={ 700 } fontSize={ 17 }>{ question }</Typography>
+				<Typography fontFamily="Montserrat" fontWeight={ 700 }
+				            fontSize={ 17 }>{ question.question }</Typography>
 			</AccordionSummary>
 			<AccordionDetails>
-				<Typography fontFamily="Montserrat" sx={{ overflowWrap: 'anywhere' }}>{ answer }</Typography>
+				<Typography fontFamily="Montserrat" sx={ { overflowWrap: 'anywhere' } }>{ question.answer }</Typography>
 			</AccordionDetails>
 		</Accordion>
 	);
