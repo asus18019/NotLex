@@ -7,6 +7,7 @@ import { AuthContext } from '@/context/AuthContextProvider';
 import { checkSecrets } from '@/utils/checkCredentials';
 import { useCategories } from '@/hooks/useCategories';
 import { useAlertModal } from '@/hooks/useAlertModal';
+import { CREDENTIALS_COOKIES_MAX_AGE } from '@/config/cookies';
 
 const FormInput = styled('input')({
 	fontWeight: '500',
@@ -44,7 +45,7 @@ export default function IndexForm() {
 			const res = await checkSecrets({ secret, database_id: dbId });
 			if(res.ok) {
 				const credentials = { secret, database_id: dbId };
-				setCookie('credentials', JSON.stringify(credentials));
+				setCookie('credentials', JSON.stringify(credentials), { maxAge: CREDENTIALS_COOKIES_MAX_AGE });
 
 				const { categoriesHash } = await res.json();
 				await syncCategories(categoriesHash);
@@ -78,7 +79,7 @@ export default function IndexForm() {
 			if(res.ok) {
 				const data = await res.json();
 				const credentials = { secret, database_id: data.databaseId };
-				setCookie('credentials', JSON.stringify(credentials));
+				setCookie('credentials', JSON.stringify(credentials), { maxAge: CREDENTIALS_COOKIES_MAX_AGE });
 				setSecret('');
 				setPageId('');
 				setDbName('');
