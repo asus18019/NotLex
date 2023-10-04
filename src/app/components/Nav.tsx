@@ -4,7 +4,7 @@ import Logo from '@/svg/Logo';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
 import { useRouter } from 'next/navigation';
-import { useContext, useLayoutEffect, useState } from 'react';
+import { useContext, useEffect, useLayoutEffect, useState } from 'react';
 import { AuthContext } from '@/context/AuthContextProvider';
 import { useCredentials } from '@/hooks/useCredentials';
 import { checkSecrets } from '@/utils/checkCredentials';
@@ -35,6 +35,12 @@ export default function Nav({ showMenu, setShowMenu }: { showMenu: boolean, setS
 	const { syncCategories } = useCategories();
 	const { loading, loggedIn, setAuthState } = useContext(AuthContext);
 	const [hideMenu, setHideMenu] = useState(true);
+
+	useEffect(() => {
+		if(!showMenu) {
+			setHideMenu(true);
+		}
+	}, [showMenu]);
 
 	useLayoutEffect(() => {
 		checkSecrets({ secret, database_id })
