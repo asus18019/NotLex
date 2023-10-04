@@ -3,7 +3,7 @@ import { Toolbar, styled, Divider, Typography, Box, CircularProgress } from '@mu
 import Logo from '@/svg/Logo';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { useContext, useEffect, useLayoutEffect, useState } from 'react';
 import { AuthContext } from '@/context/AuthContextProvider';
 import { useCredentials } from '@/hooks/useCredentials';
@@ -12,11 +12,12 @@ import { navLinks } from '@/config/links';
 import { useCategories } from '@/hooks/useCategories';
 
 const NavbarLink = styled(Link)(({ theme }) => ({
-	margin: '10px 18px',
+	margin: '3px 5px',
+	padding: '7px 12px',
 	textDecoration: 'none',
 	fontFamily: 'Inter',
 	fontSize: '16px',
-	color: '#00000099',
+	borderRadius: '30px',
 	cursor: 'pointer',
 	':hover': {
 		color: '#000000'
@@ -25,12 +26,14 @@ const NavbarLink = styled(Link)(({ theme }) => ({
 		textAlign: 'center',
 		fontSize: '20px',
 		fontWeight: 600,
-		margin: '8px 18px'
+		margin: '0px 18px',
+		padding: '7px 9px',
 	}
 }));
 
 export default function Nav({ showMenu, setShowMenu }: { showMenu: boolean, setShowMenu: () => void }) {
 	const router = useRouter();
+	const pathname = usePathname();
 	const [secret, database_id] = useCredentials();
 	const { syncCategories } = useCategories();
 	const { loading, loggedIn, setAuthState } = useContext(AuthContext);
@@ -144,7 +147,11 @@ export default function Nav({ showMenu, setShowMenu }: { showMenu: boolean, setS
 											setShowMenu();
 											setHideMenu(true);
 										} }
-										sx={ { display: { xs: hideMenu ? 'none' : 'block', md: 'block' } } }
+										sx={ {
+											display: { xs: hideMenu ? 'none' : 'block', md: 'block' },
+											border: `1px solid ${ section.url === pathname ? 'lightgray' : 'transparent' }`,
+											color: section.url === pathname ? 'black' : '#00000099',
+										} }
 									>
 										{ section.title }
 									</NavbarLink>
