@@ -8,7 +8,7 @@ const WordContainer = styled(Box)({
 	display: 'flex',
 	alignItems: 'center',
 	borderTop: '1px solid lightgray',
-	':first-of-type': {
+	':nth-of-type(2)': {
 		borderTop: 'none'
 	}
 });

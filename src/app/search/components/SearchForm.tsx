@@ -1,6 +1,7 @@
 'use client';
-import { styled } from '@mui/material';
-import { useCallback, useMemo, useState } from 'react';
+import { Box, styled } from '@mui/material';
+import ClearIcon from '@mui/icons-material/Clear';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import { Definition, Sense } from '@/types';
 import debounce from 'lodash/debounce';
 import { useRouter } from 'next/navigation';
@@ -11,20 +12,28 @@ const FormInput = styled('input')({
 	fontWeight: '500',
 	fontFamily: 'Montserrat',
 	fontSize: '16px',
-	marginTop: '10px',
+	marginLeft: '8px',
 	width: '100%',
 	outline: 'none',
-	padding: '8px 16px',
-	borderRadius: '6px',
 	color: 'black',
-	border: '1px solid gray',
+	border: 'none',
 	'@media (max-width:900px)': {
 		width: 'calc(100% - 32px)'
 	}
 });
 
+const InputContainer = styled(Box)({
+	marginTop: '10px',
+	padding: '0 8px',
+	border: '1px solid gray',
+	borderRadius: '10px',
+	display: 'flex',
+	alignItems: 'center'
+});
+
 export default function SearchForm({ data, searchParam }: { data: Definition[], searchParam: string }) {
 	const router = useRouter();
+	const inputRef = useRef<HTMLInputElement | null>(null);
 	const [isFetching, setIsFetching] = useState(false);
 
 	const [searchValue, setSearchValue] = useState(searchParam);
@@ -59,6 +68,11 @@ export default function SearchForm({ data, searchParam }: { data: Definition[], 
 		setIsFetching(false);
 	}, 1000), []);
 
+	const handleClearSearch = () => {
+		setSearchValue('');
+		setSearchResults([]);
+		router.push('/search');
+	}
 
 	const renderDefinition = (definition: Sense) => {
 		return definition.meanings?.map(word => {
@@ -84,13 +98,18 @@ export default function SearchForm({ data, searchParam }: { data: Definition[], 
 
 	return (
 		<>
-			<FormInput
-				placeholder="Your search word"
-				type="text"
-				required
-				value={ searchValue }
-				onChange={ e => handleChangeInput(e.target.value) }
-			/>
+			<InputContainer onClick={ () => inputRef.current?.focus() }>
+				<img src="./mw-logo.svg" alt="Merriam-Webster Inc." onClick={ e => e.stopPropagation() }/>
+				<FormInput
+					ref={ inputRef }
+					placeholder="Your search word"
+					type="text"
+					required
+					value={ searchValue }
+					onChange={ e => handleChangeInput(e.target.value) }
+				/>
+				<ClearIcon cursor="pointer" onClick={ handleClearSearch }/>
+			</InputContainer>
 			{ isFetching ? (
 				<Loader/>
 			) : renderResults }
