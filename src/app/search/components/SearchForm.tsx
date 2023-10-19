@@ -1,7 +1,7 @@
 'use client';
 import { styled } from '@mui/material';
-import { useCallback, useState } from 'react';
-import { DictionaryWordResult } from '@/types';
+import { useCallback, useMemo, useState } from 'react';
+import { Definition, Sense } from '@/types';
 import debounce from 'lodash/debounce';
 import { useRouter } from 'next/navigation';
 import Loader from '@/app/search/components/Loader';
@@ -23,12 +23,12 @@ const FormInput = styled('input')({
 	}
 });
 
-export default function SearchForm({ data, searchParam }: { data: DictionaryWordResult[], searchParam: string }) {
+export default function SearchForm({ data, searchParam }: { data: Definition[], searchParam: string }) {
 	const router = useRouter();
 	const [isFetching, setIsFetching] = useState(false);
 
 	const [searchValue, setSearchValue] = useState(searchParam);
-	const [searchResults, setSearchResults] = useState<DictionaryWordResult[]>(data);
+	const [searchResults, setSearchResults] = useState<Definition[]>(data);
 
 	const handleChangeInput = (value: string) => {
 		setSearchValue(value);
@@ -52,13 +52,35 @@ export default function SearchForm({ data, searchParam }: { data: DictionaryWord
 		const res = await fetch(`${ process.env.NEXT_PUBLIC_API_URL }/find-word?word=` + value);
 		const searchResult = await res.json();
 		if(res.status === 200) {
-			setSearchResults(searchResult.data);
+			setSearchResults(searchResult);
 		} else {
 			setSearchResults([]);
-			console.log(searchResult);
 		}
 		setIsFetching(false);
 	}, 1000), []);
+
+
+	const renderDefinition = (definition: Sense) => {
+		return definition.meanings?.map(word => {
+			if(word === ':') return;
+			const def = word
+				.replace(': ', '')
+				.charAt(0)
+				.toUpperCase() + word.slice(3)
+				.split(/([A-Z])/g)[0];
+			return <WordResult
+				key={ def }
+				word={ { definition: def, example: definition.illustrations } }
+				handleClickAddWord={ handleClickAddWord }
+			/>;
+		});
+	};
+
+	const renderResults = useMemo(() => {
+		return searchResults?.map(result => result.definition.map(definition => {
+			return renderDefinition(definition) || definition.senses?.map(sense => renderDefinition(sense));
+		}));
+	}, [searchResults]);
 
 	return (
 		<>
@@ -71,14 +93,7 @@ export default function SearchForm({ data, searchParam }: { data: DictionaryWord
 			/>
 			{ isFetching ? (
 				<Loader/>
-			) : searchResults && searchResults.map((res) =>
-				res.meanings.map((re) =>
-					re.definitions.map((word, index) => (
-						<WordResult key={ index } word={ word } handleClickAddWord={ handleClickAddWord }/>
-					))
-				)
-			)
-			}
+			) : renderResults }
 		</>
 	);
 }

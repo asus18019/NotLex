@@ -1,19 +1,20 @@
 import { Typography } from '@mui/material';
 import SearchForm from '@/app/search/components/SearchForm';
 import { Metadata } from 'next';
-import { DictionaryWordResult, ServerComponentPropsType } from '@/types';
+import { Definition, ServerComponentPropsType } from '@/types';
 
 export const metadata: Metadata = {
 	title: 'Search | NotLex',
 	description: 'Enter the word you want to find to get the meaning and example',
 }
 
-const fetchSearchWords = async (word: string): Promise<DictionaryWordResult[]> => {
+const fetchSearchWords = async (word: string): Promise<Definition[]> => {
     if(!word) return [];
 
-    const res = await fetch(`${ process.env.NEXT_PUBLIC_API_URL }/find-word?word=` + word);
+	const res = await fetch(`${ process.env.NEXT_PUBLIC_API_URL }/find-word?word=` + word);
     const data = await res.json();
-    return data.data;
+	if(data.error === 'Error') return [];
+    return data;
 }
 
 export default async function Search({ searchParams }: ServerComponentPropsType) {

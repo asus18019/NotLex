@@ -1,8 +1,7 @@
 import AddIcon from '@mui/icons-material/Add';
-import { Box, styled, Typography } from '@mui/material';
-import { WordDefinition } from '@/types';
+import { Box, FormControl, FormControlLabel, Radio, RadioGroup, styled, Typography } from '@mui/material';
 import { AuthContext } from '@/context/AuthContextProvider';
-import { useContext } from 'react';
+import { ChangeEvent, useContext, useState } from 'react';
 
 const WordContainer = styled(Box)({
 	padding: '16px 0',
@@ -24,23 +23,33 @@ const StyledAddIcon = styled(AddIcon)({
 });
 
 interface WordResultProps {
-	word: WordDefinition,
+	word: {
+		definition: string,
+		example: string[]
+	},
 	handleClickAddWord: (word: { definition: string, example: string }) => void
 }
 
 export default function WordResult({ word, handleClickAddWord }: WordResultProps) {
 	const { loggedIn } = useContext(AuthContext);
+
+	const [selectedExample, setSelectedExample] = useState(word.example?.length ? word.example[0] : '');
+
+	const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+		setSelectedExample(event.target.value);
+	};
+
+	const handleClickAdd = () => handleClickAddWord({ definition: word.definition, example: selectedExample });
+
 	return (
 		<WordContainer>
-			{
-				loggedIn && (
-					<StyledAddIcon
-						transform="scale(1.8)"
-						sx={ { m: '0 20px 0 0', cursor: 'pointer' } }
-						onClick={ () => handleClickAddWord(word) }
-					/>
-				)
-			}
+			{ loggedIn && (
+				<StyledAddIcon
+					transform="scale(1.8)"
+					sx={ { m: '0 20px 0 0', cursor: 'pointer' } }
+					onClick={ handleClickAdd }
+				/>
+			) }
 			<Box>
 				<Typography
 					fontFamily="Montserrat"
@@ -50,15 +59,21 @@ export default function WordResult({ word, handleClickAddWord }: WordResultProps
 				>
 					{ word.definition }
 				</Typography>
-				<Typography
-					fontFamily="Montserrat"
-					margin="5px 0"
-					fontSize="15px"
-					fontWeight={ 300 }
-					color="#000000a6"
-				>
-					{ word.example }
-				</Typography>
+				{ word.example?.length && (
+					<FormControl>
+						<RadioGroup value={ selectedExample } onChange={ handleChange }>
+							{ word.example?.map(example => {
+								return <FormControlLabel
+									key={ example }
+									sx={ { color: '#000000a6' } }
+									value={ example }
+									control={ <Radio sx={ { p: '4px', ml: '10px' } }/> }
+									label={ example }
+								/>;
+							}) }
+						</RadioGroup>
+					</FormControl>
+				) }
 			</Box>
 		</WordContainer>
 	);

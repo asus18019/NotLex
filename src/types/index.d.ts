@@ -21,38 +21,6 @@ export type SwipeButtonProps = {
 	id: number;
 };
 
-export type WordDefinition = {
-	definition: string,
-	synonyms: string[],
-	antonyms: string[],
-	example: string
-}
-
-export type DictionaryWordResult = {
-	word: string,
-	phonetic: string,
-	phonetics: {
-		text: string,
-		audio: string,
-		sourceUrl: string,
-		license: {
-			name: string,
-			url: string
-		}
-	} [],
-	meanings: {
-		partOfSpeech: string,
-		definitions: WordDefinition[],
-		synonyms: string[],
-		antonyms: string[]
-	} [],
-	license: {
-		name: string,
-		url: string
-	},
-	sourceUrls: string[]
-}
-
 export type SearchParamsType = { [key: string]: string | string[] | undefined };
 
 export type ServerComponentPropsType = {
@@ -75,4 +43,21 @@ export type CategoryType = {
 	id: string,
 	name: string,
 	color: string
+}
+
+export type Definition = {
+	word: string,
+	functional_label: string,
+	pronunciation: string[],
+	definition: Sense[],
+	popularity: string
+}
+
+export type Sense = {
+	number: string,
+	meanings: string[],
+	synonyms: string[],
+	antonyms: string[],
+	illustrations: string[],
+	senses: Sense[]
 }
