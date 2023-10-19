@@ -16,7 +16,6 @@ const WordContainer = styled(Box)({
 const StyledAddIcon = styled(AddIcon)({
 	borderRadius: '50%',
 	transition: '0.2s',
-	cursor: 'pointer',
 	':hover': {
 		backgroundColor: '#eeeeee'
 	}
@@ -65,9 +64,13 @@ export default function WordResult({ word, handleClickAddWord }: WordResultProps
 							{ word.example?.map(example => {
 								return <FormControlLabel
 									key={ example }
-									sx={ { color: '#000000a6' } }
+									sx={ { color: '#000000a6', ml: '10px', cursor: loggedIn ? 'pointer' : 'initial' } }
 									value={ example }
-									control={ <Radio sx={ { p: '4px', ml: '10px' } }/> }
+									control={ loggedIn ? (
+										<Radio sx={ { p: '4px' } }/>
+									) : (
+										<Box component="span" mr={ 1 }>•</Box>
+									) }
 									label={ example }
 								/>;
 							}) }
