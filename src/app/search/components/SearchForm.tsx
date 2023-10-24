@@ -5,6 +5,7 @@ import { useCallback, useMemo, useRef, useState } from 'react';
 import { Definition, Sense } from '@/types';
 import debounce from 'lodash/debounce';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import Loader from '@/app/search/components/Loader';
 import WordResult from '@/app/search/components/WordResult';
 
@@ -99,12 +100,11 @@ export default function SearchForm({ data, searchParam }: { data: Definition[], 
 	return (
 		<>
 			<InputContainer onClick={ () => inputRef.current?.focus() }>
-				<img src="./mw-logo.svg" alt="Merriam-Webster Inc." onClick={ e => e.stopPropagation() }/>
+				<Image src="./mw-logo.svg" alt="Merriam-Webster Inc." height="50" width="50" />
 				<FormInput
 					ref={ inputRef }
 					placeholder="Your search word"
 					type="text"
-					required
 					value={ searchValue }
 					onChange={ e => handleChangeInput(e.target.value) }
 				/>

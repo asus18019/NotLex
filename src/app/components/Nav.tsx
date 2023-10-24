@@ -1,9 +1,9 @@
 import Link from 'next/link';
-import { Toolbar, styled, Divider, Typography, Box, CircularProgress } from '@mui/material';
-import Logo from '@/svg/Logo';
+import { Toolbar, styled, Divider, Box, CircularProgress } from '@mui/material';
+import Image from 'next/image';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
-import { useRouter, usePathname } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { useContext, useEffect, useLayoutEffect, useState } from 'react';
 import { AuthContext } from '@/context/AuthContextProvider';
 import { useCredentials } from '@/hooks/useCredentials';
@@ -27,12 +27,20 @@ const NavbarLink = styled(Link)(({ theme }) => ({
 		fontSize: '20px',
 		fontWeight: 600,
 		margin: '0px 18px',
-		padding: '7px 9px',
+		padding: '7px 9px'
 	}
 }));
 
+const LogoLink = styled(Link)({
+	textDecoration: 'none',
+	color: 'inherit',
+	cursor: 'pointer',
+	fontFamily: 'Titillium Web',
+	fontSize: '26px',
+	margin: '8px'
+});
+
 export default function Nav({ showMenu, setShowMenu }: { showMenu: boolean, setShowMenu: () => void }) {
-	const router = useRouter();
 	const pathname = usePathname();
 	const [secret, database_id] = useCredentials();
 	const { syncCategories } = useCategories();
@@ -57,8 +65,6 @@ export default function Nav({ showMenu, setShowMenu }: { showMenu: boolean, setS
 				setAuthState({ loading: false, loggedIn: false });
 			});
 	}, []);
-
-	const goToMain = () => router.push('/');
 
 	const closeMenuIcon = (
 		<CloseIcon
@@ -112,16 +118,10 @@ export default function Nav({ showMenu, setShowMenu }: { showMenu: boolean, setS
 					display={ { xs: !hideMenu ? 'none' : 'flex', md: 'flex' } }
 					justifyContent="center"
 				>
-					<Logo onClick={ goToMain }/>
-					<Typography
-						sx={ { cursor: 'pointer' } }
-						marginLeft={ 1 }
-						fontFamily="Titillium Web"
-						fontSize="26px"
-						onClick={ goToMain }
-					>
-						NotLex
-					</Typography>
+					<Link href="/">
+						<Image src="./logo.svg" alt="NotLex" height="45" width="45"/>
+					</Link>
+					<LogoLink href="/">NotLex</LogoLink>
 				</Box>
 				<Box display="flex" flexDirection={ { xs: 'column', md: 'row' } } width={ { xs: '100%', md: 'auto' } }>
 					{ showMenu ? closeMenuIcon : openMenuIcon }
@@ -150,7 +150,7 @@ export default function Nav({ showMenu, setShowMenu }: { showMenu: boolean, setS
 										sx={ {
 											display: { xs: hideMenu ? 'none' : 'block', md: 'block' },
 											border: `1px solid ${ section.url === pathname ? 'lightgray' : 'transparent' }`,
-											color: section.url === pathname ? 'black' : '#00000099',
+											color: section.url === pathname ? 'black' : '#00000099'
 										} }
 									>
 										{ section.title }
