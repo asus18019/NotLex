@@ -1,4 +1,4 @@
-import ProgramNav from '@/app/dashboard/components/ProgramNav';
+import ProgramNav from '@/app/[lang]/dashboard/components/ProgramNav';
 import { Box, styled } from '@mui/material';
 import { CardData } from '@/types';
 import ProgramWrapper from './ProgramWrapper';

@@ -1,7 +1,7 @@
 'use client';
 import { Container } from '@mui/material';
-import '../styles/globals.css';
-import Nav from '@/app/components/Nav';
+import '../../styles/globals.css';
+import Nav from '@/app/[lang]/components/Nav';
 import SimpleBar from 'simplebar-react';
 import 'simplebar-react/dist/simplebar.min.css';
 import { useEffect, useState, ReactNode } from 'react';

@@ -1,7 +1,7 @@
 "use client"
 import { Box, Button, styled, Typography, Divider, CardMedia } from '@mui/material';
 import Link from 'next/link';
-import IndexForm from '@/app/components/IndexForm';
+import IndexForm from '@/app/[lang]/components/IndexForm';
 import { Metadata } from 'next';
 
 const Em = styled('em')({

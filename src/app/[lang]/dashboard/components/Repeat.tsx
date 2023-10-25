@@ -1,8 +1,8 @@
-import WordCard from '@/app/dashboard/components/WordCard';
+import WordCard from '@/app/[lang]/dashboard/components/WordCard';
 import { Box, styled, Typography } from '@mui/material';
 import { CardData } from '@/types';
-import ProgramWrapper from '@/app/dashboard/components/ProgramWrapper';
-import ProgramNav from '@/app/dashboard/components/ProgramNav';
+import ProgramWrapper from '@/app/[lang]/dashboard/components/ProgramWrapper';
+import ProgramNav from '@/app/[lang]/dashboard/components/ProgramNav';
 
 export const LoadingText = styled(Typography)({
 	fontFamily: 'Montserrat',

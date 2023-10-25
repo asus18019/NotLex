@@ -6,8 +6,8 @@ import { Definition, Sense } from '@/types';
 import debounce from 'lodash/debounce';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import Loader from '@/app/search/components/Loader';
-import WordResult from '@/app/search/components/WordResult';
+import Loader from '@/app/[lang]/search/components/Loader';
+import WordResult from '@/app/[lang]/search/components/WordResult';
 
 const FormInput = styled('input')({
 	fontWeight: '500',
@@ -100,7 +100,7 @@ export default function SearchForm({ data, searchParam }: { data: Definition[], 
 	return (
 		<>
 			<InputContainer onClick={ () => inputRef.current?.focus() }>
-				<Image src="./mw-logo.svg" alt="Merriam-Webster Inc." height="50" width="50" />
+				<Image src="./../mw-logo.svg" alt="Merriam-Webster Inc." height="50" width="50" />
 				<FormInput
 					ref={ inputRef }
 					placeholder="Your search word"

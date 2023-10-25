@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
 import { Box, Typography } from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
-import { LoadingText } from '@/app/dashboard/components/Repeat';
+import { LoadingText } from '@/app/[lang]/dashboard/components/Repeat';
 import { CardData } from '@/types';
 
 interface ProgramWrapperProps {

@@ -1,6 +1,6 @@
 import { Box } from '@mui/material';
-import Content from '@/app/settings/components/Content';
 import { Metadata } from 'next';
+import Content from './components/Content';
 
 export const metadata: Metadata = {
 	title: 'Settings | NotLex',

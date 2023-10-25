@@ -1,5 +1,5 @@
 'use client';
-import AlertModal from '@/app/components/AlertModal';
+import AlertModal from '@/app/[lang]/components/AlertModal';
 import { useRef, useState } from 'react';
 import { ModalDataType, ModalType } from '@/types';
 import { AlertTimeout as DefaultAlertTimeout } from '@/config/AlertTimeout';

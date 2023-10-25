@@ -1,15 +1,15 @@
 'use client';
 import { Autocomplete, Box, styled, TextField, Typography } from '@mui/material';
 import { SyntheticEvent, useEffect, useRef, useState } from 'react';
-import Repeat from '@/app/dashboard/components/Repeat';
+import Repeat from '@/app/[lang]/dashboard/components/Repeat';
 import { CardData, CredentialsType } from '@/types';
 import { useCredentials } from '@/hooks/useCredentials';
-import GuessingProgram from '@/app/dashboard/components/GuessingProgram';
+import GuessingProgram from '@/app/[lang]/dashboard/components/GuessingProgram';
 import { programs } from '@/config/programs';
-import Pairing from '@/app/dashboard/components/Pairing';
-import Modal from '@/app/components/Modal';
+import Modal from '@/app/[lang]/components/Modal';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { useCategories } from '@/hooks/useCategories';
+import Pairing from '@/app/[lang]/dashboard/components/Pairing';
 
 export const ProgramsContainer = styled(Box)({
 	width: '100%',

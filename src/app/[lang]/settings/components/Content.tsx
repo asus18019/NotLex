@@ -1,10 +1,10 @@
 'use client';
 import { Box, Button, Paper, styled, Typography } from '@mui/material';
-import { Input } from '@/app/settings/components/Input';
+import { Input } from '@/app/[lang]/settings/components/Input';
 import Link from 'next/link';
 import { useContext, useState } from 'react';
 import { useCredentials } from '@/hooks/useCredentials';
-import Modal from '../../components/Modal';
+import Modal from '@/app/[lang]/components/Modal';
 import { deleteCookie } from 'cookies-next';
 import { useRouter } from 'next/navigation';
 import { AuthContext } from '@/context/AuthContextProvider';

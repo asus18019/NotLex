@@ -119,7 +119,7 @@ export default function Nav({ showMenu, setShowMenu }: { showMenu: boolean, setS
 					justifyContent="center"
 				>
 					<Link href="/">
-						<Image src="./logo.svg" alt="NotLex" height="45" width="45"/>
+						<Image src="./../logo.svg" alt="NotLex" height="45" width="45"/>
 					</Link>
 					<LogoLink href="/">NotLex</LogoLink>
 				</Box>

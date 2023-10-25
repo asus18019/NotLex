@@ -1,5 +1,5 @@
 import CircularProgress from '@mui/material/CircularProgress';
-import { LoadingText } from '@/app/dashboard/components/Repeat';
+import { LoadingText } from '@/app/[lang]/dashboard/components/Repeat';
 import { Box } from '@mui/material';
 
 export default function Loader() {

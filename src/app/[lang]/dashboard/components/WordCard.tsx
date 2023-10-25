@@ -1,7 +1,7 @@
 'use client';
 import { CardProps } from '@/types';
 import { Box, CardContent, Typography, Card, styled } from '@mui/material';
-import Swappable from '@/app/dashboard/components/Swappable';
+import Swappable from '@/app/[lang]/dashboard/components/Swappable';
 import Image from 'next/image';
 
 const StyledCard = styled(Card)(({ theme }) => ({

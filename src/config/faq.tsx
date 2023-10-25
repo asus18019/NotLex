@@ -1,6 +1,6 @@
-import Span from '@/app/faq/components/Span';
 import Link from 'next/link';
 import { Box } from '@mui/material';
+import Span from '@/app/[lang]/faq/components/Span';
 
 export const faq = [
 	{

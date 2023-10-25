@@ -1,5 +1,5 @@
-import ProgramSelector from '@/app/dashboard/components/ProgramSelector';
 import { Metadata } from 'next';
+import ProgramSelector from './components/ProgramSelector';
 
 export const metadata: Metadata = {
 	title: 'Dashboard | NotLex',

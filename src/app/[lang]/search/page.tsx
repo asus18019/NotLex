@@ -1,7 +1,7 @@
 import { Typography } from '@mui/material';
-import SearchForm from '@/app/search/components/SearchForm';
 import { Metadata } from 'next';
 import { Definition, ServerComponentPropsType } from '@/types';
+import SearchForm from './components/SearchForm';
 
 export const metadata: Metadata = {
 	title: 'Search | NotLex',

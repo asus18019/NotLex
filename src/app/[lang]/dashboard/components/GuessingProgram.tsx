@@ -4,9 +4,9 @@ import { CardData } from '@/types';
 import { useShuffleWords } from '@/hooks/useShuffleWords';
 import { capitalizeFirstLetter } from '@/utils/capitalizeFirstLetter';
 import { useMemo, useRef, useState } from 'react';
-import ProgramWrapper from '@/app/dashboard/components/ProgramWrapper';
+import ProgramWrapper from '@/app/[lang]/dashboard/components/ProgramWrapper';
 import { getOptionColor } from '@/utils/getOptionColor';
-import ProgramNav from '@/app/dashboard/components/ProgramNav';
+import ProgramNav from '@/app/[lang]/dashboard/components/ProgramNav';
 import { useProgress } from '@/hooks/useProgress';
 
 const QuizOption = styled(Box)(({ theme }) => ({
