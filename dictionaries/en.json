@@ -13,6 +13,15 @@
 			"title": "Welcome to NextJs i18n",
 			"description": "Internationalization in NextJs 13 App router"
 		},
+		"search": {
+			"input": {
+				"title": "Enter the word you want to find...",
+				"placeholder": "Your search word..."
+			},
+			"loader": {
+				"text": "Looking for your words..."
+			}
+		},
 		"about": {
 			"title": "About Us",
 			"description": "This is the about page"

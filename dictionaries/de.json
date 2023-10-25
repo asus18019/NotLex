@@ -13,6 +13,15 @@
 			"title": "Willkommen bei NextJs i18n",
 			"description": "Internationalisierung im NextJs 13 App-Router"
 		},
+		"search": {
+			"input": {
+				"title": "Geben Sie das Wort ein, das Sie finden möchten...",
+				"placeholder": "Ihr Suchwort..."
+			},
+			"loader": {
+				"text": "Suche nach deinen Worten..."
+			}
+		},
 		"about": {
 			"title": "Über uns",
 			"description": "Dies ist die About-Seite"

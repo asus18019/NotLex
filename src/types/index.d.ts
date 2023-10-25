@@ -1,4 +1,5 @@
 import { SetStateAction } from 'react';
+import { Locale } from '../../i18n.config';
 
 export type CardData = {
 	id: string;
@@ -24,7 +25,7 @@ export type SwipeButtonProps = {
 export type SearchParamsType = { [key: string]: string | string[] | undefined };
 
 export type ServerComponentPropsType = {
-	params: { slug: string }
+	params: { slug: string, lang: Locale }
 	searchParams: SearchParamsType
 }
 

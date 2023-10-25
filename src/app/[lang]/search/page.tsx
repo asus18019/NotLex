@@ -2,6 +2,7 @@ import { Typography } from '@mui/material';
 import { Metadata } from 'next';
 import { Definition, ServerComponentPropsType } from '@/types';
 import SearchForm from './components/SearchForm';
+import { getDictionary } from '@/utils/dictionary';
 
 export const metadata: Metadata = {
 	title: 'Search | NotLex',
@@ -17,16 +18,17 @@ const fetchSearchWords = async (word: string): Promise<Definition[]> => {
     return data;
 }
 
-export default async function Search({ searchParams }: ServerComponentPropsType) {
+export default async function Search({ searchParams, params }: ServerComponentPropsType) {
     const searchParam = searchParams.search?.toString() || '';
     const searchWords = await fetchSearchWords(searchParam);
+	const { page } = getDictionary(params.lang)
 
     return (
 		<>
 			<Typography fontFamily="Montserrat" fontSize={ 18 } marginTop={ 3 }>
-				Enter the word you want to find...
+				{ page.search.input.title }
 			</Typography>
-			<SearchForm data={ searchWords } searchParam={ searchParam } />
+			<SearchForm data={ searchWords } searchParam={ searchParam } lang={ params.lang } />
 		</>
 	);
 };

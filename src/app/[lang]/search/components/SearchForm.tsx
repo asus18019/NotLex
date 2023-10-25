@@ -8,6 +8,8 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Loader from '@/app/[lang]/search/components/Loader';
 import WordResult from '@/app/[lang]/search/components/WordResult';
+import { Locale } from '../../../../../i18n.config';
+import { getDictionary } from '@/utils/dictionary';
 
 const FormInput = styled('input')({
 	fontWeight: '500',
@@ -32,8 +34,13 @@ const InputContainer = styled(Box)({
 	alignItems: 'center'
 });
 
-export default function SearchForm({ data, searchParam }: { data: Definition[], searchParam: string }) {
+export default function SearchForm({ data, searchParam, lang }: {
+	data: Definition[],
+	searchParam: string,
+	lang: Locale
+}) {
 	const router = useRouter();
+	const { page } = getDictionary(lang);
 	const inputRef = useRef<HTMLInputElement | null>(null);
 	const [isFetching, setIsFetching] = useState(false);
 
@@ -47,11 +54,11 @@ export default function SearchForm({ data, searchParam }: { data: Definition[], 
 
 	const handleClickAddWord = (word: { definition: string, example: string }) => {
 		const { definition, example } = word;
-		router.push(`/add?word=${ searchValue }&definition=${ definition }${ example ? `&example=${ example }` : '' }`);
+		router.push(`/${ lang }/add?word=${ searchValue }&definition=${ definition }${ example ? `&example=${ example }` : '' }`);
 	};
 
 	const debounceFn = useCallback(debounce(async (value: string) => {
-		router.push(`/search${ value.trim() && `?search=${ value }` }`);
+		router.push(`/${ lang }/search${ value.trim() && `?search=${ value }` }`);
 
 		if(!value.trim()) {
 			setSearchResults([]);
@@ -72,8 +79,8 @@ export default function SearchForm({ data, searchParam }: { data: Definition[], 
 	const handleClearSearch = () => {
 		setSearchValue('');
 		setSearchResults([]);
-		router.push('/search');
-	}
+		router.push(`/${ lang }/search`);
+	};
 
 	const renderDefinition = (definition: Sense) => {
 		return definition.meanings?.map(word => {
@@ -100,10 +107,10 @@ export default function SearchForm({ data, searchParam }: { data: Definition[], 
 	return (
 		<>
 			<InputContainer onClick={ () => inputRef.current?.focus() }>
-				<Image src="./../mw-logo.svg" alt="Merriam-Webster Inc." height="50" width="50" />
+				<Image src="./../mw-logo.svg" alt="Merriam-Webster Inc." height="50" width="50"/>
 				<FormInput
 					ref={ inputRef }
-					placeholder="Your search word"
+					placeholder={ page.search.input.placeholder }
 					type="text"
 					value={ searchValue }
 					onChange={ e => handleChangeInput(e.target.value) }
@@ -111,7 +118,7 @@ export default function SearchForm({ data, searchParam }: { data: Definition[], 
 				<ClearIcon cursor="pointer" onClick={ handleClearSearch }/>
 			</InputContainer>
 			{ isFetching ? (
-				<Loader/>
+				<Loader lang={ lang } />
 			) : renderResults }
 		</>
 	);
