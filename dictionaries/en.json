@@ -1,0 +1,21 @@
+{
+	"navigation": {
+		"home": "Home",
+		"dashboard": "Dashboard",
+		"find word": "Find word",
+		"add word": "Add word",
+		"settings": "Settings",
+		"faq": "FAQ",
+		"donate": "Donate"
+	},
+	"page": {
+		"home": {
+			"title": "Welcome to NextJs i18n",
+			"description": "Internationalization in NextJs 13 App router"
+		},
+		"about": {
+			"title": "About Us",
+			"description": "This is the about page"
+		}
+	}
+}

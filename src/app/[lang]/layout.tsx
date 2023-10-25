@@ -8,11 +8,14 @@ import { useEffect, useState, ReactNode } from 'react';
 import { Analytics } from '@vercel/analytics/react';
 import AuthContextProvider from '@/context/AuthContextProvider';
 import { useWindowSize } from '@/hooks/useWindowSize';
+import { Locale } from '../../../i18n.config';
 
 export default function RootLayout({
-	children
+	children,
+	params
 }: {
-	children: ReactNode
+	children: ReactNode,
+	params: { lang: Locale }
 }) {
 	const { width } = useWindowSize();
 	const [showMenu, setShowMenu] = useState(false);
@@ -22,12 +25,16 @@ export default function RootLayout({
 	}, [width]);
 
 	return (
-		<html lang="en">
+		<html lang={ params.lang }>
 		<body>
 		<SimpleBar style={ { maxHeight: '100vh' } }>
 			<AuthContextProvider>
 				<Container maxWidth="lg">
-					<Nav showMenu={ showMenu } setShowMenu={ () => width < 900 && setShowMenu(!showMenu) }/>
+					<Nav
+						lang={ params.lang }
+						showMenu={ showMenu }
+						setShowMenu={ () => width < 900 && setShowMenu(!showMenu) }
+					/>
 					{ children }
 				</Container>
 			</AuthContextProvider>

@@ -1,8 +1,9 @@
 import { NextFetchEvent, NextMiddleware, NextRequest } from 'next/server';
 import { chain } from '@/middlewares/chain';
 import { withMiddleware1 } from '@/middlewares/privateRoutes';
+import { withMiddleware2 } from '@/middlewares/internationalization';
 
-export default chain([withMiddleware1]);
+export default chain([withMiddleware1, withMiddleware2]);
 
 export const runNextMiddleware = (req: NextRequest, event: NextFetchEvent, middleware?: NextMiddleware) => {
 	return middleware && middleware(req, event);

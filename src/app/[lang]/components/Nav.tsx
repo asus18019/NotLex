@@ -10,6 +10,8 @@ import { useCredentials } from '@/hooks/useCredentials';
 import { checkSecrets } from '@/utils/checkCredentials';
 import { navLinks } from '@/config/links';
 import { useCategories } from '@/hooks/useCategories';
+import { Locale } from '../../../../i18n.config';
+import { getDictionary } from '@/utils/dictionary';
 
 const NavbarLink = styled(Link)(({ theme }) => ({
 	margin: '3px 5px',
@@ -40,8 +42,14 @@ const LogoLink = styled(Link)({
 	margin: '8px'
 });
 
-export default function Nav({ showMenu, setShowMenu }: { showMenu: boolean, setShowMenu: () => void }) {
+export default function Nav({ showMenu, setShowMenu, lang }: {
+	showMenu: boolean,
+	setShowMenu: () => void,
+	lang: Locale
+}) {
 	const pathname = usePathname();
+	const { navigation } = getDictionary(lang);
+
 	const [secret, database_id] = useCredentials();
 	const { syncCategories } = useCategories();
 	const { loading, loggedIn, setAuthState } = useContext(AuthContext);
@@ -153,7 +161,7 @@ export default function Nav({ showMenu, setShowMenu }: { showMenu: boolean, setS
 											color: section.url === pathname ? 'black' : '#00000099'
 										} }
 									>
-										{ section.title }
+										{ navigation[section.title.toLowerCase()] }
 									</NavbarLink>
 								);
 							})
