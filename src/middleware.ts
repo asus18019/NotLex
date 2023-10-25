@@ -1,15 +1,14 @@
-import { NextFetchEvent, NextMiddleware, NextRequest, NextResponse } from 'next/server';
-import { checkSecrets } from '@/utils/checkCredentials';
+import { NextFetchEvent, NextMiddleware, NextRequest } from 'next/server';
+import { chain } from '@/middlewares/chain';
+import { withMiddleware1 } from '@/middlewares/privateRoutes';
 
-const privateRoutes = ['/dashboard', '/add', '/settings'];
+export default chain([withMiddleware1]);
 
-export default withMiddleware1();
-
-const runNextMiddleware = (req: NextRequest, event: NextFetchEvent, middleware?: NextMiddleware) => {
+export const runNextMiddleware = (req: NextRequest, event: NextFetchEvent, middleware?: NextMiddleware) => {
 	return middleware && middleware(req, event);
 };
 
-const matchRoute = (currentRoute: string, routes: string[]): boolean => {
+export const matchRoute = (currentRoute: string, routes: string[]): boolean => {
 	let isMatchRoute = false;
 	routes.forEach(route => {
 		if(currentRoute.includes(route)) {
@@ -18,32 +17,6 @@ const matchRoute = (currentRoute: string, routes: string[]): boolean => {
 	});
 	return isMatchRoute;
 };
-
-function withMiddleware1(middleware?: NextMiddleware) {
-	return async (req: NextRequest, event: NextFetchEvent) => {
-		if(!matchRoute(req.url, privateRoutes)) {
-			return runNextMiddleware(req, event, middleware);
-		}
-
-		const credentials = req.cookies.get('credentials');
-		const { secret, database_id } = JSON.parse(credentials?.value || '{}');
-
-		if(!secret || !database_id) {
-			return NextResponse.redirect(new URL('/', req.url));
-		}
-
-		try {
-			const res = await checkSecrets({ secret, database_id });
-			if(!res.ok) {
-				new Error('This route is unavailable');
-			}
-		} catch(error) {
-			console.log(error);
-			return NextResponse.redirect(new URL('/', req.url));
-		}
-		return runNextMiddleware(req, event, middleware);
-	};
-}
 
 export const config = {
 	matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)']
