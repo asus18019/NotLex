@@ -5,8 +5,10 @@ import ProgramWrapper from './ProgramWrapper';
 import { shuffleArray } from '@/utils/shuffleArray';
 import { capitalizeFirstLetter } from '@/utils/capitalizeFirstLetter';
 import { MainWord } from './GuessingProgram';
-import { Fragment, useMemo, useState } from 'react';
+import { Fragment, useContext, useMemo, useState } from 'react';
 import { useProgress } from '@/hooks/useProgress';
+import { LangContext } from '@/context/LangContextProvider';
+import { getDictionary } from '@/utils/dictionary';
 
 const OptionBox = styled(Box)(({ theme }) => ({
 	display: 'flex',
@@ -68,6 +70,8 @@ interface SelectedOption extends CardData {
 }
 
 const Pairing = ({ words, removeCard, isFetching, closeProgram }: PairingProps) => {
+	const { lang } = useContext(LangContext);
+	const { page } = getDictionary(lang);
 	const { updateProgress } = useProgress();
 	const [selected, setSelected] = useState<SelectedOption | undefined>(undefined);
 	const [answers, setAnswers] = useState<{ id: string, isCorrect: boolean }[]>([]);
@@ -133,7 +137,7 @@ const Pairing = ({ words, removeCard, isFetching, closeProgram }: PairingProps) 
 	return (
 		<ProgramWrapper isFetching={ isFetching } words={ words }>
 			<ContentContainer>
-				<MainWord>Match each option with its correct answer</MainWord>
+				<MainWord>{ page.dashboard.programs.pairing.headerTitle }</MainWord>
 				<Box display="flex" justifyContent="center" flexWrap="wrap">
 					{ shuffledWords.map((word, index) => (
 						<Fragment key={ word.id }>

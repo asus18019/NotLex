@@ -13,6 +13,36 @@
 			"title": "Welcome to NextJs i18n",
 			"description": "Internationalization in NextJs 13 App router"
 		},
+		"dashboard": {
+			"title": "Please select a program",
+			"programs": {
+				"repeat": {
+					"name": "Repeat"
+				},
+				"guess meaning": {
+					"name": "Guess meaning"
+				},
+				"guess word": {
+					"name": "Guess word"
+				},
+				"pairing": {
+					"name": "Pairing",
+					"headerTitle": "Match each option with its correct answer"
+				}
+			},
+			"settings": {
+				"options": {
+					"category": "Category",
+					"description": "Leave the Category field empty to disable filtering by category"
+				}
+			},
+			"navigation": {
+				"back": "Back",
+				"next": "Next",
+				"skip": "Skip"
+			},
+			"loadingText": "Loading your words..."
+		},
 		"search": {
 			"input": {
 				"title": "Enter the word you want to find...",

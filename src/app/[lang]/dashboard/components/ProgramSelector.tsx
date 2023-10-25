@@ -1,6 +1,6 @@
 'use client';
 import { Autocomplete, Box, styled, TextField, Typography } from '@mui/material';
-import { SyntheticEvent, useEffect, useRef, useState } from 'react';
+import { SyntheticEvent, useContext, useEffect, useRef, useState } from 'react';
 import Repeat from '@/app/[lang]/dashboard/components/Repeat';
 import { CardData, CredentialsType } from '@/types';
 import { useCredentials } from '@/hooks/useCredentials';
@@ -10,6 +10,8 @@ import Modal from '@/app/[lang]/components/Modal';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { useCategories } from '@/hooks/useCategories';
 import Pairing from '@/app/[lang]/dashboard/components/Pairing';
+import { LangContext } from '@/context/LangContextProvider';
+import { getDictionary } from '@/utils/dictionary';
 
 export const ProgramsContainer = styled(Box)({
 	width: '100%',
@@ -93,6 +95,8 @@ async function fetchData({ secret, database_id }: CredentialsType, category?: st
 
 export default function ProgramSelector() {
 	const firstRender = useRef(true);
+	const { lang } = useContext(LangContext);
+	const { page } = getDictionary(lang);
 	const [secret, database_id] = useCredentials();
 	const { categories } = useCategories();
 
@@ -168,7 +172,7 @@ export default function ProgramSelector() {
 			<StyledSettingsIcon fontSize="large" onClick={ toggleModal }/>
 			<Modal isOpen={ isModalOpen } toggleModal={ toggleModal }>
 				<Box display="flex" justifyContent="space-between" alignItems="center">
-					<Typography fontFamily="Montserrat">Category:</Typography>
+					<Typography fontFamily="Montserrat">{ page.dashboard.settings.options.category + ':' }</Typography>
 					<Autocomplete
 						disablePortal
 						id="combo-box-demo"
@@ -184,17 +188,19 @@ export default function ProgramSelector() {
 						renderInput={ (params) => <TextField ref={params.InputProps.ref  } { ...params } fullWidth/> }
 					/>
 				</Box>
-				<Typography mt={ 2 } letterSpacing={ 0.8 } color="gray" fontSize="15px">Leave the Category field empty
-					to disable filtering by category</Typography>
+				<Typography mt={ 2 } letterSpacing={ 0.8 } color="gray" fontSize="15px">
+					{ page.dashboard.settings.options.description }
+				</Typography>
 			</Modal>
-			<Title zIndex={ 10 } fontSize={ { xs: '20px', md: '24px' } }>Please select a program</Title>
+			<Title zIndex={ 10 } fontSize={ { xs: '20px', md: '24px' } }>{ page.dashboard.title }</Title>
 			<ProgramsBox>
 				{ programs.map(program => {
 					return (
 						<MenuItem onClick={ () => setSelectedProgram(program.name) }
 						          padding={ { xs: '15px 0', md: '15px 100px' } } key={ program.label }>
-							<Typography fontFamily="Montserrat" fontWeight="500"
-							            fontSize={ { xs: 17, md: 20 } }>{ program.label }</Typography>
+							<Typography fontFamily="Montserrat" fontWeight="500" fontSize={ { xs: 17, md: 20 } }>
+								{ page.dashboard.programs[program.label.toLowerCase()].name }
+							</Typography>
 						</MenuItem>
 					);
 				}) }

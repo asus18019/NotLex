@@ -1,6 +1,9 @@
 import { Box, Button } from '@mui/material';
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import SkipNextIcon from '@mui/icons-material/SkipNext';
+import { useContext } from 'react';
+import { LangContext } from '@/context/LangContextProvider';
+import { getDictionary } from '@/utils/dictionary';
 
 interface ProgramNavProps {
 	closeProgram: () => void,
@@ -9,6 +12,9 @@ interface ProgramNavProps {
 }
 
 const ProgramNav = ({ closeProgram, skipWord, isAnswered }: ProgramNavProps) => {
+	const { lang } = useContext(LangContext);
+	const { page } = getDictionary(lang);
+	const { back, next, skip } = page.dashboard.navigation;
 	return (
 		<Box display="flex" flexWrap="nowrap" mt="10px">
 			<Button
@@ -18,7 +24,7 @@ const ProgramNav = ({ closeProgram, skipWord, isAnswered }: ProgramNavProps) => 
 				sx={{ color: '#4f4f4f', fontFamily: "Montserrat" }}
 				onClick={ closeProgram }
 			>
-				Back
+				{ back }
 			</Button>
 			<Button
 				fullWidth
@@ -27,7 +33,7 @@ const ProgramNav = ({ closeProgram, skipWord, isAnswered }: ProgramNavProps) => 
 				sx={{ color: '#4f4f4f', fontFamily: "Montserrat" }}
 				onClick={ skipWord }
 			>
-				{ isAnswered ? "Next" : "Skip" }
+				{ isAnswered ? next : skip }
 			</Button>
 		</Box>
 	);
