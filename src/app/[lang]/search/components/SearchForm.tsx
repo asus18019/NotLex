@@ -1,15 +1,15 @@
 'use client';
 import { Box, styled } from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useContext, useMemo, useRef, useState } from 'react';
 import { Definition, Sense } from '@/types';
 import debounce from 'lodash/debounce';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Loader from '@/app/[lang]/search/components/Loader';
 import WordResult from '@/app/[lang]/search/components/WordResult';
-import { Locale } from '../../../../../i18n.config';
 import { getDictionary } from '@/utils/dictionary';
+import { LangContext } from '@/context/LangContextProvider';
 
 const FormInput = styled('input')({
 	fontWeight: '500',
@@ -34,12 +34,12 @@ const InputContainer = styled(Box)({
 	alignItems: 'center'
 });
 
-export default function SearchForm({ data, searchParam, lang }: {
+export default function SearchForm({ data, searchParam }: {
 	data: Definition[],
-	searchParam: string,
-	lang: Locale
+	searchParam: string
 }) {
 	const router = useRouter();
+	const { lang } = useContext(LangContext);
 	const { page } = getDictionary(lang);
 	const inputRef = useRef<HTMLInputElement | null>(null);
 	const [isFetching, setIsFetching] = useState(false);
@@ -118,7 +118,7 @@ export default function SearchForm({ data, searchParam, lang }: {
 				<ClearIcon cursor="pointer" onClick={ handleClearSearch }/>
 			</InputContainer>
 			{ isFetching ? (
-				<Loader lang={ lang } />
+				<Loader />
 			) : renderResults }
 		</>
 	);

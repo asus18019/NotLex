@@ -12,6 +12,7 @@ import { navLinks } from '@/config/links';
 import { useCategories } from '@/hooks/useCategories';
 import { Locale } from '../../../../i18n.config';
 import { getDictionary } from '@/utils/dictionary';
+import LocaleSwitcher from '@/app/[lang]/components/LocaleSwitcher';
 
 const NavbarLink = styled(Link)(({ theme }) => ({
 	margin: '3px 5px',
@@ -165,7 +166,7 @@ export default function Nav({ showMenu, setShowMenu, lang }: {
 									</NavbarLink>
 								);
 							})
-						}</Box>
+						}<LocaleSwitcher/></Box>
 					) }
 				</Box>
 			</Toolbar>

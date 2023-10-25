@@ -1,10 +1,12 @@
 import CircularProgress from '@mui/material/CircularProgress';
 import { LoadingText } from '@/app/[lang]/dashboard/components/Repeat';
 import { Box } from '@mui/material';
-import { Locale } from '../../../../../i18n.config';
 import { getDictionary } from '@/utils/dictionary';
+import { useContext } from 'react';
+import { LangContext } from '@/context/LangContextProvider';
 
-export default function Loader({ lang }: { lang: Locale }) {
+export default function Loader() {
+	const { lang } = useContext(LangContext);
 	const { page } = getDictionary(lang);
 
 	return (

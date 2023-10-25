@@ -28,7 +28,7 @@ export default async function Search({ searchParams, params }: ServerComponentPr
 			<Typography fontFamily="Montserrat" fontSize={ 18 } marginTop={ 3 }>
 				{ page.search.input.title }
 			</Typography>
-			<SearchForm data={ searchWords } searchParam={ searchParam } lang={ params.lang } />
+			<SearchForm data={ searchWords } searchParam={ searchParam } />
 		</>
 	);
 };

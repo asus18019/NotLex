@@ -9,6 +9,7 @@ import { Analytics } from '@vercel/analytics/react';
 import AuthContextProvider from '@/context/AuthContextProvider';
 import { useWindowSize } from '@/hooks/useWindowSize';
 import { Locale } from '../../../i18n.config';
+import LangContextProvider from '@/context/LangContextProvider';
 
 export default function RootLayout({
 	children,
@@ -29,14 +30,16 @@ export default function RootLayout({
 		<body>
 		<SimpleBar style={ { maxHeight: '100vh' } }>
 			<AuthContextProvider>
-				<Container maxWidth="lg">
-					<Nav
-						lang={ params.lang }
-						showMenu={ showMenu }
-						setShowMenu={ () => width < 900 && setShowMenu(!showMenu) }
-					/>
-					{ children }
-				</Container>
+				<LangContextProvider lang={ params.lang }>
+					<Container maxWidth="lg">
+						<Nav
+							lang={ params.lang }
+							showMenu={ showMenu }
+							setShowMenu={ () => width < 900 && setShowMenu(!showMenu) }
+						/>
+						{ children }
+					</Container>
+				</LangContextProvider>
 			</AuthContextProvider>
 		</SimpleBar>
 		<Analytics/>
