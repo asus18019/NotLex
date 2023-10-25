@@ -1,8 +1,9 @@
 'use client';
 import { Accordion, AccordionDetails, AccordionSummary, Typography } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { ReactNode, useState } from 'react';
+import { ReactNode, useContext, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { LangContext } from '@/context/LangContextProvider';
 
 interface AccordionFaqProps {
 	question: {
@@ -15,6 +16,7 @@ interface AccordionFaqProps {
 
 const AccordionFaq = ({ question, searchParam }: AccordionFaqProps) => {
 	const router = useRouter();
+	const { lang } = useContext(LangContext);
 	const [expanded, setExpanded] = useState(searchParam?.includes(question.id.toString()));
 	const parsedParams = typeof searchParam === 'string' ? searchParam.split(',') : [];
 
@@ -28,7 +30,7 @@ const AccordionFaq = ({ question, searchParam }: AccordionFaqProps) => {
 		} else {
 			queryUrl = `?questions=${ [...parsedParams, question.id] }`;
 		}
-		router.push('/faq' + queryUrl);
+		router.push(`/${ lang }/faq` + queryUrl);
 	};
 
 	return (
