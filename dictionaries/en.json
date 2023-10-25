@@ -40,6 +40,17 @@
 				}
 			}
 		},
+		"settings": {
+			"title": "Account settings",
+			"signOutBtn": "sign out",
+			"credentialsInfo1": "You can use your secrets to log in into your account on another device or browser. All of them are stored in your browser's cookies. If you want to update them, simply log in again on the",
+			"credentialsInfo2": "page.",
+			"modal": {
+				"title": "Are you sure you want to sign out ?",
+				"submit": "Sign Out",
+				"cancel": "Cancel"
+			}
+		},
 		"about": {
 			"title": "About Us",
 			"description": "This is the about page"

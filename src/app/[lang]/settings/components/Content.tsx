@@ -8,6 +8,8 @@ import Modal from '@/app/[lang]/components/Modal';
 import { deleteCookie } from 'cookies-next';
 import { useRouter } from 'next/navigation';
 import { AuthContext } from '@/context/AuthContextProvider';
+import { LangContext } from '@/context/LangContextProvider';
+import { getDictionary } from '@/utils/dictionary';
 
 const PaperWrapper = styled(Paper)(({ theme }) => ({
 	display: 'flex',
@@ -27,6 +29,8 @@ const StyledButton = styled(Button)({
 });
 
 export default function Content() {
+	const { lang } = useContext(LangContext);
+	const { page, navigation } = getDictionary(lang);
 	const router = useRouter();
 	const { setAuthState } = useContext(AuthContext);
 	const [secret, databaseId] = useCredentials();
@@ -40,7 +44,7 @@ export default function Content() {
 
 	const handleSignOut = () => {
 		deleteCookie('credentials');
-		router.push('/');
+		router.push(`/${ lang }/`);
 		setAuthState({ loading: false, loggedIn: false });
 	}
 
@@ -48,15 +52,14 @@ export default function Content() {
 		<PaperWrapper variant="elevation" elevation={ 4 }>
 			<Modal isOpen={ isModalOpen } toggleModal={ toggleModal }>
 				<Box display="flex" justifyContent="center" alignItems="center" flexDirection="column">
-					<Typography fontFamily="Montserrat" fontWeight="500" fontSize={ 18 }>Are you sure you want to sign out ?</Typography>
+					<Typography fontFamily="Montserrat" fontWeight="500" fontSize={ 18 }>{ page.settings.modal.title }</Typography>
 					<Box display="flex" width="100%" gap="16px">
-						<StyledButton fullWidth color="error" variant="outlined" onClick={ handleSignOut }>Sign Out</StyledButton>
-						<StyledButton fullWidth variant="outlined" onClick={ toggleModal }>Cancel</StyledButton>
+						<StyledButton fullWidth color="error" variant="outlined" onClick={ handleSignOut }>{ page.settings.modal.submit }</StyledButton>
+						<StyledButton fullWidth variant="outlined" onClick={ toggleModal }>{ page.settings.modal.cancel }</StyledButton>
 					</Box>
 				</Box>
 			</Modal>
-			<Typography fontFamily="Montserrat" fontWeight="600" fontSize={ 20 } textAlign="center">Account
-				settings</Typography>
+			<Typography fontFamily="Montserrat" fontWeight="600" fontSize={ 20 } textAlign="center">{ page.settings.title }</Typography>
 			<Box display="flex" justifyContent="space-between" marginTop="30px">
 				<Typography fontFamily="Montserrat" fontWeight="400" fontSize={ 15 }
 				            alignSelf="center">SECRET_KEY</Typography>
@@ -85,11 +88,11 @@ export default function Content() {
 					<div>Not found</div>
 				) }
 			</Box>
-			<StyledButton variant="outlined" color="error" onClick={ toggleModal }>Sign Out</StyledButton>
+			<StyledButton variant="outlined" color="error" onClick={ toggleModal }>{ page.settings.signOutBtn }</StyledButton>
 			<Typography fontFamily="Montserrat" color="rgba(0,0,0,0.55)" fontWeight="400" fontSize={ 14 } mt="20px">
-				You can use your secrets to log in into your account on another device or browser.
-				All of them are stored in your browser&apos;s cookies. If you want to update them, simply log in
-				again on the <Link href="/">Home</Link> page.
+				{ page.settings.credentialsInfo1 + ' ' }
+				<Link href={ `/${ lang }/` }>{ navigation.home }</Link>
+				{ ' ' + page.settings.credentialsInfo2 }
 			</Typography>
 		</PaperWrapper>
 	);

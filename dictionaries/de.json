@@ -40,6 +40,17 @@
 				}
 			}
 		},
+		"settings": {
+			"title": "Kontoeinstellungen",
+			"signOutBtn": "Abmelden",
+			"credentialsInfo1": "Du kannst deine Zugangsdaten verwenden, um dich auf einem anderen Gerät oder Browser in deinem Konto anzumelden. Alle Daten werden in den Cookies deines Browsers gespeichert. Wenn du sie aktualisieren möchtest, melde dich einfach erneut auf der",
+			"credentialsInfo2": "Seite an.",
+			"modal": {
+				"title": "Bist du sicher, dass du dich abmelden möchtest?",
+				"submit": "Abmelden",
+				"cancel": "Abbrechen"
+			}
+		},
 		"about": {
 			"title": "Über uns",
 			"description": "Dies ist die About-Seite"
