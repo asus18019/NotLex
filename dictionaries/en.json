@@ -22,6 +22,24 @@
 				"text": "Looking for your words..."
 			}
 		},
+		"add": {
+			"form": {
+				"title": "Add new word",
+				"placeholders": {
+					"word": "Word",
+					"category": "Category",
+					"meaning": "Meaning",
+					"example": "Example"
+				},
+				"button": {
+					"submit": "Save"
+				},
+				"modal": {
+					"success": "You've added a new word",
+					"error": "Something went wrong. Try again"
+				}
+			}
+		},
 		"about": {
 			"title": "About Us",
 			"description": "This is the about page"

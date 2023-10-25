@@ -33,7 +33,6 @@ export default function RootLayout({
 				<LangContextProvider lang={ params.lang }>
 					<Container maxWidth="lg">
 						<Nav
-							lang={ params.lang }
 							showMenu={ showMenu }
 							setShowMenu={ () => width < 900 && setShowMenu(!showMenu) }
 						/>

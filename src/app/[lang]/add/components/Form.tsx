@@ -1,12 +1,14 @@
 'use client';
 import { Autocomplete, Button, FormControl, styled, Typography } from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
-import { FormEvent, useState } from 'react';
+import { FormEvent, useContext, useState } from 'react';
 import { SearchParamsType } from '@/types';
 import { useRouter } from 'next/navigation';
 import { useCredentials } from '@/hooks/useCredentials';
 import { useCategories } from '@/hooks/useCategories';
 import { useAlertModal } from '@/hooks/useAlertModal';
+import { LangContext } from '@/context/LangContextProvider';
+import { getDictionary } from '@/utils/dictionary';
 
 const FormInput = styled('input')({
 	fontWeight: '500',
@@ -34,6 +36,8 @@ const FormText = styled('textarea')({
 });
 
 export default function Form({ searchParams }: { searchParams: SearchParamsType }) {
+	const { lang } = useContext(LangContext);
+	const { page } = getDictionary(lang);
 	const router = useRouter();
 	const [secret, database_id] = useCredentials();
 	const { categories } = useCategories();
@@ -62,16 +66,16 @@ export default function Form({ searchParams }: { searchParams: SearchParamsType 
 
 			if(!response.ok) throw new Error();
 
-			handleShowModal('You\'ve added a new word', 'success');
+			handleShowModal(page.add.form.modal.success, 'success');
 
 			setWord('');
 			setCategory('');
 			setMeaning('');
 			setExample('');
 
-			router.push('/add');
+			router.push(`/${ lang }/add`);
 		} catch(e) {
-			handleShowModal('Something went wrong. Try again', 'error');
+			handleShowModal(page.add.form.modal.error, 'error');
 			console.log(e);
 		} finally {
 			setIsFetching(false);
@@ -82,7 +86,7 @@ export default function Form({ searchParams }: { searchParams: SearchParamsType 
 		<FormControl sx={ { my: '25px', width: '310px' } } component="form" onSubmit={ handleAddWord }>
 			{ alertModal }
 			<FormInput
-				placeholder="Word"
+				placeholder={ page.add.form.placeholders.word }
 				type="text"
 				value={ word }
 				onChange={ e => setWord(e.target.value) }
@@ -107,20 +111,20 @@ export default function Form({ searchParams }: { searchParams: SearchParamsType 
 							sx={ { width: 'calc(100% - 32px)' } }
 							type="text"
 							{ ...params.inputProps }
-							placeholder="Category"
+							placeholder={ page.add.form.placeholders.category }
 							required/>
 					</div>
 				) }
 			/>
 			<FormText
-				placeholder="Meaning"
+				placeholder={ page.add.form.placeholders.meaning }
 				rows={ 3 }
 				required
 				value={ meaning }
 				onChange={ e => setMeaning(e.target.value) }
 			/>
 			<FormText
-				placeholder="Example sentence"
+				placeholder={ page.add.form.placeholders.example }
 				rows={ 5 }
 				required
 				value={ example }
@@ -130,7 +134,7 @@ export default function Form({ searchParams }: { searchParams: SearchParamsType 
 				{ isFetching ? (
 					<CircularProgress size={ 24 }/>
 				) : (
-					<Typography fontFamily="Montserrat">Save</Typography>
+					<Typography fontFamily="Montserrat">{ page.add.form.button.submit }</Typography>
 				) }
 			</Button>
 		</FormControl>

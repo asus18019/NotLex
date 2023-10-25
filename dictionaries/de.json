@@ -22,6 +22,24 @@
 				"text": "Suche nach deinen Worten..."
 			}
 		},
+		"add": {
+			"form": {
+				"title": "Neues Wort hinzufügen",
+				"placeholders": {
+					"word": "Wort",
+					"category": "Kategorie",
+					"meaning": "Bedeutung",
+					"example": "Beispiel"
+				},
+				"button": {
+					"submit": "Speichern"
+				},
+				"modal": {
+					"success": "Du hast ein neues Wort hinzugefügt",
+					"error": "Etwas ist schiefgegangen. Bitte versuche es erneut"
+				}
+			}
+		},
 		"about": {
 			"title": "Über uns",
 			"description": "Dies ist die About-Seite"

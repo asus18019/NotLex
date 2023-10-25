@@ -10,9 +10,9 @@ import { useCredentials } from '@/hooks/useCredentials';
 import { checkSecrets } from '@/utils/checkCredentials';
 import { navLinks } from '@/config/links';
 import { useCategories } from '@/hooks/useCategories';
-import { Locale } from '../../../../i18n.config';
 import { getDictionary } from '@/utils/dictionary';
 import LocaleSwitcher from '@/app/[lang]/components/LocaleSwitcher';
+import { LangContext } from '@/context/LangContextProvider';
 
 const NavbarLink = styled(Link)(({ theme }) => ({
 	margin: '3px 5px',
@@ -43,11 +43,11 @@ const LogoLink = styled(Link)({
 	margin: '8px'
 });
 
-export default function Nav({ showMenu, setShowMenu, lang }: {
+export default function Nav({ showMenu, setShowMenu }: {
 	showMenu: boolean,
-	setShowMenu: () => void,
-	lang: Locale
+	setShowMenu: () => void
 }) {
+	const { lang } = useContext(LangContext);
 	const pathname = usePathname();
 	const { navigation } = getDictionary(lang);
 
@@ -151,7 +151,7 @@ export default function Nav({ showMenu, setShowMenu, lang }: {
 								return (
 									<NavbarLink
 										key={ section.title }
-										href={ section.url }
+										href={ `/${ lang }/${ section.url }` }
 										onClick={ () => {
 											setShowMenu();
 											setHideMenu(true);
