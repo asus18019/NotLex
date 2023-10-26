@@ -142,7 +142,7 @@ export default function Nav({ showMenu, setShowMenu }: {
 								display: 'flex',
 								flexDirection: { xs: 'column', md: 'row' },
 								transition: 'height 0.2s',
-								height: { xs: !hideMenu ? '260px' : '0px', md: 'auto' },
+								height: { xs: !hideMenu ? (loggedIn ? '292px' : '184px') : '0px', md: 'auto' },
 								opacity: showMenu ? 1 : 0
 							} }
 						>{
@@ -166,7 +166,9 @@ export default function Nav({ showMenu, setShowMenu }: {
 									</NavbarLink>
 								);
 							})
-						}<LocaleSwitcher/></Box>
+						}
+							<LocaleSwitcher/>
+						</Box>
 					) }
 				</Box>
 			</Toolbar>
