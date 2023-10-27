@@ -148,6 +148,7 @@ export default function Nav({ showMenu, setShowMenu }: {
 						>{
 							navLinks.map((section) => {
 								if(!loggedIn && section.private) return;
+								const isActiveLink = '/' + (pathname.split('/')[2] || '') === section.url;
 								return (
 									<NavbarLink
 										key={ section.title }
@@ -158,7 +159,7 @@ export default function Nav({ showMenu, setShowMenu }: {
 										} }
 										sx={ {
 											display: { xs: hideMenu ? 'none' : 'block', md: 'block' },
-											border: `1px solid ${ section.url === pathname ? 'lightgray' : 'transparent' }`,
+											border: `1px solid ${ isActiveLink ? 'lightgray' : 'transparent' }`,
 											color: section.url === pathname ? 'black' : '#00000099'
 										} }
 									>
