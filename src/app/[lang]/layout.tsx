@@ -28,7 +28,7 @@ export default function RootLayout({
 		<body>
 		<AuthContextProvider>
 			<LangContextProvider lang={ params.lang }>
-				<Container maxWidth="lg">
+				<Container maxWidth="lg" sx={{ position: "relative" }}>
 					<Nav
 						showMenu={ showMenu }
 						setShowMenu={ () => width < 900 && setShowMenu(!showMenu) }

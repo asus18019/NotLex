@@ -113,7 +113,7 @@ export default function Nav({ showMenu, setShowMenu }: {
 	);
 
 	return (
-		<>
+		<Box sx={ { top: 0, position: 'sticky', backgroundColor: 'white', zIndex: 50 } }>
 			<Toolbar
 				component="nav"
 				variant="dense"
@@ -174,6 +174,6 @@ export default function Nav({ showMenu, setShowMenu }: {
 				</Box>
 			</Toolbar>
 			<Divider/>
-		</>
+		</Box>
 	);
 }
