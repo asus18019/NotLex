@@ -34,7 +34,7 @@ export default function LocaleSwitcher() {
 
 	const redirectedPathName = (locale: string) => {
 		const queryParameters = Object.fromEntries(searchParams);
-		let queryUrl = ''
+		let queryUrl = '';
 		for(const query in queryParameters) {
 			const sign = queryUrl ? '&' : '?';
 			queryUrl += `${ sign + query }=${ queryParameters[query] }`;
@@ -55,6 +55,7 @@ export default function LocaleSwitcher() {
 				anchorEl={ anchorEl }
 				open={ Boolean(anchorEl) }
 				onClose={ handleClick }
+				disableScrollLock
 			>
 				{ i18n.locales.map(locale => (
 					<MenuItem
