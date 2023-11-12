@@ -28,6 +28,9 @@
 				"pairing": {
 					"name": "Pairing",
 					"headerTitle": "Match each option with its correct answer"
+				},
+				"crossword": {
+					"name": "Crossword EN"
 				}
 			},
 			"settings": {

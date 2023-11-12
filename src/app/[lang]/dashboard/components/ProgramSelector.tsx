@@ -12,6 +12,7 @@ import { useCategories } from '@/hooks/useCategories';
 import Pairing from '@/app/[lang]/dashboard/components/Pairing';
 import { LangContext } from '@/context/LangContextProvider';
 import { getDictionary } from '@/utils/dictionary';
+import Crossword from '@/app/[lang]/dashboard/components/Crossword';
 
 export const ProgramsContainer = styled(Box)({
 	width: '100%',
@@ -162,6 +163,8 @@ export default function ProgramSelector() {
 			return <GuessingProgram { ...{ words, activeWord, removeCard, isFetching, closeProgram, type: program } }/>;
 		case ('Pairing') :
 			return <Pairing { ...{ words, removeCard, isFetching, closeProgram } }/>;
+		case ('Crossword') :
+			return <Crossword { ...{ words, isFetching, removeCard, closeProgram }  }/>;
 		default:
 			return null;
 		}

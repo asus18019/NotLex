@@ -28,6 +28,9 @@
 				"pairing": {
 					"name": "Paarbildung",
 					"headerTitle": "Ordne jede Option ihrer richtigen Antwort zu"
+				},
+				"crossword": {
+					"name": "Crossword DE"
 				}
 			},
 			"settings": {
