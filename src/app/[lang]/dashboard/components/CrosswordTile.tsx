@@ -3,26 +3,34 @@ import { Box, InputBase } from '@mui/material';
 import ArrowRightAltIcon from '@mui/icons-material/ArrowRightAlt';
 
 interface CrosswordTileProps {
+	id: string,
 	char: string,
 	clue?: {
 		index: number,
 		direction: 'across' | 'down'
-	}
+	},
+	isCorrect: boolean,
+	pushResult: (char: { id: string, char: string }) => void;
 }
 
-const CrosswordTile = ({ char, clue }: CrosswordTileProps) => {
-	const [currentChar, setCurrentChar] = useState<string>(char);
+const CrosswordTile = ({ id, char, clue, isCorrect, pushResult }: CrosswordTileProps) => {
+	const [currentChar, setCurrentChar] = useState<string>(isCorrect ? char : '');
 	const type = char === '-' ? 'empty' : char === '*' ? 'blocked' : 'fill';
+
+	if(type === 'blocked') {
+		pushResult({ id, char: '*' });
+	}
 
 	const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
 		const value = e.target.value.toUpperCase();
 		const newChar = value.charAt(currentChar.length > 0 ? 1 : 0);
 		setCurrentChar(value === '' ? '' : newChar);
+		pushResult({ id, char: value === '' ? '' : newChar });
 	};
 
 	return (
 		<Box
-			bgcolor={ type === 'empty' ? 'azure' : char === '*' ? 'lightgray' : 'lightblue' }
+			bgcolor={ type === 'empty' ? 'azure' : char === '*' ? 'lightgray' : isCorrect ? 'lightgreen' : 'lightblue' }
 			width="30px"
 			height="30px"
 			margin="1px"
@@ -38,8 +46,8 @@ const CrosswordTile = ({ char, clue }: CrosswordTileProps) => {
 		>
 			{ type !== 'empty' && (
 				<InputBase
-					value={ currentChar === '*' ? '' : currentChar }
-					disabled={ type === 'blocked' }
+					value={ currentChar }
+					disabled={ type === 'blocked' || isCorrect }
 					onChange={ handleChange }
 					inputProps={ { style: { textAlign: 'center' } } }
 				/>
