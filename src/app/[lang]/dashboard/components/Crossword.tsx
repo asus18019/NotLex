@@ -8,6 +8,7 @@ import CrosswordTile from '@/app/[lang]/dashboard/components/CrosswordTile';
 import { v4 as uuidv4 } from 'uuid';
 // @ts-ignore
 import clg from 'crossword-layout-generator';
+import { useProgress } from '@/hooks/useProgress';
 
 interface CrosswordProps {
 	words: CardData[],
@@ -20,6 +21,9 @@ const Crossword = ({ isFetching, words, closeProgram, removeCard }: CrosswordPro
 	type CharObg = { id: string, char: string };
 	const activeWords = useMemo(() => [...words].reverse().slice(0, 10), [words]);
 	const shuffledWords = useMemo(() => shuffleArray([...activeWords]), [activeWords]);
+	const { updateProgress } = useProgress();
+
+	console.log(shuffledWords);
 
 	const userChars = useRef<CharObg[]>([]);
 	const [correctIds, setCorrectIds] = useState<string[]>([]);
@@ -99,6 +103,12 @@ const Crossword = ({ isFetching, words, closeProgram, removeCard }: CrosswordPro
 				let allExist = res.every(id => correctIds.includes(id));
 				if(!allExist) {
 					setCorrectIds(prev => [...prev, ...res]);
+
+					const concatenatedWord = word.map((d: any) => d.char.toLowerCase()).join('');
+					const pageId = shuffledWords.find(storedWord => storedWord.word.toLowerCase() === concatenatedWord)?.id;
+					if(pageId) {
+						updateProgress(pageId, 8);
+					}
 				}
 			}
 		}
