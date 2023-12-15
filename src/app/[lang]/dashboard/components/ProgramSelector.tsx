@@ -1,20 +1,17 @@
 'use client';
-import { Autocomplete, Box, styled, TextField, Typography } from '@mui/material';
-import { SyntheticEvent, useContext, useEffect, useRef, useState } from 'react';
+import { Box, styled, Typography } from '@mui/material';
+import { useContext, useEffect, useRef, useState } from 'react';
 import Repeat from '@/app/[lang]/dashboard/components/Repeat';
 import { CardData, CredentialsType } from '@/types';
 import { useCredentials } from '@/hooks/useCredentials';
 import GuessingProgram from '@/app/[lang]/dashboard/components/GuessingProgram';
 import { programs } from '@/config/programs';
-import Modal from '@/app/[lang]/components/Modal';
 import SettingsIcon from '@mui/icons-material/Settings';
-import { useCategories } from '@/hooks/useCategories';
 import Pairing from '@/app/[lang]/dashboard/components/Pairing';
 import { LangContext } from '@/context/LangContextProvider';
 import { getDictionary } from '@/utils/dictionary';
 import Crossword from '@/app/[lang]/dashboard/components/Crossword';
-import { WORDS_PER_CROSSWORD_PAGE_OPTIONS } from '@/config/dashboardSettings';
-import { useSettings } from '@/hooks/useSettings';
+import SettingsModal from '@/app/[lang]/dashboard/components/SettingsModal';
 
 export const ProgramsContainer = styled(Box)({
 	width: '100%',
@@ -101,12 +98,9 @@ export default function ProgramSelector() {
 	const { lang } = useContext(LangContext);
 	const { page } = getDictionary(lang);
 	const [secret, database_id] = useCredentials();
-	const { categories } = useCategories();
-	const { wordsPerCrossword, setWordsPerCrossword } = useSettings();
 
 	const [selectedProgram, setSelectedProgram] = useState('');
 	const [selectedCategory, setSelectedCategory] = useState<string>('');
-	const [selectedWordsPerCrossword, setSelectedWordsPerCrossword] = useState<number>(wordsPerCrossword);
 
 	const [isFetching, setIsFetching] = useState(true);
 	const [isModalOpen, setIsModalOpen] = useState(false);
@@ -147,19 +141,6 @@ export default function ProgramSelector() {
 		}
 	};
 
-	const handleChangeCategoryAutocomplete = <T, >(_event: SyntheticEvent, value: T | T[]) => {
-		if(typeof value !== 'string') return;
-		if(value === selectedCategory) return;
-		setWords([]); // Clear the current words to start fetching new words with a category filter applied.
-		setSelectedCategory(value || '');
-	};
-
-	const handleChangeCrosswordWordsAutocomplete = <T, >(_event: SyntheticEvent, value: T | T[]) => {
-		if(typeof value !== 'number') return;
-		setWordsPerCrossword(value);
-		setSelectedWordsPerCrossword(value);
-	};
-
 	const closeProgram = () => setSelectedProgram('');
 	const toggleModal = () => setIsModalOpen(!isModalOpen);
 
@@ -183,51 +164,16 @@ export default function ProgramSelector() {
 	return !selectedProgram ? (
 		<ProgramsContainer>
 			<StyledSettingsIcon fontSize="large" onClick={ toggleModal }/>
-			<Modal isOpen={ isModalOpen } toggleModal={ toggleModal }>
-				<Box display="flex" justifyContent="space-between" alignItems="center">
-					<Typography fontFamily="Montserrat">{ page.dashboard.settings.options.category + ':' }</Typography>
-					<Autocomplete
-						disablePortal
-						id="combo-box-demo"
-						sx={ { width: '50%' } }
-						options={ categories.map(elem => elem.name) }
-						value={ selectedCategory }
-						onChange={ handleChangeCategoryAutocomplete }
-						onInputChange={ (_event, value) => {
-							if(categories.some(category => category.name === value) || value === "") {
-								handleChangeCategoryAutocomplete(_event, value)
-							}
-						}}
-						renderInput={ (params) => <TextField ref={params.InputProps.ref  } { ...params } fullWidth/> }
-					/>
-				</Box>
-				<Typography mt={ 1 } mb={ 3 } letterSpacing={ 0.8 } color="gray" fontSize="15px">
-					{ page.dashboard.settings.options.description }
-				</Typography>
-				<Box display="flex" justifyContent="space-between" alignItems="center">
-					<Typography fontFamily="Montserrat">{ page.dashboard.settings.options.wordsPerCrossword + ':' }</Typography>
-					<Autocomplete
-						disablePortal
-						id="combo-box-demo"
-						sx={ { width: '50%' } }
-						options={ WORDS_PER_CROSSWORD_PAGE_OPTIONS }
-						value={ selectedWordsPerCrossword }
-						onChange={ handleChangeCrosswordWordsAutocomplete }
-						onInputChange={ (_event, value) => {
-							if(categories.some(category => category.name === value) || value === "") {
-								handleChangeCrosswordWordsAutocomplete(_event, value)
-							}
-						}}
-						renderInput={ (params) => <TextField ref={params.InputProps.ref  } { ...params } fullWidth/> }
-					/>
-				</Box>
-			</Modal>
+			<SettingsModal { ...{ isModalOpen, toggleModal, selectedCategory, setSelectedCategory, setWords } }/>
 			<Title zIndex={ 10 } fontSize={ { xs: '20px', md: '24px' } }>{ page.dashboard.title }</Title>
 			<ProgramsBox>
 				{ programs.map(program => {
 					return (
-						<MenuItem onClick={ () => setSelectedProgram(program.name) }
-						          padding={ { xs: '15px 0', md: '15px 100px' } } key={ program.label }>
+						<MenuItem
+							key={ program.label }
+							onClick={ () => setSelectedProgram(program.name) }
+							padding={ { xs: '15px 0', md: '15px 100px' } }
+						>
 							<Typography fontFamily="Montserrat" fontWeight="500" fontSize={ { xs: 17, md: 20 } }>
 								{ page.dashboard.programs[program.label.toLowerCase()].name }
 							</Typography>
