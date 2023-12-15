@@ -81,10 +81,13 @@ const Crossword = ({ isFetching, words, closeProgram, removeCard }: CrosswordPro
 				.toUpperCase()
 		));
 
+		const isAnswered = correctIds.includes(layout.resultWithIds[index][0].id);
+
 		return {
 			index: index + 1,
 			text: word.meaning,
-			answ: word.word
+			answ: word.word,
+			isAnswered
 		};
 	});
 
@@ -155,7 +158,12 @@ const Crossword = ({ isFetching, words, closeProgram, removeCard }: CrosswordPro
 			<Box display="flex" flexDirection="column">
 				<Box alignSelf="center" mt="8px">
 					{ questions.map(q => (
-						<Question key={ uuidv4() }>{ q.index }) { capitalizeFirstLetter(q.text) }</Question>
+						<Question
+							key={ uuidv4() }
+							sx={{ textDecoration: q.isAnswered ? "line-through": "none" }}
+						>
+							{ q.index }) { capitalizeFirstLetter(q.text) }
+						</Question>
 					)) }
 				</Box>
 				<Box width={ { xs: '95vw', md: 'auto' } } margin="0 auto" overflow="auto">
