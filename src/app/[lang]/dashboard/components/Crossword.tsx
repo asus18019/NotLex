@@ -10,6 +10,7 @@ import { v4 as uuidv4 } from 'uuid';
 import clg from 'crossword-layout-generator';
 import { useProgress } from '@/hooks/useProgress';
 import { capitalizeFirstLetter } from '@/utils/capitalizeFirstLetter';
+import { useSettings } from '@/hooks/useSettings';
 
 const Question = styled(Typography)(({ theme }) => ({
 	fontWeight: '600',
@@ -33,7 +34,8 @@ interface CrosswordProps {
 }
 
 const Crossword = ({ isFetching, words, closeProgram, removeCard }: CrosswordProps) => {
-	const activeWords = useMemo(() => [...words].reverse().slice(0, 10), [words]);
+	const { wordsPerCrossword } = useSettings();
+	const activeWords = useMemo(() => [...words].reverse().slice(0, wordsPerCrossword), [words]);
 	const shuffledWords = useMemo(() => shuffleArray([...activeWords]), [activeWords]);
 	const { updateProgress } = useProgress();
 

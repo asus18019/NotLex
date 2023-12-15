@@ -8,6 +8,7 @@ import { checkSecrets } from '@/utils/checkCredentials';
 import { useCategories } from '@/hooks/useCategories';
 import { useAlertModal } from '@/hooks/useAlertModal';
 import { CREDENTIALS_COOKIES_MAX_AGE } from '@/config/cookies';
+import { useSettings } from '@/hooks/useSettings';
 
 const FormInput = styled('input')({
 	fontWeight: '500',
@@ -28,6 +29,7 @@ const FormInput = styled('input')({
 export default function IndexForm() {
 	const { setAuthState } = useContext(AuthContext);
 	const { syncCategories } = useCategories();
+	const { setWordsPerCrossword } = useSettings();
 	const { alertModal, handleShowModal } = useAlertModal();
 	const [isLoginForm, setIsLoginForm] = useState(true);
 	const [isFetching, setIsFetching] = useState(false);
@@ -46,6 +48,7 @@ export default function IndexForm() {
 			if(res.ok) {
 				const credentials = { secret, database_id: dbId };
 				setCookie('credentials', JSON.stringify(credentials), { maxAge: CREDENTIALS_COOKIES_MAX_AGE });
+				setWordsPerCrossword(10);
 
 				const { categoriesHash } = await res.json();
 				await syncCategories(categoriesHash);

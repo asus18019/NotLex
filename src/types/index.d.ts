@@ -67,3 +67,7 @@ export type CharObg = {
 	id: string,
 	char: string
 };
+
+export type SettingsCookie = {
+	crosswordWordCount: number
+}

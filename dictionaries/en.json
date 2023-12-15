@@ -36,7 +36,8 @@
 			"settings": {
 				"options": {
 					"category": "Category",
-					"description": "Leave the Category field empty to disable filtering by category"
+					"description": "Leave the Category field empty to disable filtering by category",
+					"wordsPerCrossword": "Words per crossword"
 				}
 			},
 			"navigation": {

@@ -36,7 +36,8 @@
 			"settings": {
 				"options": {
 					"category": "Kategorie",
-					"description": "Lasse das Feld 'Kategorie' leer, um die Filterung nach Kategorie zu deaktivieren"
+					"description": "Lasse das Feld 'Kategorie' leer, um die Filterung nach Kategorie zu deaktivieren",
+					"wordsPerCrossword": "Wörter pro Kreuzworträtsel"
 				}
 			},
 			"navigation": {
