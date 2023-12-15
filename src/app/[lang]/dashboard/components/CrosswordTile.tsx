@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useRef, useState } from 'react';
 import { Box, InputBase } from '@mui/material';
 import ArrowRightAltIcon from '@mui/icons-material/ArrowRightAlt';
 
@@ -14,8 +14,9 @@ interface CrosswordTileProps {
 }
 
 const CrosswordTile = ({ id, char, clue, isCorrect, pushResult }: CrosswordTileProps) => {
-	const [currentChar, setCurrentChar] = useState<string>(isCorrect ? char : '');
+	const [currentChar, setCurrentChar] = useState<string>(isCorrect && char !== '*' ? char : '');
 	const type = char === '-' ? 'empty' : char === '*' ? 'blocked' : 'fill';
+	const clueRef = useRef<HTMLInputElement | null>(null);
 
 	if(type === 'blocked') {
 		pushResult({ id, char: '*' });
@@ -27,6 +28,11 @@ const CrosswordTile = ({ id, char, clue, isCorrect, pushResult }: CrosswordTileP
 		setCurrentChar(value === '' ? '' : newChar);
 		pushResult({ id, char: value === '' ? '' : newChar });
 	};
+
+	const handleInputFocus = () => {
+		if(!clueRef.current) return;
+		clueRef.current?.focus();
+	}
 
 	return (
 		<Box
@@ -42,14 +48,14 @@ const CrosswordTile = ({ id, char, clue, isCorrect, pushResult }: CrosswordTileP
 			border="1px solid black"
 			fontWeight="bold"
 			textAlign="center"
-			sx={ { cursor: type === 'empty' ? 'arrow' : 'pointer' } }
+			sx={ { cursor: type === 'empty' ? 'arrow' : 'text' } }
 		>
 			{ type !== 'empty' && (
 				<InputBase
 					value={ currentChar }
 					disabled={ type === 'blocked' || isCorrect }
 					onChange={ handleChange }
-					inputProps={ { style: { textAlign: 'center' } } }
+					inputProps={ { style: { textAlign: 'center' }, ref: clueRef } }
 				/>
 			) }
 			{ clue && (
@@ -59,6 +65,8 @@ const CrosswordTile = ({ id, char, clue, isCorrect, pushResult }: CrosswordTileP
 					left="1px"
 					fontSize="12px"
 					display="flex"
+					sx={{ cursor: "text" }}
+					onClick={ handleInputFocus }
 				>
 					<p>{ clue.index }</p>
 					<ArrowRightAltIcon sx={ {

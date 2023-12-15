@@ -62,3 +62,8 @@ export type Sense = {
 	illustrations: string[],
 	senses: Sense[]
 }
+
+export type CharObg = {
+	id: string,
+	char: string
+};
