@@ -72,7 +72,6 @@ const SettingsModal = ({ isModalOpen, toggleModal, selectedCategory, setSelected
 					renderInput={ (params) => <TextField ref={params.InputProps.ref  } { ...params } fullWidth/> }
 				/>
 			</Box>
-			<Box><h1>Modal</h1></Box>
 		</Modal>
 	);
 };
