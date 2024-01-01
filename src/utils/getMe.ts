@@ -1,8 +1,5 @@
-import { useCredentials } from '@/hooks/useCredentials';
-
-export const getMe = async (token?: string): Promise<Response> => {
-	const { accessToken } = useCredentials();
+export const getMe = async (accessToken: string): Promise<Response> => {
 	return fetch(`${ process.env.NEXT_PUBLIC_API_URL }/me`, {
-		headers: { 'Authorization': `Bearer ${ token || accessToken }` }
+		headers: { 'Authorization': `Bearer ${ accessToken }` }
 	})
 };

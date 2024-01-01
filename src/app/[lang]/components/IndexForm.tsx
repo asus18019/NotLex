@@ -61,7 +61,7 @@ export default function IndexForm() {
 			setWordsPerCrossword(10);
 			setCookie('tokens', JSON.stringify({ accessToken }), { maxAge: CREDENTIALS_COOKIES_MAX_AGE });
 
-			const getMeResponse = await getMe();
+			const getMeResponse = await getMe(accessToken);
 			const { categoriesHash } = await getMeResponse.json();
 			await syncCategories(categoriesHash);
 

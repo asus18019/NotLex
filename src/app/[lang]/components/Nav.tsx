@@ -12,6 +12,7 @@ import { getDictionary } from '@/utils/dictionary';
 import LocaleSwitcher from '@/app/[lang]/components/LocaleSwitcher';
 import { LangContext } from '@/context/LangContextProvider';
 import { getMe } from '@/utils/getMe';
+import { useCredentials } from '@/hooks/useCredentials';
 
 const NavbarLink = styled(Link)(({ theme }) => ({
 	margin: '3px 5px',
@@ -50,6 +51,7 @@ export default function Nav({ showMenu, setShowMenu }: {
 	const pathname = usePathname();
 	const { navigation } = getDictionary(lang);
 
+	const { accessToken = '' } = useCredentials();
 	const { syncCategories } = useCategories();
 	const { loading, loggedIn, setAuthState } = useContext(AuthContext);
 	const [hideMenu, setHideMenu] = useState(true);
@@ -61,7 +63,7 @@ export default function Nav({ showMenu, setShowMenu }: {
 	}, [showMenu]);
 
 	useLayoutEffect(() => {
-		getMe()
+		getMe(accessToken)
 			.then(async res => {
 				setAuthState({ loading: false, loggedIn: res.ok });
 

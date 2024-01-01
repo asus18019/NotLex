@@ -81,8 +81,7 @@ const StyledSettingsIcon = styled(SettingsIcon)(({ theme }) => ({
 	}
 }));
 
-async function fetchData(category?: string) {
-	const { accessToken } = useCredentials();
+async function fetchData(accessToken: string, category?: string) {
 	const categoryQueryParam = category?.length ? `&category=${ category }` : '';
 	const data = await fetch(`${ process.env.NEXT_PUBLIC_API_URL }/words?randomize=true${ categoryQueryParam }`, {
 		headers: { 'Authorization': `Bearer ${ accessToken }` }
@@ -98,6 +97,7 @@ export default function ProgramSelector() {
 	const firstRender = useRef(true);
 	const { lang } = useContext(LangContext);
 	const { page } = getDictionary(lang);
+	const { accessToken = '' } = useCredentials();
 
 	const [selectedProgram, setSelectedProgram] = useState('');
 	const [selectedCategory, setSelectedCategory] = useState<string>('');
@@ -113,7 +113,7 @@ export default function ProgramSelector() {
 		if(firstRender.current) {
 			firstRender.current = false;
 
-			fetchData()
+			fetchData(accessToken)
 				.then(response => setWords(response.data))
 				.catch(error => console.log(error))
 				.finally(() => setIsFetching(false));
