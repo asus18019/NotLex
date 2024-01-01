@@ -63,7 +63,7 @@ export default function IndexForm() {
 
 			const getMeResponse = await getMe(accessToken);
 			const { categoriesHash } = await getMeResponse.json();
-			await syncCategories(categoriesHash);
+			await syncCategories(categoriesHash, { token: accessToken });
 
 			setEmail('');
 			setPassword('');
