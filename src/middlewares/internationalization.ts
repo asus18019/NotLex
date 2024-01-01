@@ -20,7 +20,7 @@ export function withMiddleware2(middleware?: NextMiddleware) {
 			locale => !pathname.startsWith(`/${ locale }/`) && pathname !== `/${ locale }`
 		);
 
-		if(pathnameIsMissingLocale) {
+		if(pathnameIsMissingLocale && pathname !== '/verify-email') {
 			const locale = getLocale(req);
 			return NextResponse.redirect(
 				new URL(`/${ locale }${ pathname.startsWith('/') ? '' : '/' }${ pathname }`, req.url)

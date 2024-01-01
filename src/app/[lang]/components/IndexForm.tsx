@@ -96,8 +96,7 @@ export default function IndexForm() {
 				setFirstName('');
 				setLastName('');
 				setIsLoginForm(!isLoginForm);
-				setAuthState({ loading: false, loggedIn: true });
-				handleShowModal('You\'ve created your account. Please log in', 'success', 10000);
+				handleShowModal('Check and confirm your email...', 'success', 10000);
 			} else {
 				const message = data.message || 'Something went wrong. Try again...';
 				throw new Error(message);
