@@ -124,7 +124,7 @@ export default function IndexForm() {
 			             onSubmit={ isLoginForm ? handleLogin : handleRegister }>
 				<FormInput
 					placeholder="Email"
-					type="text"
+					type="email"
 					required
 					value={ email }
 					onChange={ e => setEmail(e.target.value) }

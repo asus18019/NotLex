@@ -7,9 +7,10 @@ import { useCredentials } from '@/hooks/useCredentials';
 
 export const useCategories = () => {
 	const categories: CategoryType[] = JSON.parse(getCookie('categories')?.toString() || '[]');
-	const { accessToken = '' } = useCredentials()
 
 	const syncCategories = async (serverCategoriesHash: string) => {
+		const { accessToken = '' } = useCredentials();
+
 		const isLocalCategoriesHashEqualsNotion = md5(JSON.stringify(categories)) === serverCategoriesHash;
 		if(!isLocalCategoriesHashEqualsNotion) {
 			const { properties: fetchedCategories } = await fetchCategories(accessToken);
