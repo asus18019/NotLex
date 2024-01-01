@@ -39,7 +39,7 @@ export default function Form({ searchParams }: { searchParams: SearchParamsType 
 	const { lang } = useContext(LangContext);
 	const { page } = getDictionary(lang);
 	const router = useRouter();
-	const [secret, database_id] = useCredentials();
+	const { accessToken } = useCredentials();
 	const { categories } = useCategories();
 	const { alertModal, handleShowModal } = useAlertModal();
 
@@ -57,9 +57,11 @@ export default function Form({ searchParams }: { searchParams: SearchParamsType 
 		try {
 			const response = await fetch(`${ process.env.NEXT_PUBLIC_API_URL }/word`, {
 				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
+				headers: {
+					'Content-Type': 'application/json',
+					'Authorization': `Bearer ${ accessToken }`
+				},
 				body: JSON.stringify({
-					credentials: { secret, database_id },
 					data: { word, category: [category], meaning, example }
 				})
 			});
@@ -94,7 +96,7 @@ export default function Form({ searchParams }: { searchParams: SearchParamsType 
 			/>
 			<Autocomplete
 				sx={ { mt: '20px' } }
-				options={ categories.map(elem => elem.name) }
+				options={ categories.map(elem => elem.title) }
 				disableClearable={ true }
 				freeSolo={ true }
 				value={ category }

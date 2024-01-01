@@ -51,12 +51,14 @@ export default function IndexForm() {
 				body: JSON.stringify({ email, password })
 			});
 
-			if(!res.ok) {
-				throw new Error('Something went wrong. Try again...');
-			}
-			setWordsPerCrossword(10);
+			const { accessToken, message } = await res.json();
 
-			const { accessToken } = await res.json();
+			if(!res.ok) {
+				const errorMessage = message || 'Something went wrong. Try again...';
+				throw new Error(errorMessage);
+			}
+
+			setWordsPerCrossword(10);
 			setCookie('tokens', JSON.stringify({ accessToken }), { maxAge: CREDENTIALS_COOKIES_MAX_AGE });
 
 			const getMeResponse = await getMe();
@@ -69,13 +71,14 @@ export default function IndexForm() {
 			handleShowModal('You have logged in', 'success');
 		} catch(e: any) {
 			const error = e as Error;
+			console.log(error);
 			handleShowModal(error.message, 'error');
 		} finally {
 			setIsFetching(false);
 		}
 	};
 
-	const handleCreateDatabase = async (e: any) => {
+	const handleRegister = async (e: any) => {
 		e.preventDefault();
 
 		setIsFetching(true);
@@ -86,20 +89,18 @@ export default function IndexForm() {
 				body: JSON.stringify({ email, password, firstName, lastName })
 			});
 
-
+			const data = await res.json();
 			if(res.ok) {
-				const data = await res.json();
-				// const credentials = { secret, database_id: data.databaseId };
-				// setCookie('credentials', JSON.stringify(credentials), { maxAge: CREDENTIALS_COOKIES_MAX_AGE });
-				console.log(data);
 				setEmail('');
 				setPassword('');
 				setFirstName('');
 				setLastName('');
+				setIsLoginForm(!isLoginForm);
 				setAuthState({ loading: false, loggedIn: true });
-				handleShowModal('You\'ve created your database and logged in', 'success');
+				handleShowModal('You\'ve created your account. Please log in', 'success', 10000);
 			} else {
-				throw new Error('Something went wrong. Try again...');
+				const message = data.message || 'Something went wrong. Try again...';
+				throw new Error(message);
 			}
 		} catch(e: any) {
 			const error = e as Error;
@@ -120,7 +121,7 @@ export default function IndexForm() {
 				{ isLoginForm ? 'Log in your account' : 'Register your account' }
 			</Typography>
 			<FormControl sx={ { mt: '25px', width: '310px' } } fullWidth component="form"
-			             onSubmit={ isLoginForm ? handleLogin : handleCreateDatabase }>
+			             onSubmit={ isLoginForm ? handleLogin : handleRegister }>
 				<FormInput
 					placeholder="Email"
 					type="text"
@@ -172,7 +173,7 @@ export default function IndexForm() {
 					} }
 					fontFamily="Montserrat"
 				>
-					{ isLoginForm ? 'Don\'t have a database. Click to create' : 'Already have the database. Log in' }
+					{ isLoginForm ? 'Don\'t have an account ? Click to create' : 'Already have an account ? Log in' }
 				</Typography>
 			</FormControl>
 		</>

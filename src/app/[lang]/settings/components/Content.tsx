@@ -1,9 +1,7 @@
 'use client';
 import { Box, Button, Paper, styled, Typography } from '@mui/material';
-import { Input } from '@/app/[lang]/settings/components/Input';
 import Link from 'next/link';
 import { useContext, useState } from 'react';
-import { useCredentials } from '@/hooks/useCredentials';
 import Modal from '@/app/[lang]/components/Modal';
 import { deleteCookie } from 'cookies-next';
 import { useRouter } from 'next/navigation';
@@ -33,17 +31,13 @@ export default function Content() {
 	const { page, navigation } = getDictionary(lang);
 	const router = useRouter();
 	const { setAuthState } = useContext(AuthContext);
-	const [secret, databaseId] = useCredentials();
-
-	const [showSecretKey, setShowSecretKey] = useState(false);
-	const [showDatabaseId, setShowDatabaseId] = useState(false);
 
 	const [isModalOpen, setIsModalOpen] = useState(false);
 
 	const toggleModal = () => setIsModalOpen(!isModalOpen);
 
 	const handleSignOut = () => {
-		deleteCookie('credentials');
+		deleteCookie('tokens');
 		router.push(`/${ lang }/`);
 		setAuthState({ loading: false, loggedIn: false });
 	}
@@ -60,34 +54,6 @@ export default function Content() {
 				</Box>
 			</Modal>
 			<Typography fontFamily="Montserrat" fontWeight="600" fontSize={ 20 } textAlign="center">{ page.settings.title }</Typography>
-			<Box display="flex" justifyContent="space-between" marginTop="30px">
-				<Typography fontFamily="Montserrat" fontWeight="400" fontSize={ 15 }
-				            alignSelf="center">SECRET_KEY</Typography>
-				{ secret ? (
-					<Input
-						value={ secret }
-						showPassword={ showSecretKey }
-						handleClickShowPassword={ () => setShowSecretKey(show => !show) }
-						handleMouseDownPassword={ e => e.preventDefault() }
-					/>
-				) : (
-					<div>Not found</div>
-				) }
-			</Box>
-			<Box display="flex" justifyContent="space-between" marginTop="8px">
-				<Typography fontFamily="Montserrat" fontWeight="400" fontSize={ 15 }
-				            alignSelf="center">DATABASE_ID</Typography>
-				{ databaseId ? (
-					<Input
-						value={ databaseId }
-						showPassword={ showDatabaseId }
-						handleClickShowPassword={ () => setShowDatabaseId(show => !show) }
-						handleMouseDownPassword={ e => e.preventDefault() }
-					/>
-				) : (
-					<div>Not found</div>
-				) }
-			</Box>
 			<StyledButton variant="outlined" color="error" onClick={ toggleModal }>{ page.settings.signOutBtn }</StyledButton>
 			<Typography fontFamily="Montserrat" color="rgba(0,0,0,0.55)" fontWeight="400" fontSize={ 14 } mt="20px">
 				{ page.settings.credentialsInfo1 + ' ' }
