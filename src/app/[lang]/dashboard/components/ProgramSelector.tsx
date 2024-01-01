@@ -2,7 +2,7 @@
 import { Box, styled, Typography } from '@mui/material';
 import { useContext, useEffect, useRef, useState } from 'react';
 import Repeat from '@/app/[lang]/dashboard/components/Repeat';
-import { CardData, CredentialsType } from '@/types';
+import { CardData } from '@/types';
 import { useCredentials } from '@/hooks/useCredentials';
 import GuessingProgram from '@/app/[lang]/dashboard/components/GuessingProgram';
 import { programs } from '@/config/programs';
@@ -81,10 +81,11 @@ const StyledSettingsIcon = styled(SettingsIcon)(({ theme }) => ({
 	}
 }));
 
-async function fetchData({ secret, database_id }: CredentialsType, category?: string) {
+async function fetchData(category?: string) {
+	const { accessToken } = useCredentials();
 	const categoryQueryParam = category?.length ? `&category=${ category }` : '';
-	const data = await fetch(`${ process.env.NEXT_PUBLIC_API_URL }/words?secret=${ secret }&database_id=${ database_id }${ categoryQueryParam }`, {
-		method: 'GET'
+	const data = await fetch(`${ process.env.NEXT_PUBLIC_API_URL }/words?randomize=true${ categoryQueryParam }`, {
+		headers: { 'Authorization': `Bearer ${ accessToken }` }
 	});
 
 	if(data.ok) {
@@ -97,7 +98,6 @@ export default function ProgramSelector() {
 	const firstRender = useRef(true);
 	const { lang } = useContext(LangContext);
 	const { page } = getDictionary(lang);
-	const [secret, database_id] = useCredentials();
 
 	const [selectedProgram, setSelectedProgram] = useState('');
 	const [selectedCategory, setSelectedCategory] = useState<string>('');
@@ -113,7 +113,7 @@ export default function ProgramSelector() {
 		if(firstRender.current) {
 			firstRender.current = false;
 
-			fetchData({ secret, database_id })
+			fetchData()
 				.then(response => setWords(response.data))
 				.catch(error => console.log(error))
 				.finally(() => setIsFetching(false));
@@ -122,15 +122,15 @@ export default function ProgramSelector() {
 
 		if(fetchNewWords) {
 			setIsFetching(true);
-			fetchData({ secret, database_id }, selectedCategory)
+			fetchData(selectedCategory)
 				.then(response => setWords([...response.data, ...words]))
 				.catch(error => console.log(error))
 				.finally(() => setIsFetching(false));
 		}
 	}, [fetchNewWords, selectedProgram]);
 
-	const removeCard = (id: string, action?: 'right' | 'left') => {
-		setWords((prev) => prev.filter((card) => card.id !== id));
+	const removeCard = (id: number, action?: 'right' | 'left') => {
+		setWords((prev) => prev.filter(card => card.id !== id));
 
 		if(!action) {
 			return;

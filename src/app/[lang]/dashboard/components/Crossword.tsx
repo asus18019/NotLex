@@ -28,7 +28,7 @@ const Question = styled(Typography)(({ theme }) => ({
 
 interface CrosswordProps {
 	words: CardData[],
-	removeCard: (id: string) => void,
+	removeCard: (id: number) => void,
 	isFetching: boolean,
 	closeProgram: () => void
 }

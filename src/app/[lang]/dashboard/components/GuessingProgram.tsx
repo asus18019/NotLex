@@ -47,7 +47,7 @@ interface GuessingProgramProps {
 	type: 'GuessMeaning' | 'GuessWord',
 	words: CardData[],
 	activeWord: CardData,
-	removeCard: (id: string) => void,
+	removeCard: (id: number) => void,
 	isFetching: boolean,
 	closeProgram: () => void
 }

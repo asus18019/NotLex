@@ -3,7 +3,7 @@ import { useState, ReactNode } from 'react';
 import { CardData } from '@/types';
 
 interface SwappableProps {
-	removeCard: (id: string, action: ("right" | "left")) => void,
+	removeCard: (id: number, action: ("right" | "left")) => void,
 	data: CardData,
 	children: ReactNode
 }

@@ -1,13 +1,16 @@
 import { useCredentials } from '@/hooks/useCredentials';
 
 export const useProgress = () => {
-	const [secret] = useCredentials();
+	const { accessToken } = useCredentials();
 
-	const updateProgress = async (page_id: string, difference: number) => {
-		await fetch(`${ process.env.NEXT_PUBLIC_API_URL }/change-progress`, {
+	const updateProgress = async (wordId: number, difference: number) => {
+		await fetch(`${ process.env.NEXT_PUBLIC_API_URL }/update-word`, {
 			method: 'PATCH',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ secret, page_id, difference })
+			headers: {
+				'Content-Type': 'application/json',
+				'Authorization': `Bearer ${ accessToken }`
+			},
+			body: JSON.stringify({ wordId, progress: difference })
 		});
 	};
 

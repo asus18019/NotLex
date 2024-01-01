@@ -20,6 +20,7 @@ const SettingsModal = ({ isModalOpen, toggleModal, selectedCategory, setSelected
 	const { lang } = useContext(LangContext);
 	const { page } = getDictionary(lang);
 	const { categories } = useCategories();
+	console.log(categories);
 	const { wordsPerCrossword, setWordsPerCrossword } = useSettings();
 
 	const [selectedWordsPerCrossword, setSelectedWordsPerCrossword] = useState<number>(wordsPerCrossword);
@@ -45,11 +46,11 @@ const SettingsModal = ({ isModalOpen, toggleModal, selectedCategory, setSelected
 					disablePortal
 					id="combo-box-demo"
 					sx={ { width: '50%' } }
-					options={ categories.map(elem => elem.name) }
+					options={ categories.map(elem => elem.title) }
 					value={ selectedCategory }
 					onChange={ handleChangeCategoryAutocomplete }
 					onInputChange={ (_event, value) => {
-						if(categories.some(category => category.name === value) || value === "") {
+						if(categories.some(category => category.title === value) || value === "") {
 							handleChangeCategoryAutocomplete(_event, value)
 						}
 					}}

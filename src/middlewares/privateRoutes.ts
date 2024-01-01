@@ -1,5 +1,5 @@
 import { NextFetchEvent, NextMiddleware, NextRequest, NextResponse } from 'next/server';
-import { checkSecrets } from '@/utils/checkCredentials';
+import { getMe } from '@/utils/getMe';
 import { matchRoute, runNextMiddleware } from '@/middleware';
 import { i18n } from '../../i18n.config';
 
@@ -22,17 +22,17 @@ export function withMiddleware1(middleware?: NextMiddleware) {
 		}
 		const redirectUrl = `/${ locale }`;
 
-		const credentials = req.cookies.get('credentials');
-		const { secret, database_id } = JSON.parse(credentials?.value || '{}');
+		const credentials = req.cookies.get('tokens');
+		const { accessToken } = JSON.parse(credentials?.value || '{}');
 
-		if(!secret || !database_id) {
+		if(!accessToken) {
 			return NextResponse.redirect(new URL(redirectUrl, req.url));
 		}
 
 		try {
-			const res = await checkSecrets({ secret, database_id });
+			const res = await getMe(accessToken);
 			if(!res.ok) {
-				new Error('This route is unavailable');
+				return NextResponse.redirect(new URL(redirectUrl, req.url));
 			}
 		} catch(error) {
 			console.log(error);

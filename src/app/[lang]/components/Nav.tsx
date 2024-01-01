@@ -6,8 +6,6 @@ import CloseIcon from '@mui/icons-material/Close';
 import { usePathname } from 'next/navigation';
 import { useContext, useEffect, useLayoutEffect, useState } from 'react';
 import { AuthContext } from '@/context/AuthContextProvider';
-import { useCredentials } from '@/hooks/useCredentials';
-// import { checkSecrets } from '@/utils/checkCredentials';
 import { navLinks } from '@/config/links';
 import { useCategories } from '@/hooks/useCategories';
 import { getDictionary } from '@/utils/dictionary';
@@ -68,7 +66,6 @@ export default function Nav({ showMenu, setShowMenu }: {
 				setAuthState({ loading: false, loggedIn: res.ok });
 
 				const { categoriesHash, user } = await res.json();
-				console.log(user);
 				await syncCategories(categoriesHash);
 			})
 			.catch(() => {

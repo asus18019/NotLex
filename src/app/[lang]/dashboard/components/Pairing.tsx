@@ -60,7 +60,7 @@ const ContentContainer = styled(Box)(({ theme }) => ({
 
 interface PairingProps {
 	words: CardData[],
-	removeCard: (id: string) => void,
+	removeCard: (id: number) => void,
 	isFetching: boolean,
 	closeProgram: () => void
 }
@@ -74,7 +74,7 @@ const Pairing = ({ words, removeCard, isFetching, closeProgram }: PairingProps) 
 	const { page } = getDictionary(lang);
 	const { updateProgress } = useProgress();
 	const [selected, setSelected] = useState<SelectedOption | undefined>(undefined);
-	const [answers, setAnswers] = useState<{ id: string, isCorrect: boolean }[]>([]);
+	const [answers, setAnswers] = useState<{ id: number, isCorrect: boolean }[]>([]);
 
 	const activeWords = useMemo(() => [...words].reverse().slice(0, 10), [words]);
 	const shuffledWords = useMemo(() => shuffleArray([...activeWords]), [activeWords]);

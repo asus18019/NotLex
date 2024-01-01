@@ -13,7 +13,7 @@ export const LoadingText = styled(Typography)({
 interface RepeatProps {
 	words: CardData[],
 	activeWord: CardData,
-	removeCard: (id: string, action?: 'right' | 'left') => void,
+	removeCard: (id: number, action?: 'right' | 'left') => void,
 	isFetching: boolean,
 	closeProgram: () => void
 }
