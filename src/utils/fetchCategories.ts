@@ -1,10 +1,11 @@
-import { CategoryType, CredentialsType } from '@/types';
+import { CategoryType } from '@/types';
+import { useCredentials } from '@/hooks/useCredentials';
 
-export const fetchCategories = async ({ secret, database_id }: CredentialsType): Promise<{ properties: CategoryType[] }> => {
+export const fetchCategories = async (): Promise<{ properties: CategoryType[] }> => {
+	const { accessToken } = useCredentials();
+
 	const res = await fetch(`${ process.env.NEXT_PUBLIC_API_URL }/get-categories`, {
-		method: 'POST',
-		headers: { 'Content-Type': 'application/json' },
-		body: JSON.stringify({ secret: secret, database_id })
+		headers: { 'Authorization': `Bearer ${ accessToken }` }
 	});
 
 	return await res.json();

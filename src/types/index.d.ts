@@ -30,8 +30,7 @@ export type ServerComponentPropsType = {
 }
 
 export type CredentialsType = {
-	secret: string | undefined,
-	database_id: string | undefined
+	accessToken: string | undefined
 }
 export type ModalDataType = {
 	message: string,

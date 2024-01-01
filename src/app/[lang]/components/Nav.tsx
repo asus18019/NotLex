@@ -7,12 +7,13 @@ import { usePathname } from 'next/navigation';
 import { useContext, useEffect, useLayoutEffect, useState } from 'react';
 import { AuthContext } from '@/context/AuthContextProvider';
 import { useCredentials } from '@/hooks/useCredentials';
-import { checkSecrets } from '@/utils/checkCredentials';
+// import { checkSecrets } from '@/utils/checkCredentials';
 import { navLinks } from '@/config/links';
 import { useCategories } from '@/hooks/useCategories';
 import { getDictionary } from '@/utils/dictionary';
 import LocaleSwitcher from '@/app/[lang]/components/LocaleSwitcher';
 import { LangContext } from '@/context/LangContextProvider';
+import { getMe } from '@/utils/getMe';
 
 const NavbarLink = styled(Link)(({ theme }) => ({
 	margin: '3px 5px',
@@ -51,7 +52,6 @@ export default function Nav({ showMenu, setShowMenu }: {
 	const pathname = usePathname();
 	const { navigation } = getDictionary(lang);
 
-	const [secret, database_id] = useCredentials();
 	const { syncCategories } = useCategories();
 	const { loading, loggedIn, setAuthState } = useContext(AuthContext);
 	const [hideMenu, setHideMenu] = useState(true);
@@ -63,11 +63,12 @@ export default function Nav({ showMenu, setShowMenu }: {
 	}, [showMenu]);
 
 	useLayoutEffect(() => {
-		checkSecrets({ secret, database_id })
+		getMe()
 			.then(async res => {
 				setAuthState({ loading: false, loggedIn: res.ok });
 
-				const { categoriesHash } = await res.json();
+				const { categoriesHash, user } = await res.json();
+				console.log(user);
 				await syncCategories(categoriesHash);
 			})
 			.catch(() => {
