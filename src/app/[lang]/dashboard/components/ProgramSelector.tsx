@@ -122,7 +122,7 @@ export default function ProgramSelector() {
 
 		if(fetchNewWords) {
 			setIsFetching(true);
-			fetchData(selectedCategory)
+			fetchData(accessToken, selectedCategory)
 				.then(response => setWords([...response.data, ...words]))
 				.catch(error => console.log(error))
 				.finally(() => setIsFetching(false));
