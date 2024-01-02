@@ -2,6 +2,7 @@
 	"navigation": {
 		"home": "Startseite",
 		"dashboard": "Dashboard",
+		"library": "Bibliothek",
 		"find word": "Wort finden",
 		"add word": "Wort hinzufügen",
 		"settings": "Einstellungen",

@@ -20,7 +20,6 @@ const SettingsModal = ({ isModalOpen, toggleModal, selectedCategory, setSelected
 	const { lang } = useContext(LangContext);
 	const { page } = getDictionary(lang);
 	const { categories } = useCategories();
-	console.log(categories);
 	const { wordsPerCrossword, setWordsPerCrossword } = useSettings();
 
 	const [selectedWordsPerCrossword, setSelectedWordsPerCrossword] = useState<number>(wordsPerCrossword);

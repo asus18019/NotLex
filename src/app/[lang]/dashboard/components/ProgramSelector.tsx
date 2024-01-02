@@ -12,6 +12,7 @@ import { LangContext } from '@/context/LangContextProvider';
 import { getDictionary } from '@/utils/dictionary';
 import Crossword from '@/app/[lang]/dashboard/components/Crossword';
 import SettingsModal from '@/app/[lang]/dashboard/components/SettingsModal';
+import { fetchWords } from '@/utils/fetchWords';
 
 export const ProgramsContainer = styled(Box)({
 	width: '100%',
@@ -81,18 +82,6 @@ const StyledSettingsIcon = styled(SettingsIcon)(({ theme }) => ({
 	}
 }));
 
-async function fetchData(accessToken: string, category?: string) {
-	const categoryQueryParam = category?.length ? `&category=${ category }` : '';
-	const data = await fetch(`${ process.env.NEXT_PUBLIC_API_URL }/words?randomize=true${ categoryQueryParam }`, {
-		headers: { 'Authorization': `Bearer ${ accessToken }` }
-	});
-
-	if(data.ok) {
-		return await data.json();
-	}
-	throw new Error('Something went wrong');
-}
-
 export default function ProgramSelector() {
 	const firstRender = useRef(true);
 	const { lang } = useContext(LangContext);
@@ -113,8 +102,14 @@ export default function ProgramSelector() {
 		if(firstRender.current) {
 			firstRender.current = false;
 
-			fetchData(accessToken)
-				.then(response => setWords(response.data))
+			fetchWords(accessToken, { randomize: true })
+				.then(response => {
+					if(!response.ok) {
+						throw new Error('Something went wrong');
+					}
+					return response.json();
+				})
+				.then(result => setWords(result.data))
 				.catch(error => console.log(error))
 				.finally(() => setIsFetching(false));
 			return;
@@ -122,7 +117,16 @@ export default function ProgramSelector() {
 
 		if(fetchNewWords) {
 			setIsFetching(true);
-			fetchData(accessToken, selectedCategory)
+			fetchWords(accessToken, {
+				category: selectedCategory,
+				randomize: true
+			})
+				.then(response => {
+					if(!response.ok) {
+						throw new Error('Something went wrong');
+					}
+					return response.json();
+				})
 				.then(response => setWords([...response.data, ...words]))
 				.catch(error => console.log(error))
 				.finally(() => setIsFetching(false));

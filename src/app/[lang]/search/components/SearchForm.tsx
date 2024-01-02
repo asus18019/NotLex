@@ -54,7 +54,7 @@ export default function SearchForm({ data, searchParam }: {
 
 	const handleClickAddWord = (word: { definition: string, example: string }) => {
 		const { definition, example } = word;
-		router.push(`/${ lang }/add?word=${ searchValue }&definition=${ definition }${ example ? `&example=${ example }` : '' }`);
+		router.push(`/${ lang }/library/add?word=${ searchValue }&definition=${ definition }${ example ? `&example=${ example }` : '' }`);
 	};
 
 	const debounceFn = useCallback(debounce(async (value: string) => {

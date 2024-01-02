@@ -10,15 +10,20 @@ export const navLinks = [
 		private: true
 	},
 	{
+		title: 'Library',
+		url: '/library',
+		private: true
+	},
+	{
 		title: 'Find word',
 		url: '/search',
 		private: false
 	},
-	{
-		title: 'Add word',
-		url: '/add',
-		private: true
-	},
+	// {
+	// 	title: 'Add word',
+	// 	url: '/add',
+	// 	private: true
+	// },
 	{
 		title: 'Settings',
 		url: '/settings',

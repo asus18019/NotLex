@@ -1,5 +1,5 @@
 import { Box, Typography } from '@mui/material';
-import Form from '@/app/[lang]/add/components/Form';
+import Form from '@/app/[lang]/library/add/components/Form';
 import { Metadata } from 'next';
 import { ServerComponentPropsType } from '@/types';
 import { getDictionary } from '@/utils/dictionary';

@@ -3,7 +3,7 @@ import { getMe } from '@/utils/getMe';
 import { matchRoute, runNextMiddleware } from '@/middleware';
 import { i18n } from '../../i18n.config';
 
-const privateRoutes = ['/dashboard', '/add', '/settings'];
+const privateRoutes = ['/dashboard', '/settings', '/library'];
 
 export function withMiddleware1(middleware?: NextMiddleware) {
 	return async (req: NextRequest, event: NextFetchEvent) => {
