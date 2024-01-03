@@ -5,11 +5,18 @@ import { fetchWords } from '@/utils/fetchWords';
 import { ChangeEvent, useCallback, useEffect, useState } from 'react';
 import { CardData } from '@/types';
 import WordCard from '@/app/[lang]/library/components/WordCard';
-import { Box, InputBase, Pagination, styled, Typography } from '@mui/material';
+import {
+	Box,
+	InputBase,
+	Pagination,
+	styled,
+	Typography,
+} from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
 import Badge from '@/app/[lang]/library/components/Badge';
 import debounce from 'lodash/debounce';
 import ClearIcon from '@mui/icons-material/Clear';
+import Select from '@/app/[lang]/library/components/Select';
 
 const PageContainer = styled(Box)({
 	display: "flex",
@@ -43,11 +50,16 @@ const NotFoundText = styled(Typography)(({ theme }) => ({
 	}
 }));
 
+type SortByType = 'progress' | 'created_at' | 'word';
+type OrderByType = 'asc' | 'desc'
+
 export default function Library() {
 	const { accessToken = '' } = useCredentials();
 
 	const [isFetching, setIsFetching] = useState(true);
 	const [searchValue, setSearchValue] = useState('');
+	const [sortBy, setSortBy] = useState<SortByType>('created_at');
+	const [orderBy, setOrderBy] = useState<OrderByType>('desc');
 
 	const [words, setWords] = useState<CardData[]>([]);
 	const [page, setPage] = useState<number>(1);
@@ -58,7 +70,7 @@ export default function Library() {
 
 	useEffect(() => {
 		setIsFetching(true);
-		fetchWords(accessToken, { randomize: false, pageSize, page, search })
+		fetchWords(accessToken, { randomize: false, pageSize, page, search, sortBy, orderBy })
 			.then(response => {
 				if(!response.ok) {
 					throw new Error('Something went wrong');
@@ -72,7 +84,7 @@ export default function Library() {
 			})
 			.catch(error => console.log(error))
 			.finally(() => setIsFetching(false));
-	}, [accessToken, page, search]);
+	}, [accessToken, page, search, sortBy, orderBy]);
 
 	const handleChangeInput = (e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
 		setSearchValue(e.target.value);
@@ -102,12 +114,25 @@ export default function Library() {
 				<Typography fontFamily="Montserrat" fontSize="16px">words saved</Typography>
 			</Box>
 			<Typography fontFamily="Montserrat" fontSize="18px">Explore your saved words</Typography>
-			<SearchInput
-				placeholder="Find your word..."
-				value={ searchValue }
-				onChange={ handleChangeInput }
-				endAdornment={ <ClearIcon sx={ { cursor: 'pointer' } } onClick={ handleClearSearch }/> }
-			/>
+			<Box display="flex" flexWrap="wrap">
+				<SearchInput
+					placeholder="Find your word..."
+					value={ searchValue }
+					onChange={ handleChangeInput }
+					endAdornment={ <ClearIcon sx={ { cursor: 'pointer' } } onClick={ handleClearSearch }/> }
+				/>
+				<Box alignSelf="center">
+					<Select value={ sortBy } onChange={ e => setSortBy(e.target.value as SortByType) }>
+						<option value="created_at">Created</option>
+						<option value="word">Name</option>
+						<option value="progress">Progress</option>
+					</Select>
+					<Select value={ orderBy } onChange={ e => setOrderBy(e.target.value as OrderByType) }>
+						<option value="asc">Ascending</option>
+						<option value="desc">Descending</option>
+					</Select>
+				</Box>
+			</Box>
 			<Box>
 				{ isFetching ? (
 					<CircularProgress sx={ { mt: '10px' } }/>
