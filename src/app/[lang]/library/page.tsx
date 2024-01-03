@@ -16,6 +16,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Badge from '@/app/[lang]/library/components/Badge';
 import debounce from 'lodash/debounce';
 import ClearIcon from '@mui/icons-material/Clear';
+import FilterListIcon from '@mui/icons-material/FilterList';
 import Select from '@/app/[lang]/library/components/Select';
 
 const PageContainer = styled(Box)({
@@ -26,18 +27,15 @@ const PageContainer = styled(Box)({
 	minHeight: "80vh"
 });
 
-const SearchInput = styled(InputBase)(({ theme }) => ({
+const SearchInput = styled(InputBase)({
 	border: '1px solid gray',
 	borderRadius: '10px',
 	fontSize: '16px',
 	padding: '2px 12px',
 	fontFamily: 'Montserrat',
 	width: '100%',
-	margin: '10px 0',
-	[theme.breakpoints.up('md')]: {
-		width: '500px'
-	}
-}));
+	margin: '10px 0'
+});
 
 const NotFoundText = styled(Typography)(({ theme }) => ({
 	marginTop: '10px',
@@ -57,6 +55,7 @@ export default function Library() {
 	const { accessToken = '' } = useCredentials();
 
 	const [isFetching, setIsFetching] = useState(true);
+	const [showFiltering, setShowFiltering] = useState(false);
 	const [searchValue, setSearchValue] = useState('');
 	const [sortBy, setSortBy] = useState<SortByType>('created_at');
 	const [orderBy, setOrderBy] = useState<OrderByType>('desc');
@@ -64,7 +63,7 @@ export default function Library() {
 	const [words, setWords] = useState<CardData[]>([]);
 	const [page, setPage] = useState<number>(1);
 	const [search, setSearch] = useState('');
-	const [pageSize] = useState<number>(25);
+	const [pageSize, setPageSize] = useState<number>(25);
 	const [foundedWords, setFoundedWords] = useState<number>(0);
 	const [totalWords, setTotalWords] = useState<number>(0);
 
@@ -84,7 +83,7 @@ export default function Library() {
 			})
 			.catch(error => console.log(error))
 			.finally(() => setIsFetching(false));
-	}, [accessToken, page, search, sortBy, orderBy]);
+	}, [accessToken, page, pageSize, search, sortBy, orderBy]);
 
 	const handleChangeInput = (e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
 		setSearchValue(e.target.value);
@@ -114,24 +113,36 @@ export default function Library() {
 				<Typography fontFamily="Montserrat" fontSize="16px">words saved</Typography>
 			</Box>
 			<Typography fontFamily="Montserrat" fontSize="18px">Explore your saved words</Typography>
-			<Box display="flex" flexWrap="wrap">
-				<SearchInput
-					placeholder="Find your word..."
-					value={ searchValue }
-					onChange={ handleChangeInput }
-					endAdornment={ <ClearIcon sx={ { cursor: 'pointer' } } onClick={ handleClearSearch }/> }
-				/>
-				<Box alignSelf="center">
-					<Select value={ sortBy } onChange={ e => setSortBy(e.target.value as SortByType) }>
-						<option value="created_at">Created</option>
-						<option value="word">Name</option>
-						<option value="progress">Progress</option>
-					</Select>
-					<Select value={ orderBy } onChange={ e => setOrderBy(e.target.value as OrderByType) }>
-						<option value="asc">Ascending</option>
-						<option value="desc">Descending</option>
-					</Select>
+			<Box display="flex" flexDirection="column" width={{ xs: '100%', md: '500px' }}>
+				<Box display="flex" alignItems="center">
+					<SearchInput
+						placeholder="Find your word..."
+						value={ searchValue }
+						onChange={ handleChangeInput }
+						endAdornment={ <ClearIcon sx={ { cursor: 'pointer' } } onClick={ handleClearSearch }/> }
+					/>
+					<FilterListIcon sx={{ m: '0 0 0 12px', cursor: 'pointer' }} onClick={ () => setShowFiltering(!showFiltering) }/>
 				</Box>
+				{ showFiltering && (
+					<Box alignSelf="center">
+						<Select value={ sortBy } onChange={ e => setSortBy(e.target.value as SortByType) }>
+							<option value="created_at">Created</option>
+							<option value="word">Name</option>
+							<option value="progress">Progress</option>
+						</Select>
+						<Select value={ orderBy } onChange={ e => setOrderBy(e.target.value as OrderByType) }>
+							<option value="asc">Ascending</option>
+							<option value="desc">Descending</option>
+						</Select>
+						<Select value={ pageSize.toString() } onChange={ e => setPageSize(Number(e.target.value)) }>
+							<option value={ 5 }>5</option>
+							<option value={ 10 }>10</option>
+							<option value={ 25 }>25</option>
+							<option value={ 50 }>50</option>
+							<option value={ 100 }>100</option>
+						</Select>
+					</Box>
+				) }
 			</Box>
 			<Box>
 				{ isFetching ? (

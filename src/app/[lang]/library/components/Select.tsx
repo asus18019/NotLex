@@ -15,17 +15,16 @@ export default function Select({ value, onChange, children }: SelectProps) {
 			variant="standard"
 			sx={ {
 				border: '1px solid gray',
-				padding: '2px 12px',
+				padding: '0px 8px',
 				borderRadius: '10px',
 				fontFamily: 'Montserrat',
-				height: '38px',
 				marginLeft: '10px',
 				':before': { content: 'none' },
 				':after': { content: 'none' }
 			} }
 			onChange={ onChange }
 			inputProps={ {
-				sx: { ':focus': { backgroundColor: 'transparent', borderBottom: 'none' } }
+				sx: { fontSize: '15px', ':focus': { backgroundColor: 'transparent', borderBottom: 'none' } }
 			} }
 		>
 			{ children }
