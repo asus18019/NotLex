@@ -153,7 +153,7 @@ export default function Content({ lang }: ContentProps) {
 						endAdornment={ <ClearIcon sx={ iconStyles } onClick={ handleClearSearch }/> }
 					/>
 					<FilterListIcon sx={ iconStyles } onClick={ () => setShowFiltering(!showFiltering) }/>
-					<Link href="/library/add">
+					<Link href={ `/${ lang }/library/add` }>
 						<AddIcon sx={ iconStyles }/>
 					</Link>
 				</Box>
