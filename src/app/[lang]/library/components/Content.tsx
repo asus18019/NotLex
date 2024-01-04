@@ -12,7 +12,7 @@ import {
 	styled,
 	Typography
 } from '@mui/material';
-import CircularProgress from '@mui/material/CircularProgress';
+import SkeletonCard from '@/app/[lang]/library/components/SkeletonCard';
 import Badge from '@/app/[lang]/library/components/Badge';
 import debounce from 'lodash/debounce';
 import ClearIcon from '@mui/icons-material/Clear';
@@ -180,7 +180,7 @@ export default function Content({ lang }: ContentProps) {
 			</Box>
 			<Box>
 				{ isFetching ? (
-					<CircularProgress sx={ { mt: '10px' } }/>
+					Array.from({ length: 10 }).map((_e, index) => <SkeletonCard key={ index }/>)
 				) : words.map(word => <WordCard
 					key={ word.id }
 					word={ word.word }
