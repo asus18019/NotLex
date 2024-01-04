@@ -37,7 +37,7 @@ const FormText = styled('textarea')({
 
 export default function Form({ searchParams }: { searchParams: SearchParamsType }) {
 	const { lang } = useContext(LangContext);
-	const { page } = getDictionary(lang);
+	const { page: { library: { addPage: page } } } = getDictionary(lang);
 	const router = useRouter();
 	const { accessToken } = useCredentials();
 	const { categories } = useCategories();
@@ -68,7 +68,7 @@ export default function Form({ searchParams }: { searchParams: SearchParamsType 
 
 			if(!response.ok) throw new Error();
 
-			handleShowModal(page.add.form.modal.success, 'success');
+			handleShowModal(page.form.modal.success, 'success');
 
 			setWord('');
 			setCategory('');
@@ -77,7 +77,7 @@ export default function Form({ searchParams }: { searchParams: SearchParamsType 
 
 			router.push(`/${ lang }/add`);
 		} catch(e) {
-			handleShowModal(page.add.form.modal.error, 'error');
+			handleShowModal(page.form.modal.error, 'error');
 			console.log(e);
 		} finally {
 			setIsFetching(false);
@@ -88,7 +88,7 @@ export default function Form({ searchParams }: { searchParams: SearchParamsType 
 		<FormControl sx={ { my: '25px', width: '310px' } } component="form" onSubmit={ handleAddWord }>
 			{ alertModal }
 			<FormInput
-				placeholder={ page.add.form.placeholders.word }
+				placeholder={ page.form.placeholders.word }
 				type="text"
 				value={ word }
 				onChange={ e => setWord(e.target.value) }
@@ -113,20 +113,20 @@ export default function Form({ searchParams }: { searchParams: SearchParamsType 
 							sx={ { width: 'calc(100% - 32px)' } }
 							type="text"
 							{ ...params.inputProps }
-							placeholder={ page.add.form.placeholders.category }
+							placeholder={ page.form.placeholders.category }
 							required/>
 					</div>
 				) }
 			/>
 			<FormText
-				placeholder={ page.add.form.placeholders.meaning }
+				placeholder={ page.form.placeholders.meaning }
 				rows={ 3 }
 				required
 				value={ meaning }
 				onChange={ e => setMeaning(e.target.value) }
 			/>
 			<FormText
-				placeholder={ page.add.form.placeholders.example }
+				placeholder={ page.form.placeholders.example }
 				rows={ 5 }
 				required
 				value={ example }
@@ -136,7 +136,7 @@ export default function Form({ searchParams }: { searchParams: SearchParamsType 
 				{ isFetching ? (
 					<CircularProgress size={ 24 }/>
 				) : (
-					<Typography fontFamily="Montserrat">{ page.add.form.button.submit }</Typography>
+					<Typography fontFamily="Montserrat">{ page.form.button.submit }</Typography>
 				) }
 			</Button>
 		</FormControl>

@@ -10,11 +10,11 @@ export const metadata: Metadata = {
 }
 
 export default function Add({ searchParams, params }: ServerComponentPropsType) {
-	const { page } = getDictionary(params.lang);
+	const { page: { library: { addPage: page } } } = getDictionary(params.lang);
 	return (
 		<Box width="100%" height="calc(100vh - 81px)" display="flex" justifyContent="center" alignItems="center"
 		     flexDirection="column">
-			<Typography fontFamily="Montserrat" fontSize={ 18 }>{ page.add.form.title }</Typography>
+			<Typography fontFamily="Montserrat" fontSize={ 18 }>{ page.form.title }</Typography>
 			<Form searchParams={ searchParams }/>
 		</Box>
 	);

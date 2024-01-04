@@ -57,24 +57,40 @@
 				"text": "Looking for your words..."
 			}
 		},
-		"add": {
-			"form": {
-				"title": "Add new word",
-				"placeholders": {
-					"word": "Word",
-					"category": "Category",
-					"meaning": "Meaning",
-					"example": "Example"
+		"library": {
+			"header": "Explore your saved words",
+			"searchInputPlaceholder": "Find your word...",
+			"filters": {
+				"sorts": {
+					"created_at": "Created",
+					"word": "Name",
+					"progress": "progress"
 				},
-				"button": {
-					"submit": "Save"
-				},
-				"modal": {
-					"success": "You've added a new word",
-					"error": "Something went wrong. Try again"
+				"orders": {
+					"asc": "Ascending",
+					"desc": "Descending"
+				}
+			},
+			"addPage": {
+				"form": {
+					"title": "Add new word",
+					"placeholders": {
+						"word": "Word",
+						"category": "Category",
+						"meaning": "Meaning",
+						"example": "Example"
+					},
+					"button": {
+						"submit": "Save"
+					},
+					"modal": {
+						"success": "You've added a new word",
+						"error": "Something went wrong. Try again"
+					}
 				}
 			}
 		},
+
 		"settings": {
 			"title": "Account settings",
 			"signOutBtn": "sign out",
