@@ -10,32 +10,48 @@ import {
 	InputBase,
 	Pagination,
 	styled,
-	Typography,
+	Typography
 } from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
 import Badge from '@/app/[lang]/library/components/Badge';
 import debounce from 'lodash/debounce';
 import ClearIcon from '@mui/icons-material/Clear';
 import FilterListIcon from '@mui/icons-material/FilterList';
+import AddIcon from '@mui/icons-material/Add';
 import Select from '@/app/[lang]/library/components/Select';
 
 const PageContainer = styled(Box)({
-	display: "flex",
-	alignItems: "center",
-	marginTop: "10px",
-	flexDirection: "column",
-	minHeight: "80vh"
+	display: 'flex',
+	alignItems: 'center',
+	marginTop: '10px',
+	flexDirection: 'column',
+	minHeight: '80vh'
 });
 
-const SearchInput = styled(InputBase)({
+const SearchInput = styled(InputBase)(({ theme }) => ({
 	border: '1px solid gray',
 	borderRadius: '10px',
 	fontSize: '16px',
 	padding: '2px 12px',
 	fontFamily: 'Montserrat',
 	width: '100%',
-	margin: '10px 0'
-});
+	margin: '4px 0',
+	[theme.breakpoints.up('md')]: {
+		margin: '10px 0',
+
+	}
+}));
+
+const LibraryHeader = styled(Typography)(({ theme }) => ({
+	fontFamily: "Montserrat",
+	fontSize: "18px",
+	width: '100%',
+	textAlign: 'start',
+	[theme.breakpoints.up('md')]: {
+		width: '80%',
+		textAlign: 'center'
+	}
+}));
 
 const NotFoundText = styled(Typography)(({ theme }) => ({
 	marginTop: '10px',
@@ -47,6 +63,15 @@ const NotFoundText = styled(Typography)(({ theme }) => ({
 		width: '80%'
 	}
 }));
+
+const iconStyles = {
+	color: 'black',
+	m: '0 0 0 8px',
+	p: '4px',
+	cursor: 'pointer',
+	transition: 'all 0.25s',
+	':hover': { backgroundColor: '#ebebeb', borderRadius: '100%' }
+}
 
 type SortByType = 'progress' | 'created_at' | 'word';
 type OrderByType = 'asc' | 'desc'
@@ -106,22 +131,24 @@ export default function Library() {
 
 	return (
 		<PageContainer>
-			<Link href="/library/add">Add</Link>
 			<Box display="flex" alignItems="center" gap="4px" width={ { xs: '100%', md: '80%' } }>
 				<Typography fontFamily="Montserrat" fontSize="16px" fontWeight="600">Total:</Typography>
 				<Badge text={ totalWords.toString() } color="darkcyan" fontSize="15px"/>
 				<Typography fontFamily="Montserrat" fontSize="16px">words saved</Typography>
 			</Box>
-			<Typography fontFamily="Montserrat" fontSize="18px">Explore your saved words</Typography>
-			<Box display="flex" flexDirection="column" width={{ xs: '100%', md: '500px' }}>
+			<LibraryHeader>Explore your saved words</LibraryHeader>
+			<Box display="flex" flexDirection="column" width={ { xs: '100%', md: '500px' } }>
 				<Box display="flex" alignItems="center">
 					<SearchInput
 						placeholder="Find your word..."
 						value={ searchValue }
 						onChange={ handleChangeInput }
-						endAdornment={ <ClearIcon sx={ { cursor: 'pointer' } } onClick={ handleClearSearch }/> }
+						endAdornment={ <ClearIcon sx={ iconStyles } onClick={ handleClearSearch }/> }
 					/>
-					<FilterListIcon sx={{ m: '0 0 0 12px', cursor: 'pointer' }} onClick={ () => setShowFiltering(!showFiltering) }/>
+					<FilterListIcon sx={ iconStyles } onClick={ () => setShowFiltering(!showFiltering) }/>
+					<Link href="/library/add">
+						<AddIcon sx={ iconStyles }/>
+					</Link>
 				</Box>
 				{ showFiltering && (
 					<Box alignSelf="center">
@@ -168,7 +195,8 @@ export default function Library() {
 				/>
 			) }
 			{ (!isFetching && words.length === 0) && (
-				<NotFoundText>We haven`&apos;t found any words... Try to add a new one or clear the filters</NotFoundText>
+				<NotFoundText>We haven`&apos;t found any words... Try to add a new one or clear the
+					filters</NotFoundText>
 			) }
 		</PageContainer>
 	);

@@ -118,7 +118,7 @@ export default function ProgramSelector() {
 		if(fetchNewWords) {
 			setIsFetching(true);
 			fetchWords(accessToken, {
-				category: selectedCategory,
+				category: [selectedCategory],
 				randomize: true
 			})
 				.then(response => {
