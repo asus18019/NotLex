@@ -18,9 +18,12 @@ import debounce from 'lodash/debounce';
 import ClearIcon from '@mui/icons-material/Clear';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import AddIcon from '@mui/icons-material/Add';
+import CheckIcon from '@mui/icons-material/Check';
 import Select from '@/app/[lang]/library/components/Select';
 import { Locale } from '../../../../../i18n.config';
 import { getDictionary } from '@/utils/dictionary';
+import CategoryBadge from '@/app/[lang]/library/components/CategoryBadge';
+import { useCategories } from '@/hooks/useCategories';
 
 const PageContainer = styled(Box)({
 	display: 'flex',
@@ -39,14 +42,14 @@ const SearchInput = styled(InputBase)(({ theme }) => ({
 	width: '100%',
 	margin: '4px 0',
 	[theme.breakpoints.up('md')]: {
-		margin: '10px 0',
+		margin: '10px 0'
 
 	}
 }));
 
 const LibraryHeader = styled(Typography)(({ theme }) => ({
-	fontFamily: "Montserrat",
-	fontSize: "18px",
+	fontFamily: 'Montserrat',
+	fontSize: '18px',
 	width: '100%',
 	textAlign: 'start',
 	[theme.breakpoints.up('md')]: {
@@ -73,24 +76,26 @@ const iconStyles = {
 	cursor: 'pointer',
 	transition: 'all 0.25s',
 	':hover': { backgroundColor: '#ebebeb', borderRadius: '100%' }
-}
+};
 
 type SortByType = 'progress' | 'created_at' | 'word';
 type OrderByType = 'asc' | 'desc'
 
 interface ContentProps {
-	lang: Locale
+	lang: Locale;
 }
 
 export default function Content({ lang }: ContentProps) {
 	const { page: { library: libraryPage } } = getDictionary(lang);
 	const { accessToken = '' } = useCredentials();
+	const { categories } = useCategories();
 
 	const [isFetching, setIsFetching] = useState(true);
 	const [showFiltering, setShowFiltering] = useState(false);
 	const [searchValue, setSearchValue] = useState('');
 	const [sortBy, setSortBy] = useState<SortByType>('created_at');
 	const [orderBy, setOrderBy] = useState<OrderByType>('desc');
+	const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
 
 	const [words, setWords] = useState<CardData[]>([]);
 	const [page, setPage] = useState<number>(1);
@@ -101,7 +106,15 @@ export default function Content({ lang }: ContentProps) {
 
 	useEffect(() => {
 		setIsFetching(true);
-		fetchWords(accessToken, { randomize: false, pageSize, page, search, sortBy, orderBy })
+		fetchWords(accessToken, {
+			randomize: false,
+			pageSize,
+			page,
+			search,
+			sortBy,
+			orderBy,
+			category: selectedCategories
+		})
 			.then(response => {
 				if(!response.ok) {
 					throw new Error('Something went wrong');
@@ -115,7 +128,7 @@ export default function Content({ lang }: ContentProps) {
 			})
 			.catch(error => console.log(error))
 			.finally(() => setIsFetching(false));
-	}, [accessToken, page, pageSize, search, sortBy, orderBy]);
+	}, [accessToken, page, pageSize, search, sortBy, orderBy, selectedCategories]);
 
 	const handleChangeInput = (e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
 		setSearchValue(e.target.value);
@@ -134,6 +147,16 @@ export default function Content({ lang }: ContentProps) {
 	const handleClearSearch = () => {
 		setSearchValue('');
 		setSearch('');
+	};
+
+	const handleClickCategory = (clickedCategory: string) => {
+		setPage(1);
+		if(selectedCategories.includes(clickedCategory)) {
+			const updated = selectedCategories.filter(category => category !== clickedCategory);
+			setSelectedCategories(updated);
+		} else {
+			setSelectedCategories([...selectedCategories, clickedCategory]);
+		}
 	};
 
 	return (
@@ -175,6 +198,24 @@ export default function Content({ lang }: ContentProps) {
 							<option value={ 50 }>50</option>
 							<option value={ 100 }>100</option>
 						</Select>
+						<Box display="flex" justifyContent="center" alignItems="center">
+							<Typography fontFamily="Montserrat" fontSize="16px">Categories:</Typography>
+							{ categories.map(category => {
+								const isSelected = selectedCategories.includes(category.title);
+								return <CategoryBadge
+									key={ category.id }
+									isSelected={ isSelected }
+									onClickBadge={ () => handleClickCategory(category.title) }
+								>
+									{ isSelected && <CheckIcon fontSize="inherit" sx={ {
+										position: 'absolute',
+										left: 3,
+										color: '#2886DE'
+									} }/> }
+									{ category.title }
+								</CategoryBadge>;
+							}) }
+						</Box>
 					</Box>
 				) }
 			</Box>
