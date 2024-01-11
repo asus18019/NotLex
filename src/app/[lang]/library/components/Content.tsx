@@ -5,25 +5,16 @@ import { fetchWords } from '@/utils/fetchWords';
 import { ChangeEvent, useCallback, useEffect, useState } from 'react';
 import { CardData } from '@/types';
 import WordCard from '@/app/[lang]/library/components/WordCard';
-import {
-	Box,
-	InputBase,
-	Pagination,
-	styled,
-	Typography
-} from '@mui/material';
+import { Box, InputBase, Pagination, styled, Typography } from '@mui/material';
 import SkeletonCard from '@/app/[lang]/library/components/SkeletonCard';
 import Badge from '@/app/[lang]/library/components/Badge';
 import debounce from 'lodash/debounce';
 import ClearIcon from '@mui/icons-material/Clear';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import AddIcon from '@mui/icons-material/Add';
-import CheckIcon from '@mui/icons-material/Check';
-import Select from '@/app/[lang]/library/components/Select';
 import { Locale } from '../../../../../i18n.config';
 import { getDictionary } from '@/utils/dictionary';
-import CategoryBadge from '@/app/[lang]/library/components/CategoryBadge';
-import { useCategories } from '@/hooks/useCategories';
+import Filters from '@/app/[lang]/library/components/Filters';
 
 const PageContainer = styled(Box)({
 	display: 'flex',
@@ -78,8 +69,8 @@ const iconStyles = {
 	':hover': { backgroundColor: '#ebebeb', borderRadius: '100%' }
 };
 
-type SortByType = 'progress' | 'created_at' | 'word';
-type OrderByType = 'asc' | 'desc'
+export type SortByType = 'progress' | 'created_at' | 'word';
+export type OrderByType = 'asc' | 'desc'
 
 interface ContentProps {
 	lang: Locale;
@@ -88,7 +79,6 @@ interface ContentProps {
 export default function Content({ lang }: ContentProps) {
 	const { page: { library: libraryPage } } = getDictionary(lang);
 	const { accessToken = '' } = useCredentials();
-	const { categories } = useCategories();
 
 	const [isFetching, setIsFetching] = useState(true);
 	const [showFiltering, setShowFiltering] = useState(false);
@@ -149,16 +139,6 @@ export default function Content({ lang }: ContentProps) {
 		setSearch('');
 	};
 
-	const handleClickCategory = (clickedCategory: string) => {
-		setPage(1);
-		if(selectedCategories.includes(clickedCategory)) {
-			const updated = selectedCategories.filter(category => category !== clickedCategory);
-			setSelectedCategories(updated);
-		} else {
-			setSelectedCategories([...selectedCategories, clickedCategory]);
-		}
-	};
-
 	return (
 		<PageContainer>
 			<Box display="flex" alignItems="center" gap="4px" width={ { xs: '100%', md: '80%' } }>
@@ -181,42 +161,17 @@ export default function Content({ lang }: ContentProps) {
 					</Link>
 				</Box>
 				{ showFiltering && (
-					<Box alignSelf="center">
-						<Select value={ sortBy } onChange={ e => setSortBy(e.target.value as SortByType) }>
-							<option value="created_at">{ libraryPage.filters.sorts.created_at }</option>
-							<option value="word">{ libraryPage.filters.sorts.word }</option>
-							<option value="progress">{ libraryPage.filters.sorts.progress }</option>
-						</Select>
-						<Select value={ orderBy } onChange={ e => setOrderBy(e.target.value as OrderByType) }>
-							<option value="asc">{ libraryPage.filters.orders.asc }</option>
-							<option value="desc">{ libraryPage.filters.orders.desc }</option>
-						</Select>
-						<Select value={ pageSize.toString() } onChange={ e => setPageSize(Number(e.target.value)) }>
-							<option value={ 5 }>5</option>
-							<option value={ 10 }>10</option>
-							<option value={ 25 }>25</option>
-							<option value={ 50 }>50</option>
-							<option value={ 100 }>100</option>
-						</Select>
-						<Box display="flex" justifyContent="center" alignItems="center">
-							<Typography fontFamily="Montserrat" fontSize="16px">Categories:</Typography>
-							{ categories.map(category => {
-								const isSelected = selectedCategories.includes(category.title);
-								return <CategoryBadge
-									key={ category.id }
-									isSelected={ isSelected }
-									onClickBadge={ () => handleClickCategory(category.title) }
-								>
-									{ isSelected && <CheckIcon fontSize="inherit" sx={ {
-										position: 'absolute',
-										left: 3,
-										color: '#2886DE'
-									} }/> }
-									{ category.title }
-								</CategoryBadge>;
-							}) }
-						</Box>
-					</Box>
+					<Filters { ...{
+						sortBy,
+						setSortBy,
+						orderBy,
+						setOrderBy,
+						pageSize,
+						setPageSize,
+						setPage,
+						selectedCategories,
+						setSelectedCategories
+					} } />
 				) }
 			</Box>
 			<Box>
