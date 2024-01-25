@@ -71,3 +71,23 @@ export type CharObg = {
 export type SettingsCookie = {
 	crosswordWordCount: number
 }
+
+export type WordData = {
+	wordId: number,
+	word?: string,
+	meaning?: string,
+	sentence?: string,
+	translate?: string,
+	progress?: number,
+	categories?: string[]
+}
+
+export type UpdateWordData = WordData | {
+	wordId: number,
+	word?: string,
+	meaning?: string,
+	sentence?: string,
+	translate?: string,
+	setProgress?: number,
+	categories?: string[]
+}

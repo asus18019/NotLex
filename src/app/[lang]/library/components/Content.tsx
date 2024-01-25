@@ -3,7 +3,7 @@ import { useCredentials } from '@/hooks/useCredentials';
 import Link from 'next/link';
 import { fetchWords } from '@/utils/fetchWords';
 import { ChangeEvent, useCallback, useEffect, useState } from 'react';
-import { CardData } from '@/types';
+import { CardData, WordData } from '@/types';
 import WordCard from '@/app/[lang]/library/components/WordCard';
 import { Box, InputBase, Pagination, styled, Typography } from '@mui/material';
 import SkeletonCard from '@/app/[lang]/library/components/SkeletonCard';
@@ -139,6 +139,26 @@ export default function Content({ lang }: ContentProps) {
 		setSearch('');
 	};
 
+	const handleUpdateWord = (updatedWord: Required<WordData>) => {
+		setWords(prev => {
+			return prev.map(word => {
+				if(word.id === updatedWord.wordId) {
+					return {
+						id: updatedWord.wordId,
+						word: updatedWord.word ,
+						meaning: updatedWord.meaning,
+						sentence: updatedWord.sentence,
+						progress: updatedWord.progress,
+						word_category: updatedWord.categories,
+						created_at: word.created_at
+					}
+				} else {
+					return word;
+				}
+			})
+		})
+	}
+
 	return (
 		<PageContainer>
 			<Box display="flex" alignItems="center" gap="4px" width={ { xs: '100%', md: '80%' } }>
@@ -179,11 +199,13 @@ export default function Content({ lang }: ContentProps) {
 					Array.from({ length: 10 }).map((_e, index) => <SkeletonCard key={ index }/>)
 				) : words.map(word => <WordCard
 					key={ word.id }
+					id={ word.id }
 					word={ word.word }
 					progress={ word.progress }
 					meaning={ word.meaning }
 					sentence={ word.sentence }
 					categories={ word.word_category }
+					updateWordInList={ handleUpdateWord }
 				/>) }
 			</Box>
 			{ (!isFetching && foundedWords > pageSize) && (
