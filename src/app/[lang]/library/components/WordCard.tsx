@@ -5,12 +5,14 @@ import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import AddIcon from '@mui/icons-material/Add';
 import Badge from '@/app/[lang]/library/components/Badge';
-import { SyntheticEvent, useState } from 'react';
+import { ReactNode, SyntheticEvent, useState } from 'react';
 import { UpdateWordData, WordData } from '@/types';
 import { useCredentials } from '@/hooks/useCredentials';
 import CircularProgress from '@mui/material/CircularProgress';
 import TransparentInput from '@/app/[lang]/library/components/TransparentInput';
 import { useCategories } from '@/hooks/useCategories';
+import DeleteBadgeIcon from '@/app/[lang]/library/components/DeleteBadgeIcon';
+import { updateWordQuery } from '@/utils/updateWordQuery';
 
 const CardContainer = styled(Box)(({ theme }) => ({
 	width: 'calc(100%-32px)',
@@ -29,6 +31,15 @@ const ContentText = styled(Typography)({
 	marginTop: '5px'
 });
 
+const addBadgeIconStyles = {
+	cursor: "pointer",
+	marginRight: "25px",
+	marginLeft: "5px",
+	transition: "0.15s",
+	borderRadius: "50%",
+	":hover": { backgroundColor: "rgba(173, 173, 173, 0.15)" }
+};
+
 const iconStyles = (color: string) => ({ transition: '0.15s', cursor: 'pointer', ':hover': { color } });
 
 interface WordCardProps {
@@ -42,7 +53,7 @@ interface WordCardProps {
 }
 
 export default function WordCard({ id, word, progress, meaning, sentence, categories, updateWordInList }: WordCardProps) {
-	const { accessToken } = useCredentials();
+	const { accessToken = '' } = useCredentials();
 	const { categories: syncedCategories } = useCategories();
 	const [editMode, setEditMode] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
@@ -53,48 +64,29 @@ export default function WordCard({ id, word, progress, meaning, sentence, catego
 	const [newCategoryName, setNewCategoryName] = useState('');
 	const [newCategories, setNewCategories] = useState(categories);
 
-	const renderElement = (viewElement: JSX.Element, editElement: JSX.Element) => {
+	const renderElement = (viewElement: ReactNode | ReactNode[], editElement: ReactNode) => {
 		return editMode ? editElement : viewElement;
 	}
 
 	const handleUpdate = async () => {
-		const updateData: UpdateWordData = { wordId: id }
+		const updateData: UpdateWordData = {
+			wordId: id,
+			word: newWord.trim() !== word ? newWord.trim() : undefined,
+			meaning: newMeaning.trim() !== meaning ? newMeaning.trim() : undefined,
+			sentence: newSentence.trim() !== sentence ? newSentence.trim() : undefined,
+			categories: newCategories.join() !== categories.join() ? newCategories : undefined
+		};
 
-		if(newWord.trim() !== word) {
-			updateData.word = newWord.trim();
-		}
+		const changedProperties = Object.values(updateData).filter(value => value !== undefined).length - 1;
 
-		if(newMeaning.trim() !== meaning) {
-			updateData.meaning = newMeaning.trim();
-		}
-
-		if(newSentence.trim() !== sentence) {
-			updateData.sentence = newSentence.trim();
-		}
-
-		if(newCategories.join() !== categories.join()) {
-			updateData.categories = newCategories;
-		}
-
-		if(Object.keys(updateData).length < 2) {
+		if(changedProperties < 1) {
 			handleCloseEditing();
 			return;
 		}
 
 		try {
 			setIsLoading(true);
-			const response = await fetch(`${ process.env.NEXT_PUBLIC_API_URL }/update-word`, {
-				method: "PATCH",
-				headers: {
-					'Content-Type': 'application/json',
-					'Authorization': `Bearer ${ accessToken }`
-				},
-				body: JSON.stringify(updateData)
-			});
-
-			if(response.status !== 200) {
-				throw new Error("Something went wrong...");
-			}
+			await updateWordQuery(updateData, accessToken);
 
 			updateWordInList({
 				wordId: updateData.wordId,
@@ -123,7 +115,7 @@ export default function WordCard({ id, word, progress, meaning, sentence, catego
 		setNewCategories(categories);
 	}
 
-	const handleAddCategory = (_e: any) => {
+	const handleAddCategory = () => {
 		if(!newCategoryName) return;
 
 		if(newCategories.includes(newCategoryName)) {
@@ -159,24 +151,14 @@ export default function WordCard({ id, word, progress, meaning, sentence, catego
 			) }
 			<Box mt="5px" display="flex" justifyContent="space-between" alignItems="center">
 				<Box display="flex" flexWrap="wrap" gap="5px">
-					{ editMode ? (
-						<> {
-							newCategories.map(category => (
+					{ renderElement(
+						categories.map(category => (
+							<Badge key={ category } text={ category } color="#e6ca02" fontSize="13px"/>
+						)),
+						<>
+							{ newCategories.map(category => (
 								<Badge key={ category } text={ category } color="#e6ca02" fontSize="13px" deleteIcon={
-									<CloseIcon
-										stroke='red'
-										strokeWidth={ 2 }
-										sx={{
-											position: 'absolute',
-											top: '-35%',
-											right: '-9px',
-											transition: '0.15s',
-											cursor: 'pointer',
-											fontSize: '23px',
-											':hover': { stroke: 'darkred' }
-										}}
-										onClick={ () => handleDeleteCategory(category) }
-									/>
+									<DeleteBadgeIcon itemId={ category } handleDelete={ handleDeleteCategory }/>
 								}/>
 							)) }
 							<Box display="flex" alignContent="center">
@@ -191,33 +173,19 @@ export default function WordCard({ id, word, progress, meaning, sentence, catego
 										inputProps={{ ...params.inputProps, style: { padding: "2px 8px", fontFamily: "Montserrat" } }}
 									/> }
 								/>
-								<AddIcon
-									onClick={ handleAddCategory }
-									sx={{
-										cursor: "pointer",
-										marginRight: "25px",
-										marginLeft: "5px",
-										transition: "0.15s",
-										borderRadius: "50%",
-										":hover": { backgroundColor: "rgba(173, 173, 173, 0.15)" }
-									}}
-								/>
+								<AddIcon onClick={ handleAddCategory } sx={ addBadgeIconStyles }/>
 							</Box>
 						</>
-						):
-						categories.map(category => (
-							<Badge key={ category } text={ category } color="#e6ca02" fontSize="13px"/>
-					)) }
+					) }
 				</Box>
 				<Box display="flex" gap="5px">
 					{ isLoading ? (
 						<CircularProgress size={ 24 } sx={{ color: "black" }}/>
-					) : !editMode ? (
+					) : renderElement(
 						<>
 							<EditIcon sx={ iconStyles('#1ca1d4') } onClick={ () => setEditMode(prev => !prev) }/>
 							<DeleteOutlineIcon sx={ iconStyles('red') }/>
-						</>
-					) : (
+						</>,
 						<>
 							<CheckIcon sx={ iconStyles('#49be25') } onClick={ () => handleUpdate() }/>
 							<CloseIcon sx={ iconStyles('red') } onClick={ () => handleCloseEditing() }/>
