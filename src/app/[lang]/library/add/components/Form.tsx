@@ -75,7 +75,7 @@ export default function Form({ searchParams }: { searchParams: SearchParamsType 
 			setMeaning('');
 			setExample('');
 
-			router.push(`/${ lang }/add`);
+			router.push(`/${ lang }/library/add`);
 		} catch(e) {
 			handleShowModal(page.form.modal.error, 'error');
 			console.log(e);
