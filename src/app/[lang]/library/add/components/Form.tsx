@@ -1,14 +1,17 @@
-'use client';
+'use client'
 import { Autocomplete, Button, FormControl, styled, Typography } from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
-import { FormEvent, useContext, useState } from 'react';
+import { useContext } from 'react';
 import { SearchParamsType } from '@/types';
+import { NewWordSchema, NewWordSchemaType } from '@/types/schemas';
 import { useRouter } from 'next/navigation';
+import { useForm } from "react-hook-form";
 import { useCredentials } from '@/hooks/useCredentials';
 import { useCategories } from '@/hooks/useCategories';
 import { useAlertModal } from '@/hooks/useAlertModal';
 import { LangContext } from '@/context/LangContextProvider';
 import { getDictionary } from '@/utils/dictionary';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 const FormInput = styled('input')({
 	fontWeight: '500',
@@ -35,6 +38,10 @@ const FormText = styled('textarea')({
 	resize: 'none'
 });
 
+const ErrorText = styled('p')({
+	color: 'red'
+});
+
 export default function Form({ searchParams }: { searchParams: SearchParamsType }) {
 	const { lang } = useContext(LangContext);
 	const { page: { library: { addPage: page } } } = getDictionary(lang);
@@ -43,17 +50,24 @@ export default function Form({ searchParams }: { searchParams: SearchParamsType 
 	const { categories } = useCategories();
 	const { alertModal, handleShowModal } = useAlertModal();
 
-	const [isFetching, setIsFetching] = useState(false);
+	const {
+		register,
+		handleSubmit,
+		formState: { errors, isSubmitting },
+		getValues,
+		setValue,
+		reset
+	} = useForm<NewWordSchemaType>({
+		defaultValues: {
+			word: searchParams.word?.toString() || '',
+			category: '',
+			meaning: searchParams.definition?.toString() || '',
+			example: searchParams.example?.toString() || '',
+		},
+		resolver: zodResolver(NewWordSchema)
+	});
 
-	const [word, setWord] = useState(searchParams.word || '');
-	const [category, setCategory] = useState('');
-	const [meaning, setMeaning] = useState(searchParams.definition || '');
-	const [example, setExample] = useState(searchParams.example || '');
-
-	const handleAddWord = async (e: FormEvent<HTMLFormElement>) => {
-		e.preventDefault();
-		setIsFetching(true);
-
+	const handleAddWord = async ({ word, category, example, meaning }: NewWordSchemaType) => {
 		try {
 			const response = await fetch(`${ process.env.NEXT_PUBLIC_API_URL }/word`, {
 				method: 'POST',
@@ -69,44 +83,35 @@ export default function Form({ searchParams }: { searchParams: SearchParamsType 
 			if(!response.ok) throw new Error();
 
 			handleShowModal(page.form.modal.success, 'success');
-
-			setWord('');
-			setCategory('');
-			setMeaning('');
-			setExample('');
-
+			reset();
 			router.push(`/${ lang }/library/add`);
 		} catch(e) {
 			handleShowModal(page.form.modal.error, 'error');
 			console.log(e);
-		} finally {
-			setIsFetching(false);
 		}
 	};
 
+	const onAutocompleteChange = (_event: any, value: string | null) => {
+		setValue("category", value || '', { shouldValidate: true })
+	}
+
 	return (
-		<FormControl sx={ { my: '25px', width: '310px' } } component="form" onSubmit={ handleAddWord }>
+		<FormControl sx={ { my: '25px', width: '310px' } } component="form" onSubmit={ handleSubmit(handleAddWord) }>
 			{ alertModal }
 			<FormInput
+				{ ...register("word") }
 				placeholder={ page.form.placeholders.word }
-				type="text"
-				value={ word }
-				onChange={ e => setWord(e.target.value) }
-				required
 			/>
+			<ErrorText>{ errors.word && errors.word.message }</ErrorText>
 			<Autocomplete
 				sx={ { mt: '20px' } }
 				options={ categories.map(elem => elem.title) }
 				disableClearable={ true }
 				freeSolo={ true }
-				value={ category }
-				onChange={ (_event: any, value: string | null) => {
-					setCategory(value || '');
-				} }
-				inputValue={ category }
-				onInputChange={ (_event: any, value: string | null) => {
-					setCategory(value || '');
-				} }
+				value={ getValues("category") }
+				onChange={ onAutocompleteChange }
+				inputValue={ getValues("category") }
+				onInputChange={ onAutocompleteChange }
 				renderInput={ (params) => (
 					<div ref={ params.InputProps.ref }>
 						<FormInput
@@ -114,26 +119,25 @@ export default function Form({ searchParams }: { searchParams: SearchParamsType 
 							type="text"
 							{ ...params.inputProps }
 							placeholder={ page.form.placeholders.category }
-							required/>
+						/>
 					</div>
 				) }
 			/>
+			<ErrorText>{ errors.category && errors.category.message }</ErrorText>
 			<FormText
+				{ ...register("meaning") }
 				placeholder={ page.form.placeholders.meaning }
 				rows={ 3 }
-				required
-				value={ meaning }
-				onChange={ e => setMeaning(e.target.value) }
 			/>
+			<ErrorText>{ errors.meaning && errors.meaning.message }</ErrorText>
 			<FormText
+				{ ...register("example") }
 				placeholder={ page.form.placeholders.example }
 				rows={ 5 }
-				required
-				value={ example }
-				onChange={ e => setExample(e.target.value) }
 			/>
-			<Button sx={ { mt: '25px' } } variant="contained" type="submit" disabled={ isFetching } fullWidth>
-				{ isFetching ? (
+			<ErrorText>{ errors.example && errors.example.message }</ErrorText>
+			<Button sx={ { mt: '25px' } } variant="contained" type="submit" disabled={ isSubmitting } fullWidth>
+				{ isSubmitting ? (
 					<CircularProgress size={ 24 }/>
 				) : (
 					<Typography fontFamily="Montserrat">{ page.form.button.submit }</Typography>

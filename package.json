@@ -13,6 +13,7 @@
 		"@emotion/react": "^11.11.1",
 		"@emotion/styled": "^11.11.0",
 		"@formatjs/intl-localematcher": "^0.4.2",
+		"@hookform/resolvers": "^3.3.4",
 		"@mui/icons-material": "^5.14.1",
 		"@mui/material": "^5.14.1",
 		"@mui/styled-engine-sc": "^5.12.0",
@@ -33,9 +34,11 @@
 		"next": "13.4.10",
 		"react": "18.2.0",
 		"react-dom": "18.2.0",
+		"react-hook-form": "^7.50.1",
 		"styled-components": "^5.3.11",
 		"typescript": "5.1.6",
-		"uuid": "^9.0.1"
+		"uuid": "^9.0.1",
+		"zod": "^3.22.4"
 	},
 	"devDependencies": {
 		"@next/bundle-analyzer": "^13.5.6",
