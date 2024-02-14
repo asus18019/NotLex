@@ -1,7 +1,7 @@
 "use client"
 import { Box, Button, styled, Typography, Divider, CardMedia } from '@mui/material';
 import Link from 'next/link';
-import IndexForm from '@/app/[lang]/components/IndexForm';
+import IndexFormContainer from '@/app/[lang]/components/IndexFormContainer';
 import { Metadata } from 'next';
 
 const Em = styled('em')({
@@ -91,7 +91,7 @@ export default function Home() {
 				     flexDirection={ { xs: 'column-reverse', md: 'row' } }>
 					<Box width={ { xs: '100%', md: '50%' } } display="flex" flexDirection="column"
 					     alignItems="center" mt={ { xs: '45px', md: 0 } }>
-						<IndexForm/>
+						<IndexFormContainer/>
 					</Box>
 					<Box width={ { xs: '100%', md: '50%' } } display="flex" flexDirection="column"
 					     alignItems="center">
