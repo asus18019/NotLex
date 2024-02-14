@@ -46,7 +46,13 @@
 				"next": "Weiter",
 				"skip": "Überspringen"
 			},
-			"loadingText": "Deine Wörter werden geladen..."
+			"loadingText": "Deine Wörter werden geladen...",
+			"notFoundText": "Wir haben keine Wörter in Ihrer Liste gefunden",
+			"notFoundSubtext1": "Versuchen Sie, ",
+			"notFoundSubtext2": "ein",
+			"notFoundSubtext3": " neues Wort zu ",
+			"notFoundSubtext4": "finden",
+			"notFoundSubtext5": " oder zu Ihrer Liste hinzuzufügen"
 		}
 	,
 		"search": {

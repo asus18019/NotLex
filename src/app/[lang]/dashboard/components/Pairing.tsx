@@ -1,7 +1,6 @@
 import ProgramNav from '@/app/[lang]/dashboard/components/ProgramNav';
 import { Box, styled } from '@mui/material';
 import { CardData } from '@/types';
-import ProgramWrapper from './ProgramWrapper';
 import { shuffleArray } from '@/utils/shuffleArray';
 import { capitalizeFirstLetter } from '@/utils/capitalizeFirstLetter';
 import { MainWord } from './GuessingProgram';
@@ -135,33 +134,31 @@ const Pairing = ({ words, removeCard, isFetching, closeProgram }: PairingProps) 
 	const isAnswered = answers.length === (answers.length < 10 ? words.length : 10);
 
 	return (
-		<ProgramWrapper isFetching={ isFetching } words={ words }>
-			<ContentContainer>
-				<MainWord>{ page.dashboard.programs.pairing.headerTitle }</MainWord>
-				<Box display="flex" justifyContent="center" flexWrap="wrap">
-					{ shuffledWords.map((word, index) => (
-						<Fragment key={ word.id }>
-							<OptionBox
-								bgcolor={ getOptionColor(word, 'word') }
-								onClick={ () => handleClickOption({ ...word, type: 'word' }, 'word') }
-							>
-								{ capitalizeFirstLetter(word.word) }
-							</OptionBox>
-							<OptionBox
-								bgcolor={ getOptionColor(shuffledAnswers[index], 'meaning') }
-								onClick={ () => handleClickOption({
-									...shuffledAnswers[index],
-									type: 'meaning'
-								}, 'meaning') }
-							>
-								{ capitalizeFirstLetter(shuffledAnswers[index].meaning) }
-							</OptionBox>
-						</Fragment>
-					)) }
-				</Box>
-				<ProgramNav closeProgram={ closePairingProgram } skipWord={ skipWord } isAnswered={ isAnswered }/>
-			</ContentContainer>
-		</ProgramWrapper>
+		<ContentContainer>
+			<MainWord>{ page.dashboard.programs.pairing.headerTitle }</MainWord>
+			<Box display="flex" justifyContent="center" flexWrap="wrap">
+				{ shuffledWords.map((word, index) => (
+					<Fragment key={ word.id }>
+						<OptionBox
+							bgcolor={ getOptionColor(word, 'word') }
+							onClick={ () => handleClickOption({ ...word, type: 'word' }, 'word') }
+						>
+							{ capitalizeFirstLetter(word.word) }
+						</OptionBox>
+						<OptionBox
+							bgcolor={ getOptionColor(shuffledAnswers[index], 'meaning') }
+							onClick={ () => handleClickOption({
+								...shuffledAnswers[index],
+								type: 'meaning'
+							}, 'meaning') }
+						>
+							{ capitalizeFirstLetter(shuffledAnswers[index].meaning) }
+						</OptionBox>
+					</Fragment>
+				)) }
+			</Box>
+			<ProgramNav closeProgram={ closePairingProgram } skipWord={ skipWord } isAnswered={ isAnswered }/>
+		</ContentContainer>
 	);
 };
 

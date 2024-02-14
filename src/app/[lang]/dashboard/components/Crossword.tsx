@@ -1,5 +1,4 @@
 import { CardData, CharObg } from '@/types';
-import ProgramWrapper from '@/app/[lang]/dashboard/components/ProgramWrapper';
 import { Box, styled, Typography } from '@mui/material';
 import ProgramNav from '@/app/[lang]/dashboard/components/ProgramNav';
 import { useMemo, useRef, useState } from 'react';
@@ -157,24 +156,22 @@ const Crossword = ({ isFetching, words, closeProgram, removeCard }: CrosswordPro
 	}, [shuffledWords, correctIds]);
 
 	return (
-		<ProgramWrapper isFetching={ isFetching } words={ words }>
-			<Box display="flex" flexDirection="column">
-				<Box alignSelf="center" mt="8px">
-					{ questions.map(q => (
-						<Question
-							key={ uuidv4() }
-							sx={ { textDecoration: q.isAnswered ? 'line-through' : 'none' } }
-						>
-							{ q.index }) { capitalizeFirstLetter(q.text) }
-						</Question>
-					)) }
-				</Box>
-				<Box width={ { xs: '95vw', md: 'auto' } } margin="0 auto" overflow="auto">
-					{ renderRows }
-				</Box>
-				<ProgramNav closeProgram={ closeProgram } skipWord={ skipWord } isAnswered={ false }/>
+		<Box display="flex" flexDirection="column">
+			<Box alignSelf="center" mt="8px">
+				{ questions.map(q => (
+					<Question
+						key={ uuidv4() }
+						sx={ { textDecoration: q.isAnswered ? 'line-through' : 'none' } }
+					>
+						{ q.index }) { capitalizeFirstLetter(q.text) }
+					</Question>
+				)) }
 			</Box>
-		</ProgramWrapper>
+			<Box width={ { xs: '95vw', md: 'auto' } } margin="0 auto" overflow="auto">
+				{ renderRows }
+			</Box>
+			<ProgramNav closeProgram={ closeProgram } skipWord={ skipWord } isAnswered={ false }/>
+		</Box>
 	);
 };
 

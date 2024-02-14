@@ -1,7 +1,7 @@
 'use client';
 import { Box, styled, Typography } from '@mui/material';
 import { useContext, useEffect, useRef, useState } from 'react';
-import Repeat from '@/app/[lang]/dashboard/components/Repeat';
+import Repeat, { LoadingText } from '@/app/[lang]/dashboard/components/Repeat';
 import { CardData } from '@/types';
 import { useCredentials } from '@/hooks/useCredentials';
 import GuessingProgram from '@/app/[lang]/dashboard/components/GuessingProgram';
@@ -13,6 +13,8 @@ import { getDictionary } from '@/utils/dictionary';
 import Crossword from '@/app/[lang]/dashboard/components/Crossword';
 import SettingsModal from '@/app/[lang]/dashboard/components/SettingsModal';
 import { fetchWords } from '@/utils/fetchWords';
+import CircularProgress from '@mui/material/CircularProgress';
+import Link from 'next/link';
 
 export const ProgramsContainer = styled(Box)({
 	width: '100%',
@@ -64,6 +66,14 @@ const ProgramsBox = styled(Box)(({ theme }) => ({
 	}
 }));
 
+const CenteredBox = styled(Box)({
+	display: 'flex',
+	justifyContent: 'center',
+	flexDirection: 'column',
+	minHeight: 'calc(100vh - 81px)',
+	alignItems: 'center'
+})
+
 const StyledSettingsIcon = styled(SettingsIcon)(({ theme }) => ({
 	padding: '6px',
 	borderRadius: '50%',
@@ -78,7 +88,7 @@ const StyledSettingsIcon = styled(SettingsIcon)(({ theme }) => ({
 	},
 	[theme.breakpoints.down('md')]: {
 		top: '16px',
-		right: 0,
+		right: 0
 	}
 }));
 
@@ -92,11 +102,12 @@ export default function ProgramSelector() {
 	const [selectedCategory, setSelectedCategory] = useState<string>('');
 
 	const [isFetching, setIsFetching] = useState(true);
+	const [isNoSavedWords, setIsNoSavedWords] = useState(false);
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [words, setWords] = useState<CardData[]>([]);
 
 	const activeWord = words[words.length - 1];
-	const fetchNewWords = !isFetching && !words.length;
+	const fetchNewWords = !isFetching && !words.length && !isNoSavedWords;
 
 	useEffect(() => {
 		if(firstRender.current) {
@@ -109,7 +120,7 @@ export default function ProgramSelector() {
 					}
 					return response.json();
 				})
-				.then(result => setWords(result.data))
+				.then(({ data }) => data.length ? setWords(data) : setIsNoSavedWords(true))
 				.catch(error => console.log(error))
 				.finally(() => setIsFetching(false));
 			return;
@@ -118,7 +129,7 @@ export default function ProgramSelector() {
 		if(fetchNewWords) {
 			setIsFetching(true);
 			fetchWords(accessToken, {
-				category: [selectedCategory],
+				...(selectedCategory.length && { category: [selectedCategory] }),
 				randomize: true
 			})
 				.then(response => {
@@ -127,7 +138,7 @@ export default function ProgramSelector() {
 					}
 					return response.json();
 				})
-				.then(response => setWords([...response.data, ...words]))
+				.then(({ data }) => data.length ? setWords([...data, ...words]) : setIsNoSavedWords(true))
 				.catch(error => console.log(error))
 				.finally(() => setIsFetching(false));
 		}
@@ -159,13 +170,47 @@ export default function ProgramSelector() {
 		case ('Pairing') :
 			return <Pairing { ...{ words, removeCard, isFetching, closeProgram } }/>;
 		case ('Crossword') :
-			return <Crossword { ...{ words, isFetching, removeCard, closeProgram }  }/>;
+			return <Crossword { ...{ words, isFetching, removeCard, closeProgram } }/>;
 		default:
 			return null;
 		}
 	};
 
-	return !selectedProgram ? (
+	if(isFetching) {
+		return (
+			<CenteredBox>
+				<CircularProgress size={ 50 }/>
+				<LoadingText fontSize={ { xs: 17, md: 17 } }>{ page.dashboard.loadingText }</LoadingText>
+			</CenteredBox>
+		)
+	}
+
+	if(isNoSavedWords) {
+		return (
+			<CenteredBox>
+				<Typography fontFamily="Montserrat" fontWeight="600" fontSize={ 19 }>
+					{ page.dashboard.notFoundText }
+				</Typography>
+				<Typography mt="10px" fontFamily="Montserrat" color="gray" fontWeight="500" fontSize={ 16 }>
+					{ page.dashboard.notFoundSubtext1 }
+					<Link href={ `/${ lang }/search` }>{ page.dashboard.notFoundSubtext2 }</Link>
+					{ page.dashboard.notFoundSubtext3 }
+					<Link href={ `/${ lang }/library/add` }>{ page.dashboard.notFoundSubtext4 }</Link>
+					{ page.dashboard.notFoundSubtext5 }
+				</Typography>
+			</CenteredBox>
+		);
+	}
+
+	if(selectedProgram) {
+		return (
+			<CenteredBox>
+				{ selectProgram(selectedProgram) }
+			</CenteredBox>
+		)
+	}
+
+	return (
 		<ProgramsContainer>
 			<StyledSettingsIcon fontSize="large" onClick={ toggleModal }/>
 			<SettingsModal { ...{ isModalOpen, toggleModal, selectedCategory, setSelectedCategory, setWords } }/>
@@ -186,5 +231,5 @@ export default function ProgramSelector() {
 				}) }
 			</ProgramsBox>
 		</ProgramsContainer>
-	) : selectProgram(selectedProgram);
+	);
 }

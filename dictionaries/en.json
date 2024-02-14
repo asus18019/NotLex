@@ -46,7 +46,13 @@
 				"next": "Next",
 				"skip": "Skip"
 			},
-			"loadingText": "Loading your words..."
+			"loadingText": "Loading your words...",
+			"notFoundText": "We haven't found any words in your list",
+			"notFoundSubtext1": "Try to ",
+			"notFoundSubtext2": "find",
+			"notFoundSubtext3": " or ",
+			"notFoundSubtext4": "save",
+			"notFoundSubtext5": " a new word to your list"
 		},
 		"search": {
 			"input": {
