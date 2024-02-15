@@ -98,11 +98,9 @@ export default function Form({ searchParams }: { searchParams: SearchParamsType 
 	return (
 		<FormControl sx={ { my: '25px', width: '310px' } } component="form" onSubmit={ handleSubmit(handleAddWord) }>
 			{ alertModal }
-			<FormInput
-				{ ...register("word") }
-				placeholder={ page.form.placeholders.word }
-			/>
-			<ErrorText>{ errors.word && errors.word.message }</ErrorText>
+			<FormInput{ ...register("word") } placeholder={ page.form.placeholders.word }/>
+			{ errors.word && <ErrorText>{ errors.word.message }</ErrorText> }
+
 			<Autocomplete
 				sx={ { mt: '20px' } }
 				options={ categories.map(elem => elem.title) }
@@ -123,19 +121,14 @@ export default function Form({ searchParams }: { searchParams: SearchParamsType 
 					</div>
 				) }
 			/>
-			<ErrorText>{ errors.category && errors.category.message }</ErrorText>
-			<FormText
-				{ ...register("meaning") }
-				placeholder={ page.form.placeholders.meaning }
-				rows={ 3 }
-			/>
-			<ErrorText>{ errors.meaning && errors.meaning.message }</ErrorText>
-			<FormText
-				{ ...register("example") }
-				placeholder={ page.form.placeholders.example }
-				rows={ 5 }
-			/>
-			<ErrorText>{ errors.example && errors.example.message }</ErrorText>
+			{ errors.category && <ErrorText>{ errors.category.message }</ErrorText> }
+
+			<FormText{ ...register("meaning") } placeholder={ page.form.placeholders.meaning } rows={ 3 }/>
+			{ errors.meaning && <ErrorText>{ errors.meaning.message }</ErrorText> }
+
+			<FormText{ ...register("example") } placeholder={ page.form.placeholders.example } rows={ 5 }/>
+			{ errors.example && <ErrorText>{ errors.example.message }</ErrorText> }
+
 			<Button sx={ { mt: '25px' } } variant="contained" type="submit" disabled={ isSubmitting } fullWidth>
 				{ isSubmitting ? (
 					<CircularProgress size={ 24 }/>
