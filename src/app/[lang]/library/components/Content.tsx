@@ -159,6 +159,10 @@ export default function Content({ lang }: ContentProps) {
 		})
 	}
 
+	const handleDeleteWord = (id: number) => {
+		setWords(prev => prev.filter(word => word.id !== id));
+	}
+
 	return (
 		<PageContainer>
 			<Box display="flex" alignItems="center" gap="4px" width={ { xs: '100%', md: '80%' } }>
@@ -206,6 +210,7 @@ export default function Content({ lang }: ContentProps) {
 					sentence={ word.sentence }
 					categories={ word.word_category }
 					updateWordInList={ handleUpdateWord }
+					deleteWordInList={ handleDeleteWord }
 				/>) }
 			</Box>
 			{ (!isFetching && foundedWords > pageSize) && (

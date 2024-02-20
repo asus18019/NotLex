@@ -13,6 +13,7 @@ import TransparentInput from '@/app/[lang]/library/components/TransparentInput';
 import { useCategories } from '@/hooks/useCategories';
 import DeleteBadgeIcon from '@/app/[lang]/library/components/DeleteBadgeIcon';
 import { updateWordQuery } from '@/utils/updateWordQuery';
+import { useAlertModal } from '@/hooks/useAlertModal';
 
 const CardContainer = styled(Box)(({ theme }) => ({
 	width: 'calc(100%-32px)',
@@ -42,6 +43,12 @@ const addBadgeIconStyles = {
 
 const iconStyles = (color: string) => ({ transition: '0.15s', cursor: 'pointer', ':hover': { color } });
 
+enum CardModes {
+	View = "view",
+	Edit = "edit",
+	Delete = "delete"
+}
+
 interface WordCardProps {
 	id: number,
 	word: string,
@@ -50,12 +57,14 @@ interface WordCardProps {
 	sentence: string,
 	categories: string[],
 	updateWordInList: (word: Required<WordData>) => void;
+	deleteWordInList: (id: number) => void;
 }
 
-export default function WordCard({ id, word, progress, meaning, sentence, categories, updateWordInList }: WordCardProps) {
+export default function WordCard({ id, word, progress, meaning, sentence, categories, updateWordInList, deleteWordInList }: WordCardProps) {
 	const { accessToken = '' } = useCredentials();
+	const { alertModal, handleShowModal } = useAlertModal();
 	const { categories: syncedCategories } = useCategories();
-	const [editMode, setEditMode] = useState(false);
+	const [mode, setMode] = useState<CardModes>(CardModes.View);
 	const [isLoading, setIsLoading] = useState(false);
 
 	const [newWord, setNewWord] = useState(word);
@@ -64,8 +73,11 @@ export default function WordCard({ id, word, progress, meaning, sentence, catego
 	const [newCategoryName, setNewCategoryName] = useState('');
 	const [newCategories, setNewCategories] = useState(categories);
 
-	const renderElement = (viewElement: ReactNode | ReactNode[], editElement: ReactNode) => {
-		return editMode ? editElement : viewElement;
+	const renderElement = (viewElement: ReactNode | ReactNode[], editElement: ReactNode, deleteElement?: ReactNode) => {
+		if(mode === CardModes.Delete && deleteElement) {
+			return deleteElement
+		}
+		return mode === CardModes.Edit ? editElement : viewElement;
 	}
 
 	const handleUpdate = async () => {
@@ -80,7 +92,7 @@ export default function WordCard({ id, word, progress, meaning, sentence, catego
 		const changedProperties = Object.values(updateData).filter(value => value !== undefined).length - 1;
 
 		if(changedProperties < 1) {
-			handleCloseEditing();
+			handleCloseEditOrDelete();
 			return;
 		}
 
@@ -97,7 +109,8 @@ export default function WordCard({ id, word, progress, meaning, sentence, catego
 				progress: progress,
 				categories: updateData.categories || categories
 			});
-			handleCloseEditing(true);
+			handleCloseEditOrDelete(true);
+			handleShowModal("Successfully updated", "success");
 		} catch(e) {
 			console.log(e);
 		} finally {
@@ -105,8 +118,32 @@ export default function WordCard({ id, word, progress, meaning, sentence, catego
 		}
 	}
 
-	const handleCloseEditing = (saveChanges: boolean = false) => {
-		setEditMode(false);
+	const handleDelete = async (id: number) => {
+		try {
+			setIsLoading(true);
+			const response = await fetch(`${ process.env.NEXT_PUBLIC_API_URL }/word/${ id }`, {
+				method: 'DELETE',
+				headers: {
+					'Content-Type': 'application/json',
+					'Authorization': `Bearer ${ accessToken }`
+				}
+			})
+			if(response.status !== 200) {
+				return
+			}
+
+			deleteWordInList(id);
+			handleCloseEditOrDelete();
+			handleShowModal("Successfully deleted", "success");
+		} catch(e) {
+			console.log(e);
+		} finally {
+			setIsLoading(false);
+		}
+	}
+
+	const handleCloseEditOrDelete = (saveChanges: boolean = false) => {
+		setMode(CardModes.View);
 		setNewCategoryName('');
 		if(saveChanges) return
 		setNewWord(word);
@@ -134,6 +171,7 @@ export default function WordCard({ id, word, progress, meaning, sentence, catego
 
 	return (
 		<CardContainer>
+			{ alertModal }
 			<Box display="flex" justifyContent="space-between" alignItems="center">
 				{ renderElement(
 					<Typography fontFamily="Montserrat" fontSize="16px" color="darkcyan" fontWeight="600">{ word }</Typography>,
@@ -189,12 +227,18 @@ export default function WordCard({ id, word, progress, meaning, sentence, catego
 						<CircularProgress size={ 24 } sx={{ color: "black" }}/>
 					) : renderElement(
 						<>
-							<EditIcon sx={ iconStyles('#1ca1d4') } onClick={ () => setEditMode(prev => !prev) }/>
-							<DeleteOutlineIcon sx={ iconStyles('red') }/>
+							<EditIcon sx={ iconStyles('#1ca1d4') } onClick={ () => setMode(CardModes.Edit) }/>
+							<DeleteOutlineIcon sx={ iconStyles('red') } onClick={ () => setMode(CardModes.Delete) }/>
 						</>,
 						<>
+							<Typography fontFamily="Montserrat" fontSize="14px">Save changes?</Typography>
 							<CheckIcon sx={ iconStyles('#49be25') } onClick={ () => handleUpdate() }/>
-							<CloseIcon sx={ iconStyles('red') } onClick={ () => handleCloseEditing() }/>
+							<CloseIcon sx={ iconStyles('red') } onClick={ () => handleCloseEditOrDelete() }/>
+						</>,
+						<>
+							<Typography fontFamily="Montserrat" fontSize="14px" alignSelf="center">Delete word?</Typography>
+							<CheckIcon sx={ iconStyles('#49be25') } onClick={ () => handleDelete(id) }/>
+							<CloseIcon sx={ iconStyles('red') } onClick={ () => handleCloseEditOrDelete() }/>
 						</>
 					) }
 				</Box>
