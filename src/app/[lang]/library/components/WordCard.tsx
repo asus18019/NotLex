@@ -157,9 +157,15 @@ export default function WordCard({ id, word, progress, meaning, sentence, catego
 						)),
 						<>
 							{ newCategories.map(category => (
-								<Badge key={ category } text={ category } color="#e6ca02" fontSize="13px" deleteIcon={
-									<DeleteBadgeIcon itemId={ category } handleDelete={ handleDeleteCategory }/>
-								}/>
+								<Badge
+									key={ category }
+									text={ category }
+									color="#e6ca02"
+									fontSize="13px"
+									{...(newCategories.length > 1 && { deleteIcon:
+										<DeleteBadgeIcon itemId={ category } handleDelete={ handleDeleteCategory }/>
+									})}
+								/>
 							)) }
 							<Box display="flex" alignContent="center">
 								<Autocomplete
