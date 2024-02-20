@@ -5,14 +5,14 @@ export const RegisterSchema = z
 		firstName: z.string().optional(),
 		lastName: z.string().optional(),
 		email: z.string().email("Invalid email address").min(3, "Email must contain at least 3 character(s)"),
-		password: z.string().min(4, "Password must contain at least 4 character(s)"),
+		password: z.string().min(6, "Password must contain at least 6 character(s)"),
 		confirmPassword: z.string()
 	})
 	.refine((data) => data.password === data.confirmPassword, {
 		message: "Passwords don't match",
 		path: ["confirmPassword"]
 	});
-;
+
 
 export type RegisterSchemaType = z.infer<typeof RegisterSchema>;
 
